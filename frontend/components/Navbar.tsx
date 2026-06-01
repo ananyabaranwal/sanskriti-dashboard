@@ -5,18 +5,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/constants";
 
+const GF = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');`;
+
 export default function Navbar() {
-  const pathname = usePathname();
+  const pathname               = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  // scroll listener
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // auth + close menu on route change
   useEffect(() => {
     setLoggedIn(!!localStorage.getItem("accessToken"));
     setMenuOpen(false);
@@ -25,78 +29,140 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  // hide on dashboard, admin, auth pages
   const isDashboard = pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
-  const isAuthPage = pathname === "/login" || pathname === "/register";
+  const isAuthPage  = pathname === "/login" || pathname === "/register";
   if (isDashboard || isAuthPage) return null;
 
   return (
     <>
+      <style>{`
+        ${GF}
+        .sk-nav-link:hover { color: #C41E3A !important; }
+        .sk-shop-btn:hover { border-color: #C41E3A !important; color: #C41E3A !important; }
+        .sk-signin-btn:hover { border-color: #C41E3A !important; color: #C41E3A !important; }
+        .sk-mobile-link:hover { background: rgba(196,30,58,.06) !important; color: #C41E3A !important; }
+        @keyframes sk-slideDown { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
+        @media (max-width: 768px) {
+          .sk-desktop-links { display: none !important; }
+          .sk-hamburger      { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .sk-hamburger { display: none !important; }
+        }
+      `}</style>
+
+      {/* ── MAIN NAV ─────────────────────────────────────── */}
       <nav style={{
-        position: "fixed",
-        top: 0, left: 0, right: 0,
-        zIndex: 1000,
-        height: "72px",
-        display: "flex",
-        alignItems: "center",
-        padding: "0 24px",
-        background: scrolled ? "rgba(251,247,240,0.96)" : "transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
-        borderBottom: scrolled ? "0.5px solid #E8D5A3" : "none",
-        transition: "all .3s ease",
+        position: "fixed", top: 0, left: 0, right: 0,
+        zIndex: 1000, height: "68px",
+        display: "flex", alignItems: "center",
+        padding: "0 48px",
+        background: scrolled ? "rgba(255,255,255,.97)" : "rgba(255,255,255,0)",
+        backdropFilter: scrolled ? "blur(20px)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(0,0,0,.07)" : "none",
+        transition: "all .35s ease",
       }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "12px" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "11px", textDecoration: "none" }}>
             <div style={{
               width: "40px", height: "40px", borderRadius: "50%",
-              background: "linear-gradient(135deg, #C9A84C, #8B6914)",
+              background: "linear-gradient(135deg,#C41E3A,#8B0020)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#3D2B1F", fontSize: "18px", fontWeight: "700",
-              fontFamily: "Georgia, serif",
-              flexShrink: 0,
+              fontFamily: "'Playfair Display',serif", fontSize: "18px",
+              fontWeight: 700, color: "#fff", flexShrink: 0,
+              boxShadow: "0 4px 14px rgba(196,30,58,.25)",
             }}>S</div>
             <div>
-              <div style={{ color: scrolled ? "#2C1810" : "#F5E6C8", fontSize: "15px", fontWeight: "700", fontFamily: "Georgia, serif", letterSpacing: ".06em", lineHeight: 1, transition: "color .3s" }}>SANSKRITI</div>
-              <div style={{ color: scrolled ? "#A08060" : "rgba(245,230,200,.6)", fontSize: "9px", letterSpacing: ".22em", marginTop: "3px", transition: "color .3s" }}>THE ANTIQUE</div>
+              <div style={{ fontFamily: "'Playfair Display',serif", fontSize: "17px", fontWeight: 700, color: "#111", lineHeight: 1, letterSpacing: ".02em" }}>
+                Sanskriti
+              </div>
+              <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "9px", letterSpacing: ".2em", color: "#C41E3A", textTransform: "uppercase", marginTop: "2px" }}>
+                The Antique
+              </div>
             </div>
           </Link>
 
           {/* Desktop nav links */}
-          <div style={{ display: "flex", alignItems: "center", gap: "2px" }} className="hide-mobile">
+          <div className="sk-desktop-links" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             {NAV_LINKS.map((l) => (
-              <Link key={l.href} href={l.href} style={{
-                padding: "7px 14px",
-                borderRadius: "99px",
-                fontSize: "13px",
-                fontWeight: isActive(l.href) ? 600 : 400,
-                color: isActive(l.href)
-                  ? "#8B6914"
-                  : scrolled ? "#3D2B1F" : "rgba(245,230,200,.85)",
-                background: isActive(l.href) ? "rgba(201,168,76,.12)" : "transparent",
-                textDecoration: "none",
-                transition: "all .2s",
-                letterSpacing: ".01em",
-              }}>{l.label}</Link>
+              <Link
+                key={l.href}
+                href={l.href}
+                className="sk-nav-link"
+                style={{
+                  padding: "7px 15px",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  fontWeight: isActive(l.href) ? 600 : 500,
+                  color: isActive(l.href) ? "#C41E3A" : "#333",
+                  background: isActive(l.href) ? "rgba(196,30,58,.07)" : "transparent",
+                  textDecoration: "none",
+                  transition: "color .2s",
+                  fontFamily: "'DM Sans',sans-serif",
+                  letterSpacing: ".01em",
+                }}
+              >{l.label}</Link>
             ))}
           </div>
 
           {/* CTA buttons */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }} className="hide-mobile">
+          <div className="sk-desktop-links" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <a
+              href="https://sanskrititheantique.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="sk-shop-btn"
+              style={{
+                fontFamily: "'DM Sans',sans-serif",
+                fontSize: "13px", fontWeight: 500,
+                color: "#333", textDecoration: "none",
+                padding: "8px 18px", borderRadius: "6px",
+                border: "1.5px solid #ddd",
+                transition: "all .2s",
+              }}
+            >Shop →</a>
+
             {loggedIn ? (
-              <Link href="/dashboard" className="btn btn-gold btn-sm">Dashboard →</Link>
+              <Link
+                href="/dashboard"
+                style={{
+                  fontFamily: "'DM Sans',sans-serif",
+                  fontSize: "13px", fontWeight: 600,
+                  color: "#fff", textDecoration: "none",
+                  padding: "9px 22px", borderRadius: "6px",
+                  background: "linear-gradient(135deg,#C41E3A,#8B0020)",
+                  boxShadow: "0 4px 14px rgba(196,30,58,.25)",
+                }}
+              >Dashboard →</Link>
             ) : (
               <>
-                <Link href="/login" style={{
-                  padding: "8px 18px", borderRadius: "8px",
-                  border: `1.5px solid ${scrolled ? "#E8D5A3" : "rgba(201,168,76,.35)"}`,
-                  color: scrolled ? "#2C1810" : "rgba(245,230,200,.9)",
-                  fontSize: "13px", fontWeight: "500",
-                  textDecoration: "none", transition: "all .2s",
-                  background: "transparent",
-                }}>Sign In</Link>
-                <Link href="/register" className="btn btn-gold btn-sm">Become a Seller</Link>
+                <Link
+                  href="/login"
+                  className="sk-signin-btn"
+                  style={{
+                    fontFamily: "'DM Sans',sans-serif",
+                    fontSize: "13px", fontWeight: 500,
+                    color: "#333", textDecoration: "none",
+                    padding: "8px 18px", borderRadius: "6px",
+                    border: "1.5px solid #ddd",
+                    transition: "all .2s",
+                  }}
+                >Sign In</Link>
+                <Link
+                  href="/register"
+                  style={{
+                    fontFamily: "'DM Sans',sans-serif",
+                    fontSize: "13px", fontWeight: 600,
+                    color: "#fff", textDecoration: "none",
+                    padding: "9px 22px", borderRadius: "6px",
+                    background: "linear-gradient(135deg,#C41E3A,#8B0020)",
+                    boxShadow: "0 4px 14px rgba(196,30,58,.25)",
+                  }}
+                >Join as Seller</Link>
               </>
             )}
           </div>
@@ -104,15 +170,14 @@ export default function Navbar() {
           {/* Hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="hide-desktop"
-            style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", display: "flex", flexDirection: "column", gap: "5px" }}
-            aria-label="Toggle navigation menu"
+            className="sk-hamburger"
+            style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", flexDirection: "column", gap: "5px", display: "none" }}
+            aria-label="Toggle menu"
           >
-            {[0, 1, 2].map((i) => (
+            {[0, 1, 2].map(i => (
               <span key={i} style={{
                 display: "block", width: "22px", height: "2px",
-                background: scrolled ? "#2C1810" : "#F5E6C8",
-                borderRadius: "1px",
+                background: "#111", borderRadius: "2px",
                 transition: "all .25s",
                 transform: menuOpen
                   ? i === 0 ? "rotate(45deg) translate(5px,5px)"
@@ -123,37 +188,50 @@ export default function Navbar() {
               }} />
             ))}
           </button>
+
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* ── MOBILE MENU ──────────────────────────────────── */}
       {menuOpen && (
-        <div className="animate-slide-down" style={{
-          position: "fixed",
-          top: "72px", left: 0, right: 0,
+        <div style={{
+          position: "fixed", top: "68px", left: 0, right: 0,
           zIndex: 999,
-          background: "rgba(251,247,240,0.98)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          borderBottom: "1px solid #E8D5A3",
-          padding: "12px 16px 20px",
+          background: "rgba(255,255,255,.98)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: "1px solid #f0f0f0",
+          padding: "12px 20px 20px",
+          boxShadow: "0 8px 32px rgba(0,0,0,.08)",
+          animation: "sk-slideDown .25s ease",
         }}>
-          {NAV_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} style={{
-              display: "block",
-              padding: "13px 16px",
-              borderRadius: "10px",
-              fontSize: "15px",
-              fontWeight: isActive(l.href) ? 600 : 400,
-              color: isActive(l.href) ? "#8B6914" : "#2C1810",
-              background: isActive(l.href) ? "rgba(201,168,76,.1)" : "transparent",
-              textDecoration: "none",
-              marginBottom: "2px",
-            }}>{l.label}</Link>
+          {NAV_LINKS.map(l => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="sk-mobile-link"
+              style={{
+                display: "block", padding: "13px 16px",
+                borderRadius: "10px", marginBottom: "2px",
+                fontSize: "15px", fontWeight: isActive(l.href) ? 600 : 400,
+                color: isActive(l.href) ? "#C41E3A" : "#222",
+                background: isActive(l.href) ? "rgba(196,30,58,.06)" : "transparent",
+                textDecoration: "none",
+                fontFamily: "'DM Sans',sans-serif",
+                transition: "all .2s",
+              }}
+            >{l.label}</Link>
           ))}
-          <div style={{ borderTop: "1px solid #E8D5A3", paddingTop: "14px", marginTop: "10px", display: "flex", gap: "10px" }}>
-            <Link href="/login" style={{ flex: 1, padding: "12px", borderRadius: "8px", border: "1.5px solid #E8D5A3", color: "#2C1810", fontSize: "14px", fontWeight: "500", textDecoration: "none", textAlign: "center" }}>Sign In</Link>
-            <Link href="/register" className="btn btn-gold" style={{ flex: 1, padding: "12px" }}>Join Us</Link>
+
+          <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "14px", marginTop: "10px", display: "flex", gap: "10px" }}>
+            <Link
+              href="/login"
+              style={{ flex: 1, padding: "12px", borderRadius: "8px", border: "1.5px solid #ddd", color: "#333", fontSize: "14px", fontWeight: 500, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}
+            >Sign In</Link>
+            <Link
+              href="/register"
+              style={{ flex: 1, padding: "12px", borderRadius: "8px", background: "linear-gradient(135deg,#C41E3A,#8B0020)", color: "#fff", fontSize: "14px", fontWeight: 600, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}
+            >Join as Seller</Link>
           </div>
         </div>
       )}
