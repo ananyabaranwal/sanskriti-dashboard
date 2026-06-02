@@ -469,16 +469,22 @@ export default function SanskritiHomepage() {
       </section>
 
       {/* ══ CTA BAND ═════════════════════════════════════════ */}
-      <section style={{ background:"#f8f8f8",padding:"0 48px 100px" }}>
+      <section style={{ background:"#fff",padding:"0 48px 100px" }}>
         <div style={{ maxWidth:"1280px",margin:"0 auto" }}>
-          <div style={{ borderRadius:"20px",background:"#1a0005",padding:"52px 48px",textAlign:"center",position:"relative",overflow:"hidden" }}>
-            <div style={{ position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(155,0,32,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(155,0,32,.06) 1px,transparent 1px)",backgroundSize:"40px 40px",pointerEvents:"none" }} />
+          <div style={{ borderRadius:"20px",background:"#fff",border:"1.5px solid rgba(155,0,32,.15)",padding:"56px 48px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+            {/* subtle dot grid */}
+            <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(155,0,32,.08) 1.5px,transparent 1.5px)",backgroundSize:"28px 28px",pointerEvents:"none" }} />
+            {/* maroon accent bar top */}
+            <div style={{ position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"80px",height:"3px",background:BURG,borderRadius:"0 0 4px 4px" }} />
             <div style={{ position:"relative" }}>
-              <h3 style={{ fontFamily:"'Playfair Display',serif",fontSize:"clamp(26px,4vw,40px)",fontWeight:600,color:"#fff",marginBottom:"12px" }}>Ready to unlock the full library?</h3>
-              <p style={{ fontSize:"15px",color:"rgba(255,255,255,.5)",maxWidth:"460px",margin:"0 auto 32px",lineHeight:1.8,fontFamily:"'DM Sans',sans-serif" }}>Join 5,000+ sellers who have built real businesses with Sanskriti's training and tools.</p>
+              <div style={{ display:"inline-flex",alignItems:"center",gap:"6px",padding:"4px 14px",borderRadius:"99px",background:"rgba(155,0,32,.06)",border:"1px solid rgba(155,0,32,.18)",fontSize:"11px",fontWeight:600,color:BURG,letterSpacing:".12em",textTransform:"uppercase",marginBottom:"20px",fontFamily:"'DM Sans',sans-serif" }}>
+                🎓 Seller Training
+              </div>
+              <h3 style={{ fontFamily:"'Playfair Display',serif",fontSize:"clamp(26px,4vw,42px)",fontWeight:700,color:"#111",marginBottom:"12px",lineHeight:1.1 }}>Ready to unlock the full library?</h3>
+              <p style={{ fontSize:"15px",color:"#666",maxWidth:"460px",margin:"0 auto 36px",lineHeight:1.85,fontFamily:"'DM Sans',sans-serif" }}>Join 5,000+ sellers who have built real businesses with Sanskriti's training and tools.</p>
               <div style={{ display:"flex",gap:"14px",justifyContent:"center",flexWrap:"wrap" }}>
-                <Link href="/register" style={{ padding:"14px 36px",borderRadius:"8px",background:BURG,color:"#fff",fontSize:"14px",fontWeight:600,letterSpacing:".08em",textDecoration:"none",boxShadow:"0 12px 32px rgba(155,0,32,.45)",fontFamily:"'DM Sans',sans-serif" }}>Register as Seller →</Link>
-                <Link href="/login" style={{ padding:"14px 36px",borderRadius:"8px",border:"1px solid rgba(255,255,255,.18)",color:"rgba(255,255,255,.8)",fontSize:"14px",fontWeight:500,textDecoration:"none",fontFamily:"'DM Sans',sans-serif" }}>Already a Seller? Sign In</Link>
+                <Link href="/register" style={{ padding:"14px 36px",borderRadius:"8px",background:BURG,color:"#fff",fontSize:"14px",fontWeight:600,letterSpacing:".08em",textDecoration:"none",boxShadow:"0 10px 28px rgba(155,0,32,.28)",fontFamily:"'DM Sans',sans-serif" }}>Register as Seller →</Link>
+                <Link href="/login" style={{ padding:"14px 36px",borderRadius:"8px",border:"1.5px solid #ddd",color:"#333",fontSize:"14px",fontWeight:500,textDecoration:"none",fontFamily:"'DM Sans',sans-serif" }}>Already a Seller? Sign In</Link>
               </div>
             </div>
           </div>
