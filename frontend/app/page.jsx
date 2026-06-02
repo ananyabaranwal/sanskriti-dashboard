@@ -10,10 +10,10 @@ const GF = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Displ
 // Gradient btn  : #6B1A2A → #8B6914
 // Gradient text : #6B1A2A → #A07820
 // ─────────────────────────────────────────────────────────────
-const BURG  = "#6B1A2A";
+const BURG  = "#9B0020";
 const GOLD  = "#8B6914";
-const GRAD  = "linear-gradient(135deg,#6B1A2A,#8B6914)";
-const GRADS = "0 12px 32px rgba(107,26,42,.28)";
+const GRAD  = "#9B0020";
+const GRADS = "0 12px 32px rgba(155,0,32,.3)";
 
 const STATS = [
   { value: "1L+",   label: "Products"   },
