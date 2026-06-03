@@ -1,399 +1,494 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
-const categories = ["All", "Beginner", "Advanced", "Business", "Valuation", "Restoration"];
+const BURG = "#9B0020";
 
-const videos = [
-  { id: 1,  title: "Introduction to Indian Antiques",         category: "Beginner",    duration: "18:24", views: "12.4K", thumbnail: "🏺", instructor: "Rajesh Kumar",   level: "Beginner",  description: "Learn the basics of identifying authentic Indian antiques from the Mughal and colonial era.", free: true  },
-  { id: 2,  title: "How to Value Brass & Bronze Items",        category: "Valuation",   duration: "24:10", views: "8.9K",  thumbnail: "⚖️", instructor: "Priya Sharma",   level: "Beginner",  description: "Step-by-step valuation guide for brass and bronze antiques including market pricing.", free: false },
-  { id: 3,  title: "Selling Antiques Online — Complete Guide", category: "Business",    duration: "31:45", views: "15.2K", thumbnail: "💼", instructor: "Arjun Nair",    level: "Advanced",  description: "Master the art of selling antiques digitally — photography, descriptions, pricing strategy.", free: false },
-  { id: 4,  title: "Spotting Fake vs Authentic Terracotta",   category: "Advanced",    duration: "22:08", views: "6.7K",  thumbnail: "🏛️", instructor: "Meera Joshi",   level: "Advanced",  description: "Expert techniques to identify genuine terracotta pieces versus modern reproductions.", free: false },
-  { id: 5,  title: "Silver Jewellery Authentication",         category: "Valuation",   duration: "19:33", views: "9.1K",  thumbnail: "💍", instructor: "Sunita Rao",    level: "Beginner",  description: "Complete guide to authenticating tribal and traditional silver jewellery from India.", free: false },
-  { id: 6,  title: "Building Your Antique Business Brand",    category: "Business",    duration: "28:17", views: "11.3K", thumbnail: "🏷️", instructor: "Vikram Singh",  level: "Advanced",  description: "From positioning to marketing — build a recognisable brand in the antique industry.", free: false },
-  { id: 7,  title: "Wood Carving Identification Techniques",   category: "Advanced",    duration: "26:52", views: "5.8K",  thumbnail: "🪵", instructor: "Rajesh Kumar",   level: "Advanced",  description: "Identify regional styles, age markers, and authenticity cues in carved wooden antiques.", free: false },
-  { id: 8,  title: "GST & Taxation for Antique Sellers",      category: "Business",    duration: "23:06", views: "7.4K",  thumbnail: "🧾", instructor: "CA Ritu Mehta", level: "Beginner",  description: "Complete taxation guide for antique sellers — GST registration, invoicing, and compliance.", free: false },
-  { id: 9,  title: "Restoration Basics for Beginners",        category: "Restoration", duration: "35:20", views: "10.6K", thumbnail: "🔧", instructor: "Priya Sharma",   level: "Beginner",  description: "Safe cleaning and basic restoration techniques that preserve the value of your antiques.", free: false },
-  { id: 10, title: "Coins & Stamps — Collector's Guide",      category: "Valuation",   duration: "20:44", views: "8.2K",  thumbnail: "🪙", instructor: "Dr. Anand Roy",  level: "Advanced",  description: "Complete collector's guide to valuing and authenticating Indian coins and postal stamps.", free: false },
-  { id: 11, title: "Photography Tips for Antique Listings",   category: "Business",    duration: "16:38", views: "13.9K", thumbnail: "📸", instructor: "Arjun Nair",    level: "Beginner",  description: "Professional photography techniques to showcase your antiques and attract buyers online.", free: true  },
-  { id: 12, title: "Advanced Painting Authentication",        category: "Advanced",    duration: "42:15", views: "4.3K",  thumbnail: "🖼️", instructor: "Prof. Aisha Khan",level: "Advanced", description: "Deep dive into authenticating Mughal miniatures, Tanjore paintings, and folk art.", free: false },
+// ── Categories — real images from gallery.saumiccraft.com ────
+const CATEGORIES = [
+  { id:"wooden",    label:"Wooden Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png",                count:"33+"  },
+  { id:"resin",     label:"Resin Products",     img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/4.png",                count:"28+"  },
+  { id:"aluminium", label:"Aluminium Products", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/3.png",                count:"22+"  },
+  { id:"toys",      label:"Wooden Toys",        img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/25.png",               count:"45+"  },
+  { id:"marble",    label:"Marble Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png",               count:"18+"  },
+  { id:"bronze",    label:"Bronze Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/6.png",                count:"24+"  },
+  { id:"wallclock", label:"Wall Clock",         img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/17.png",               count:"31+"  },
+  { id:"bamboo",    label:"Bamboo Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/12.png",               count:"19+"  },
+  { id:"wallhang",  label:"Wall Hangings",      img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png",               count:"52+"  },
+  { id:"paintings", label:"Paintings",          img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png",               count:"200+" },
+  { id:"gemstone",  label:"Gem & Stones",       img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/26.png",               count:"65+"  },
+  { id:"jewellery", label:"Oxidised Jewellery", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png",               count:"50+"  },
+  { id:"leather",   label:"Leather Diary",      img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/2.png",                count:"15+"  },
+  { id:"plants",    label:"Artificial Plants",  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/19.png",               count:"22+"  },
+  { id:"bedsheet",  label:"Bedsheets",          img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/9.png",                count:"38+"  },
+  { id:"wallart",   label:"Wall Art",           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/cjv.png",              count:"75+"  },
+  { id:"bagru",     label:"Bagru Print",        img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/c7T3NQ-scaled.webp",   count:"30+"  },
+  { id:"tiedye",    label:"Tie Dye",            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/0o90lb.webp",          count:"18+"  },
+  { id:"suzani",    label:"Suzani Jacket",      img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/IBr2Yv-scaled.webp",   count:"12+"  },
+  { id:"lehenga",   label:"Lehenga",            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/geTAdO-scaled.webp",   count:"25+"  },
+  { id:"gown",      label:"Gown",               img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/fj1ELB-scaled.webp",   count:"20+"  },
+  { id:"saree",     label:"Saree",              img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp",   count:"80+"  },
+  { id:"coordset",  label:"Co-ord Set",         img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/23bXhX-scaled.webp",   count:"22+"  },
+  { id:"kurti",     label:"Women Kurtis",       img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/dh4kWX-scaled.webp",   count:"90+"  },
 ];
 
+// ── Products — real names + real product images from Saumic ──
+const PRODUCTS = [
+  // Wooden
+  { id:"w1",  name:"Handcrafted Colorful Wooden Elephant Stool Table",          cat:"wooden",    tag:"Bestseller", moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/5DnjgF-1200x1200.jpg" },
+  { id:"w2",  name:"Handcrafted Rajasthani Wooden Tea Coasters",                cat:"wooden",    tag:"Popular",    moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/PPE3vX-1200x1200.jpg" },
+  { id:"w3",  name:"Handcrafted Wooden Ashoka Pillar Replica",                  cat:"wooden",    tag:"Heritage",   moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/KF7AOI-1200x1200.jpg" },
+  { id:"w4",  name:"Handcrafted Wooden Camel Figurine",                         cat:"wooden",    tag:"New",        moq:8,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/tmEBYm-1200x1200.jpg" },
+  { id:"w5",  name:"Handcrafted Wooden Dry Fruit Box",                          cat:"wooden",    tag:"Bestseller", moq:6,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png" },
+  { id:"w6",  name:"Handcrafted Wooden Peacock Wall Hanging",                   cat:"wooden",    moq:5,            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png" },
+  // Gemstone — real images found
+  { id:"g1",  name:"7 Chakra Bracelet — Healing Crystal Gemstone Beaded",      cat:"gemstone",  tag:"New Launch", moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/03/qyFV73-400x457.jpg" },
+  { id:"g2",  name:"7 Chakra Pendant Tree of Life Crystal Stone Locket",       cat:"gemstone",  tag:"New Launch", moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/03/DEd6h1-400x457.jpg" },
+  { id:"g3",  name:"African Turquoise Healing Crystal Bracelet 8mm",            cat:"gemstone",  tag:"New Launch", moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/03/zbjn2z-400x457.png" },
+  // Jewellery — using category image as product
+  { id:"j1",  name:"Oxidised Radha Krishna Jhumka Earrings — Traditional",     cat:"jewellery", tag:"Bestseller", moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png" },
+  { id:"j2",  name:"German Silver Chand Bali Jhumka Set",                      cat:"jewellery", moq:10,           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png" },
+  { id:"j3",  name:"Oxidised Tribal Necklace Set — Boho Style",                cat:"jewellery", tag:"Premium",    moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png" },
+  // Paintings
+  { id:"p1",  name:"Set of Two Golden Frame Wall Paintings",                   cat:"paintings", tag:"New Launch", moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/12/ukdC1j-600x600.jpg" },
+  { id:"p2",  name:"Madhubani Folk Art Canvas Painting",                       cat:"paintings", tag:"Heritage",   moq:2,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png" },
+  { id:"p3",  name:"Tanjore Painting — Goddess Lakshmi",                      cat:"paintings", tag:"Featured",   moq:2,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png" },
+  // Marble
+  { id:"m1",  name:"Handcrafted Marble Camel Clock — Timeless Elegance",      cat:"marble",    tag:"Featured",   moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png" },
+  { id:"m2",  name:"Marble Inlay Decorative Serving Plate",                   cat:"marble",    tag:"Premium",    moq:4,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png" },
+  // Saree
+  { id:"s1",  name:"Gopi Silk Saree — Traditional Handloom Weave",            cat:"saree",     tag:"Bestseller", moq:6,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp" },
+  { id:"s2",  name:"Banarasi Silk Saree — Festival Collection",               cat:"saree",     tag:"Premium",    moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp" },
+  // Kurtis
+  { id:"k1",  name:"Women Block Print Cotton Kurti — Jaipur",                 cat:"kurti",     tag:"Popular",    moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/dh4kWX-scaled.webp" },
+  { id:"k2",  name:"Anarkali Embroidered Kurti — Full Length",                cat:"kurti",     moq:10,           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/dh4kWX-scaled.webp" },
+  // Wall Art
+  { id:"wa1", name:"3D MDF Mandala Wall Art — Laser Cut",                     cat:"wallart",   tag:"Trending",   moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/cjv.png" },
+  { id:"wa2", name:"Metal Peacock Decorative Wall Hanging",                   cat:"wallart",   tag:"Bestseller", moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png" },
+  // Bronze
+  { id:"br1", name:"Bronze Nataraja Idol — 12 Inch Antique Finish",           cat:"bronze",    tag:"Heritage",   moq:2,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/6.png" },
+  { id:"br2", name:"Bronze Ganesha — Premium Casting",                        cat:"bronze",    tag:"Premium",    moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/6.png" },
+  // Bedsheet
+  { id:"b1",  name:"Premium Cotton Block Print Bedsheet — King Size",         cat:"bedsheet",  tag:"Popular",    moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/9.png" },
+  { id:"b2",  name:"Jaipuri Rajasthani Double Bedsheet",                      cat:"bedsheet",  moq:10,           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/9.png" },
+  // Lehenga
+  { id:"l1",  name:"Designer Embroidered Lehenga Choli — Wedding",            cat:"lehenga",   tag:"Premium",    moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/geTAdO-scaled.webp" },
+  // Co-ord
+  { id:"c1",  name:"Cotton Co-ord Set — Printed Summer Collection",           cat:"coordset",  tag:"New Launch", moq:8,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/23bXhX-scaled.webp" },
+  // Bagru
+  { id:"bg1", name:"Bagru Hand Block Print Suit Set",                         cat:"bagru",     tag:"New",        moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/c7T3NQ-scaled.webp" },
+  // Wall Hangings
+  { id:"wh1", name:"Macramé Boho Wall Hanging — Handwoven",                   cat:"wallhang",  tag:"Trending",   moq:8,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png" },
+  { id:"wh2", name:"Wooden Carved Jali Wall Panel",                           cat:"wallhang",  moq:5,            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/17.png" },
+];
+
+const TAG_STYLE: Record<string, { bg: string; color: string }> = {
+  "Bestseller": { bg:"rgba(155,0,32,.1)",  color:BURG       },
+  "Popular":    { bg:"rgba(155,0,32,.08)", color:BURG       },
+  "New Launch": { bg:"rgba(22,163,74,.1)", color:"#15803d"  },
+  "New":        { bg:"rgba(22,163,74,.1)", color:"#15803d"  },
+  "Featured":   { bg:"rgba(59,130,246,.1)",color:"#1d4ed8"  },
+  "Premium":    { bg:"rgba(124,58,237,.1)",color:"#6d28d9"  },
+  "Heritage":   { bg:"rgba(120,53,15,.1)", color:"#92400e"  },
+  "Trending":   { bg:"rgba(234,88,12,.1)", color:"#c2410c"  },
+};
+
+// ── Login Modal ───────────────────────────────────────────────
 function LoginModal({ onClose }: { onClose: () => void }) {
   return (
-    <div
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-      style={{ position: "fixed", inset: 0, background: "rgba(26,0,5,.78)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "20px", backdropFilter: "blur(6px)" }}
-    >
-      <div style={{ background: "#fff", borderRadius: "20px", padding: "40px 36px", width: "100%", maxWidth: "420px", textAlign: "center", boxShadow: "0 24px 64px rgba(26,0,5,.4)", animation: "scaleIn .3s ease" }}>
-        <div style={{ width: "60px", height: "60px", borderRadius: "50%", background: "#9B0020", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "28px" }}>▶️</div>
-        <h2 style={{ fontSize: "22px", fontFamily: "'Playfair Display',serif", color: "#111", marginBottom: "10px", fontWeight: "400" }}>Seller Access Required</h2>
-        <p style={{ fontSize: "14px", color: "#666", lineHeight: "1.75", marginBottom: "28px" }}>
-          Sign in to your verified seller account to watch full training videos and access all course content.
+    <div onClick={e => e.target === e.currentTarget && onClose()} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.55)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2000,padding:"20px",backdropFilter:"blur(8px)" }}>
+      <div style={{ background:"#fff",borderRadius:"20px",padding:"44px 40px",width:"100%",maxWidth:"400px",textAlign:"center",position:"relative" }}>
+        <button onClick={onClose} style={{ position:"absolute",top:"14px",right:"16px",background:"none",border:"none",fontSize:"22px",color:"#aaa",cursor:"pointer" }}>×</button>
+        <div style={{ width:"60px",height:"60px",borderRadius:"50%",background:BURG,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px",fontSize:"26px" }}>🔒</div>
+        <h2 style={{ fontFamily:"'Playfair Display',serif",fontSize:"24px",fontWeight:700,color:"#111",marginBottom:"8px" }}>Sign in to view prices</h2>
+        <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"14px",color:"#666",lineHeight:1.75,marginBottom:"28px" }}>
+          Prices are exclusively visible to verified sellers. Register free to unlock pricing, margins, and bulk ordering.
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <Link href="/login" style={{ display: "block", padding: "13px", borderRadius: "8px", background: "#9B0020", color: "#fff", fontSize: "14px", fontWeight: "700", textDecoration: "none", letterSpacing: ".02em" }}>
-            Sign In to Watch
-          </Link>
-          <Link href="/register" style={{ display: "block", padding: "13px", borderRadius: "8px", border: "1.5px solid #eee", color: "#9B0020", fontSize: "14px", fontWeight: "600", textDecoration: "none" }}>
-            Register as New Seller
-          </Link>
-          <button onClick={onClose} style={{ padding: "10px", background: "none", border: "none", color: "#666", fontSize: "13px", cursor: "pointer", fontFamily: "inherit" }}>
-            Continue browsing →
-          </button>
+        <div style={{ display:"flex",flexDirection:"column",gap:"10px" }}>
+          <Link href="/login" style={{ display:"block",padding:"14px",borderRadius:"10px",background:BURG,color:"#fff",fontSize:"14px",fontWeight:600,textDecoration:"none",fontFamily:"'DM Sans',sans-serif" }}>Sign In →</Link>
+          <Link href="/register" style={{ display:"block",padding:"14px",borderRadius:"10px",border:`1.5px solid rgba(155,0,32,.2)`,color:BURG,fontSize:"14px",fontWeight:600,textDecoration:"none",fontFamily:"'DM Sans',sans-serif" }}>Register as Seller — Free</Link>
+          <button onClick={onClose} style={{ padding:"10px",background:"none",border:"none",color:"#aaa",fontSize:"13px",cursor:"pointer",fontFamily:"'DM Sans',sans-serif" }}>Continue browsing →</button>
         </div>
       </div>
     </div>
   );
 }
 
-function VideoPlayerModal({ video, onClose }: { video: typeof videos[0]; onClose: () => void }) {
-  return (
-    <div
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-      style={{ position: "fixed", inset: 0, background: "rgba(26,15,10,.92)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "20px", backdropFilter: "blur(8px)" }}
-    >
-      <div style={{ background: "#1a0005", borderRadius: "16px", width: "100%", maxWidth: "800px", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,.6)", animation: "scaleIn .3s ease" }}>
-        {/* Video area */}
-        <div style={{ width: "100%", aspectRatio: "16/9", background: "#1a0005", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "80px", marginBottom: "20px" }}>{video.thumbnail}</div>
-            <div style={{ fontSize: "18px", color: "#111", fontFamily: "'Playfair Display',serif", marginBottom: "8px" }}>{video.title}</div>
-            <div style={{ fontSize: "13px", color: "rgba(245,230,200,.5)" }}>Duration: {video.duration}</div>
-          </div>
-          <button style={{ position: "absolute", top: "16px", right: "16px", width: "36px", height: "36px", borderRadius: "50%", background: "rgba(255,255,255,.1)", border: "none", color: "#fff", fontSize: "18px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} onClick={onClose}>×</button>
-        </div>
-        {/* Info */}
-        <div style={{ padding: "20px 24px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
-            <div>
-              <h3 style={{ fontSize: "18px", fontFamily: "'Playfair Display',serif", color: "#fff", marginBottom: "6px", fontWeight: "400" }}>{video.title}</h3>
-              <p style={{ fontSize: "13px", color: "rgba(255,255,255,.7)", lineHeight: "1.6" }}>{video.description}</p>
-            </div>
-            <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <div style={{ fontSize: "12px", color: "rgba(155,0,32,.7)", marginBottom: "2px" }}>Instructor</div>
-              <div style={{ fontSize: "13px", color: "#9B0020", fontWeight: "600" }}>{video.instructor}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function VideoCard({
-  v,
-  isLoggedIn,
-  onLockClick,
-  onPlay,
-}: {
-  v: typeof videos[0];
-  isLoggedIn: boolean;
-  onLockClick: () => void;
-  onPlay: () => void;
+// ── Product Card ──────────────────────────────────────────────
+function ProductCard({ p, onLock, wishlisted, onWish }: {
+  p: typeof PRODUCTS[0];
+  onLock: () => void;
+  wishlisted: boolean;
+  onWish: () => void;
 }) {
-  const [hovered, setHovered] = useState(false);
-  const canWatch = isLoggedIn || v.free;
+  const [hov, setHov] = useState(false);
+  const cat = CATEGORIES.find(c => c.id === p.cat);
+  const tc = p.tag ? TAG_STYLE[p.tag] : null;
 
   return (
     <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: "#fff",
-        border: `1px solid ${hovered ? "rgba(155,0,32,.4)" : "#eee"}`,
-        borderRadius: "16px",
-        overflow: "hidden",
-        transition: "all .25s ease",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        boxShadow: hovered ? "0 12px 32px rgba(61,43,31,.12)" : "0 2px 8px rgba(61,43,31,.04)",
-        cursor: "pointer",
-        position: "relative",
-      }}
-      onClick={() => canWatch ? onPlay() : onLockClick()}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{ background:"#fff",borderRadius:"16px",border:`1px solid ${hov?"rgba(155,0,32,.22)":"#f0f0f0"}`,overflow:"hidden",transition:"all .22s ease",transform:hov?"translateY(-5px)":"none",boxShadow:hov?"0 20px 48px rgba(0,0,0,.1)":"0 1px 4px rgba(0,0,0,.04)" }}
     >
-      {/* Free badge */}
-      {v.free && (
-        <div style={{ position: "absolute", top: "12px", left: "12px", zIndex: 2, padding: "3px 10px", borderRadius: "99px", background: "rgba(21,128,61,.85)", color: "#fff", fontSize: "10px", fontWeight: "700", letterSpacing: ".06em" }}>
-          FREE
+      {/* Image */}
+      <div style={{ height:"220px",position:"relative",overflow:"hidden",background:"#f8f6f4" }}>
+        <img
+          src={p.img}
+          alt={p.name}
+          style={{ width:"100%",height:"100%",objectFit:"cover",transition:"transform .35s ease",transform:hov?"scale(1.06)":"scale(1)" }}
+          onError={e => { (e.target as HTMLImageElement).src="https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png"; }}
+        />
+        {/* hover overlay */}
+        <div style={{ position:"absolute",inset:0,background:"rgba(155,0,32,.72)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",opacity:hov?1:0,transition:"opacity .22s ease" }}>
+          <button onClick={onLock} style={{ padding:"10px 24px",borderRadius:"8px",background:"#fff",color:BURG,border:"none",fontSize:"13px",fontWeight:700,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",marginBottom:"8px" }}>🔒 View Price</button>
+          <span style={{ fontSize:"12px",color:"rgba(255,255,255,.8)",fontFamily:"'DM Sans',sans-serif" }}>Sign in to unlock</span>
         </div>
-      )}
-
-      {/* Level badge */}
-      <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 2, padding: "3px 8px", borderRadius: "99px", background: v.level === "Advanced" ? "rgba(139,105,20,.85)" : "rgba(26,0,5,.7)", color: "#fff", fontSize: "10px", fontWeight: "600", backdropFilter: "blur(4px)" }}>
-        {v.level}
+        {/* tag */}
+        {tc && (
+          <div style={{ position:"absolute",top:"10px",left:"10px",padding:"3px 9px",borderRadius:"99px",background:tc.bg,color:tc.color,fontSize:"10px",fontWeight:700,letterSpacing:".06em",fontFamily:"'DM Sans',sans-serif" }}>{p.tag}</div>
+        )}
+        {/* wishlist */}
+        <button
+          onClick={e => { e.stopPropagation(); onWish(); }}
+          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          style={{ position:"absolute",top:"10px",right:"10px",width:"32px",height:"32px",borderRadius:"50%",background:"rgba(255,255,255,.92)",border:`1px solid ${wishlisted?BURG:"#ddd"}`,color:wishlisted?BURG:"#ccc",fontSize:"15px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.08)",transition:"all .18s" }}
+        >♥</button>
+        {/* MOQ */}
+        <div style={{ position:"absolute",bottom:"10px",right:"10px",padding:"3px 8px",borderRadius:"6px",background:"rgba(0,0,0,.5)",color:"rgba(255,255,255,.9)",fontSize:"10px",fontFamily:"'DM Sans',sans-serif" }}>MOQ: {p.moq}</div>
       </div>
 
-      {/* Thumbnail */}
-      <div style={{ height: "170px", background: "#1a0005", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-        <div style={{ fontSize: "64px", filter: !canWatch ? "brightness(.6)" : "none", transition: "filter .2s" }}>{v.thumbnail}</div>
-
-        {/* Play overlay */}
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: hovered ? "rgba(0,0,0,.25)" : "transparent",
-          transition: "background .2s",
-        }}>
-          <div style={{
-            width: "52px",
-            height: "52px",
-            borderRadius: "50%",
-            background: canWatch ? "rgba(155,0,32,.9)" : "rgba(26,0,5,.7)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "20px",
-            opacity: hovered ? 1 : 0.7,
-            transition: "all .2s",
-            transform: hovered ? "scale(1.1)" : "scale(1)",
-            backdropFilter: "blur(4px)",
-          }}>
-            {canWatch ? "▶" : "🔒"}
+      {/* Info */}
+      <div style={{ padding:"14px 16px 16px" }}>
+        <div style={{ fontSize:"10px",color:BURG,fontWeight:600,letterSpacing:".1em",textTransform:"uppercase",marginBottom:"5px",fontFamily:"'DM Sans',sans-serif" }}>{cat?.label ?? p.cat}</div>
+        <h3 style={{ fontFamily:"'Playfair Display',serif",fontSize:"14px",fontWeight:600,color:"#111",lineHeight:1.35,marginBottom:"12px",minHeight:"38px" }}>{p.name}</h3>
+        <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px" }}>
+          <div style={{ display:"flex",alignItems:"center",gap:"6px" }}>
+            <span style={{ fontFamily:"'Playfair Display',serif",fontSize:"16px",fontWeight:700,color:"#111",filter:"blur(7px)",userSelect:"none",letterSpacing:".02em" }}>₹9,999</span>
+            <button onClick={onLock} style={{ padding:"3px 8px",borderRadius:"6px",background:"rgba(155,0,32,.07)",color:BURG,border:"0.5px solid rgba(155,0,32,.18)",fontSize:"10px",fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",display:"inline-flex",alignItems:"center",gap:"3px" }}>🔒 Login</button>
           </div>
-        </div>
-
-        {/* Duration */}
-        <div style={{ position: "absolute", bottom: "10px", right: "10px", padding: "3px 8px", borderRadius: "6px", background: "rgba(0,0,0,.55)", color: "#fff", fontSize: "11px", backdropFilter: "blur(4px)", fontWeight: "500" }}>
-          {v.duration}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ padding: "16px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-          <span style={{ fontSize: "11px", color: "#666", letterSpacing: ".04em" }}>{v.category}</span>
-          <span style={{ fontSize: "11px", color: "#666" }}>👁 {v.views}</span>
-        </div>
-        <h3 style={{ fontSize: "14px", fontWeight: "600", color: "#111", marginBottom: "8px", lineHeight: "1.4", fontFamily: "'Playfair Display',serif" }}>{v.title}</h3>
-        <p style={{ fontSize: "12px", color: "#666", lineHeight: "1.6", marginBottom: "12px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-          {v.description}
-        </p>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <div style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#9B0020", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "10px", fontWeight: "700", flexShrink: 0 }}>
-              {v.instructor.split(" ").map(n => n[0]).join("").slice(0, 2)}
-            </div>
-            <span style={{ fontSize: "12px", color: "#9B0020", fontWeight: "500" }}>{v.instructor}</span>
-          </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); canWatch ? onPlay() : onLockClick(); }}
-            style={{
-              padding: "6px 14px",
-              borderRadius: "8px",
-              background: canWatch ? "#9B0020" : "#fff",
-              color: canWatch ? "#111" : "#9B0020",
-              border: canWatch ? "none" : "1px solid #ddd",
-              fontSize: "12px",
-              fontWeight: "700",
-              cursor: "pointer",
-              fontFamily: "inherit",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {canWatch ? "▶ Watch" : "🔒 Unlock"}
-          </button>
+          <button onClick={onLock} style={{ padding:"8px 16px",borderRadius:"7px",background:BURG,color:"#fff",border:"none",fontSize:"12px",fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",flexShrink:0 }}>Order →</button>
         </div>
       </div>
     </div>
   );
 }
 
-export default function VideosPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [playingVideo, setPlayingVideo] = useState<typeof videos[0] | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+// ── Main Page ─────────────────────────────────────────────────
+export default function GalleryPage() {
+  const [isLoggedIn,    setIsLoggedIn]    = useState(false);
+  const [showLogin,     setShowLogin]     = useState(false);
+  const [activeCat,     setActiveCat]     = useState("All");
+  const [search,        setSearch]        = useState("");
+  const [sortBy,        setSortBy]        = useState("default");
+  const [wishlist,      setWishlist]      = useState<Set<string>>(new Set());
+  const [mounted,       setMounted]       = useState(false);
+  const [heroIdx,       setHeroIdx]       = useState(0);
+  const [showAllCats,   setShowAllCats]   = useState(false);
+  const productsRef = useRef<HTMLDivElement>(null);
+
+  const HERO = [
+    { heading:"India's Finest Handcrafted Products",    sub:"1 Lakh+ products across 25+ categories — direct from verified manufacturers"  },
+    { heading:"Direct from Manufacturer — Best Margins",sub:"Zero middlemen. Highest margins. Fastest dispatch across India."              },
+    { heading:"Authentic Indian Handicrafts & Textiles",sub:"Wooden, marble, paintings, jewellery, clothing and much more."               },
+  ];
 
   useEffect(() => {
     setMounted(true);
     setIsLoggedIn(!!localStorage.getItem("accessToken"));
+    try { setWishlist(new Set(JSON.parse(localStorage.getItem("sk_wish") || "[]"))); } catch {}
   }, []);
 
-  const filtered = videos.filter((v) => {
-    const matchCat = activeCategory === "All" || v.category === activeCategory;
-    const matchSearch =
-      v.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.instructor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  useEffect(() => {
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO.length), 4500);
+    return () => clearInterval(t);
+  }, []);
 
-  const freeCount = videos.filter((v) => v.free).length;
-  const lockedCount = videos.length - freeCount;
+  const toggleWish = (id: string) => {
+    setWishlist(prev => {
+      const n = new Set(prev);
+      n.has(id) ? n.delete(id) : n.add(id);
+      localStorage.setItem("sk_wish", JSON.stringify([...n]));
+      return n;
+    });
+  };
+
+  const PILLS = ["All", ...Array.from(new Set(PRODUCTS.map(p => p.cat)))];
+
+  const filtered = PRODUCTS
+    .filter(p => {
+      const matchCat    = activeCat === "All" || p.cat === activeCat;
+      const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase());
+      return matchCat && matchSearch;
+    })
+    .sort((a, b) => {
+      if (sortBy === "az")       return a.name.localeCompare(b.name);
+      if (sortBy === "moq-low")  return a.moq - b.moq;
+      if (sortBy === "moq-high") return b.moq - a.moq;
+      return 0;
+    });
+
+  const visibleCats = showAllCats ? CATEGORIES : CATEGORIES.slice(0, 16);
 
   if (!mounted) return null;
 
   return (
-    <div style={{ background: "#fff", minHeight: "100vh", paddingTop: "72px" }}>
+    <div style={{ background:"#fff", minHeight:"100vh", fontFamily:"'DM Sans',sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        @keyframes sk-fade { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes sk-hero { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        input:focus { outline:none; border-color:${BURG}!important; }
+        input::placeholder { color:#ccc; }
+        select:focus { outline:none; }
+      `}</style>
 
-      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
-      {playingVideo && <VideoPlayerModal video={playingVideo} onClose={() => setPlayingVideo(null)} />}
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
-      {/* ── PAGE HEADER ── */}
-      <div style={{ background: "#9B0020", padding: "52px 0 48px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(155,0,32,.04) 1px, transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative" }}>
+      {/* ══ HERO — WHITE ══════════════════════════════════ */}
+      <section style={{ background:"#fff", padding:"56px 48px 48px", position:"relative", overflow:"hidden", borderBottom:"1px solid #f0f0f0" }}>
+        {/* dot pattern */}
+        <div style={{ position:"absolute",inset:0,backgroundImage:`radial-gradient(rgba(155,0,32,.05) 1.2px,transparent 1.2px)`,backgroundSize:"24px 24px",pointerEvents:"none" }} />
+        {/* soft glow corners */}
+        <div style={{ position:"absolute",top:"-60px",right:"-80px",width:"400px",height:"400px",background:"radial-gradient(ellipse,rgba(155,0,32,.07) 0%,transparent 65%)",pointerEvents:"none" }} />
+        <div style={{ position:"absolute",bottom:"-80px",left:"-40px",width:"300px",height:"300px",background:"radial-gradient(ellipse,rgba(155,0,32,.04) 0%,transparent 65%)",pointerEvents:"none" }} />
 
-          {/* Breadcrumb */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
-            <Link href="/" style={{ fontSize: "13px", color: "rgba(255,255,255,.65)", textDecoration: "none" }}>Home</Link>
-            <span style={{ color: "rgba(155,0,32,.2)" }}>›</span>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,.9)" }}>Training Videos</span>
-          </div>
+        <div style={{ maxWidth:"1280px",margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"52px",alignItems:"center",position:"relative" }}>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "24px" }}>
-            <div>
-              <h1 style={{ fontSize: "clamp(28px, 4vw, 48px)", fontFamily: "'Playfair Display',serif", color: "#fff", marginBottom: "10px", fontWeight: "400" }}>
-                Training Videos
-              </h1>
-              <p style={{ fontSize: "15px", color: "rgba(255,255,255,.7)", maxWidth: "500px", lineHeight: "1.65" }}>
-                Expert-led training on antique identification, valuation, business growth, and restoration techniques.
-              </p>
-              {/* Stats pills */}
-              <div style={{ display: "flex", gap: "10px", marginTop: "18px", flexWrap: "wrap" }}>
-                <div style={{ padding: "6px 14px", borderRadius: "99px", background: "rgba(155,0,32,.07)", border: "1px solid rgba(155,0,32,.2)", fontSize: "12px", color: "#9B0020", fontWeight: "500" }}>
-                  {videos.length} Videos Total
-                </div>
-                <div style={{ padding: "6px 14px", borderRadius: "99px", background: "rgba(21,128,61,.12)", border: "1px solid rgba(21,128,61,.25)", fontSize: "12px", color: "#4ade80", fontWeight: "500" }}>
-                  {freeCount} Free to Watch
-                </div>
-                <div style={{ padding: "6px 14px", borderRadius: "99px", background: "rgba(26,0,5,.4)", border: "1px solid rgba(155,0,32,.15)", fontSize: "12px", color: "rgba(245,230,200,.6)", fontWeight: "500" }}>
-                  🔒 {lockedCount} Seller-Only
-                </div>
+          {/* Left — text */}
+          <div style={{ animation:"sk-hero .6s ease both" }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:"6px",padding:"5px 14px",borderRadius:"99px",border:"1px solid rgba(155,0,32,.22)",background:"rgba(155,0,32,.05)",fontSize:"11px",fontWeight:600,color:BURG,letterSpacing:".12em",textTransform:"uppercase",marginBottom:"20px",fontFamily:"'DM Sans',sans-serif" }}>
+              <span style={{ width:"5px",height:"5px",borderRadius:"50%",background:BURG,display:"block" }} />
+              Seller Gallery — Sanskriti The Antique
+            </div>
+
+            {HERO.map((s, i) => (
+              <div key={i} style={{ display:i===heroIdx?"block":"none" }}>
+                <h1 style={{ fontFamily:"'Playfair Display',serif",fontSize:"clamp(28px,3.5vw,48px)",fontWeight:700,color:"#111",lineHeight:1.1,marginBottom:"8px" }}>
+                  {s.heading.split(" — ")[0]}
+                  {s.heading.includes(" — ") && (
+                    <span style={{ display:"block",fontStyle:"italic",fontWeight:400,color:BURG }}> — {s.heading.split(" — ")[1]}</span>
+                  )}
+                </h1>
               </div>
+            ))}
+
+            <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"15px",color:"#666",lineHeight:1.85,marginBottom:"8px",maxWidth:"440px" }}>
+              {HERO[heroIdx].sub}
+            </p>
+            <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"14px",color:"#888",lineHeight:1.75,marginBottom:"28px",maxWidth:"440px" }}>
+              All products are <strong style={{ color:"#111" }}>visible to everyone.</strong> Sign in to unlock prices and place bulk orders.
+            </p>
+
+            <div style={{ display:"flex",gap:"12px",flexWrap:"wrap",marginBottom:"28px" }}>
+              <button onClick={() => productsRef.current?.scrollIntoView({ behavior:"smooth" })} style={{ padding:"13px 32px",borderRadius:"8px",background:BURG,color:"#fff",fontSize:"13px",fontWeight:600,border:"none",cursor:"pointer",fontFamily:"'DM Sans',sans-serif",boxShadow:"0 6px 20px rgba(155,0,32,.25)",letterSpacing:".04em" }}>
+                Browse Products →
+              </button>
+              <Link href="/register" style={{ padding:"13px 24px",borderRadius:"8px",border:"1.5px solid #ddd",color:"#333",fontSize:"13px",fontWeight:500,textDecoration:"none",fontFamily:"'DM Sans',sans-serif" }}>
+                Register Free
+              </Link>
             </div>
 
-            {/* Search */}
-            <div style={{ position: "relative", minWidth: "260px" }}>
-              <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontSize: "15px", pointerEvents: "none" }}>🔍</span>
-              <input
-                type="text"
-                placeholder="Search videos or instructors..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: "100%", padding: "11px 14px 11px 40px", borderRadius: "8px", border: "1.5px solid rgba(155,0,32,.25)", background: "rgba(255,253,249,.07)", color: "#fff", fontSize: "14px", outline: "none", fontFamily: "inherit" }}
-              />
+            {/* Trust strip */}
+            <div style={{ display:"flex",gap:"20px",flexWrap:"wrap" }}>
+              {["1 Lakh+ Products","25+ Categories","Verified Manufacturers","GST Invoicing"].map(t => (
+                <div key={t} style={{ display:"flex",alignItems:"center",gap:"5px",fontFamily:"'DM Sans',sans-serif",fontSize:"12px",color:"#aaa" }}>
+                  <span style={{ color:BURG,fontSize:"13px",fontWeight:700 }}>✓</span> {t}
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* ── CATEGORY TABS ── */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #ddd", position: "sticky", top: "72px", zIndex: 100 }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "flex", gap: "6px", overflowX: "auto", padding: "12px 0", scrollbarWidth: "none" }}>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                style={{
-                  padding: "7px 16px",
-                  borderRadius: "99px",
-                  border: `1px solid ${activeCategory === cat ? "#9B0020" : "#ddd"}`,
-                  background: activeCategory === cat ? "#9B0020" : "transparent",
-                  color: activeCategory === cat ? "#fff" : "#9B0020",
-                  fontSize: "13px",
-                  fontWeight: activeCategory === cat ? "700" : "500",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "all .2s",
-                  flexShrink: 0,
-                  fontFamily: "inherit",
-                }}
+          {/* Right — 3×2 category image preview */}
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px" }}>
+            {[
+              { cat:"wooden",    label:"Wooden",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png"                },
+              { cat:"jewellery", label:"Jewellery", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png"               },
+              { cat:"paintings", label:"Paintings", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png"               },
+              { cat:"marble",    label:"Marble",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png"               },
+              { cat:"saree",     label:"Saree",     img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp"  },
+              { cat:"gemstone",  label:"Gem Stones",img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/26.png"               },
+            ].map(item => (
+              <button key={item.cat} onClick={() => { setActiveCat(item.cat); productsRef.current?.scrollIntoView({ behavior:"smooth" }); }} style={{ border:"none",padding:0,cursor:"pointer",borderRadius:"12px",overflow:"hidden",boxShadow:"0 2px 10px rgba(0,0,0,.07)",transition:"transform .2s" }}
+                onMouseEnter={e => (e.currentTarget.style.transform="translateY(-2px)")}
+                onMouseLeave={e => (e.currentTarget.style.transform="none")}
               >
-                {cat}
+                <img src={item.img} alt={item.label} style={{ width:"100%",height:"88px",objectFit:"cover",display:"block" }} />
+                <div style={{ padding:"7px 8px",background:"#fff" }}>
+                  <div style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"11px",fontWeight:600,color:"#111" }}>{item.label}</div>
+                </div>
               </button>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* ── MAIN ── */}
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "32px 24px 80px" }}>
+        {/* Slide dots */}
+        <div style={{ display:"flex",justifyContent:"center",gap:"6px",marginTop:"32px",position:"relative" }}>
+          {HERO.map((_, i) => (
+            <button key={i} onClick={() => setHeroIdx(i)} style={{ width:i===heroIdx?"24px":"7px",height:"7px",borderRadius:"99px",background:i===heroIdx?BURG:"#e0e0e0",border:"none",cursor:"pointer",transition:"all .3s",padding:0 }} />
+          ))}
+        </div>
+      </section>
 
-        {/* Login banner for guests */}
-        {!isLoggedIn && (
-          <div style={{ display: "flex", alignItems: "center", gap: "14px", padding: "14px 18px", borderRadius: "12px", background: "#FFFBEB", border: "1px solid #FDE68A", marginBottom: "24px", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "20px" }}>🎬</span>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: "14px", fontWeight: "600", color: "#854d0e", marginBottom: "2px" }}>Unlock all {lockedCount} training videos</div>
-              <div style={{ fontSize: "13px", color: "#92400e" }}>Sign in to your seller account to access the full training library</div>
+      {/* ══ CATEGORIES ════════════════════════════════════ */}
+      <section style={{ padding:"56px 48px 44px",background:"#fafafa",borderBottom:"1px solid #f0f0f0" }}>
+        <div style={{ maxWidth:"1280px",margin:"0 auto" }}>
+
+          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:"28px",flexWrap:"wrap",gap:"12px" }}>
+            <div>
+              <div style={{ display:"inline-flex",alignItems:"center",gap:"5px",padding:"4px 12px",borderRadius:"99px",border:"1px solid rgba(155,0,32,.2)",background:"rgba(155,0,32,.05)",fontSize:"10px",fontWeight:600,color:BURG,letterSpacing:".1em",textTransform:"uppercase",marginBottom:"12px",fontFamily:"'DM Sans',sans-serif" }}>
+                <span style={{ width:"4px",height:"4px",borderRadius:"50%",background:BURG,display:"block" }} />
+                Browse by Category
+              </div>
+              <h2 style={{ fontFamily:"'Playfair Display',serif",fontSize:"clamp(22px,3vw,34px)",fontWeight:700,color:"#111",marginBottom:"5px" }}>Choose the Category</h2>
+              <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"14px",color:"#888" }}>25+ categories · 1 Lakh+ products · All from verified manufacturers</p>
             </div>
-            <Link href="/login" style={{ padding: "8px 20px", borderRadius: "8px", background: "#9B0020", color: "#fff", fontSize: "13px", fontWeight: "700", textDecoration: "none", whiteSpace: "nowrap" }}>
-              Sign In →
-            </Link>
+            {wishlist.size > 0 && (
+              <div style={{ padding:"8px 16px",borderRadius:"8px",border:"1px solid rgba(155,0,32,.2)",background:"rgba(155,0,32,.05)",color:BURG,fontSize:"13px",fontWeight:600,fontFamily:"'DM Sans',sans-serif",display:"flex",alignItems:"center",gap:"6px" }}>
+                ♥ {wishlist.size} saved
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Results count */}
-        <p style={{ fontSize: "14px", color: "#666", marginBottom: "20px" }}>
-          Showing <strong style={{ color: "#111" }}>{filtered.length}</strong> videos
-          {activeCategory !== "All" && <> in <strong style={{ color: "#9B0020" }}>{activeCategory}</strong></>}
-        </p>
+          {/* Category grid */}
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(130px,1fr))",gap:"12px" }}>
+            {visibleCats.map(cat => {
+              const isActive = activeCat === cat.id;
+              return (
+                <button key={cat.id} onClick={() => { setActiveCat(isActive?"All":cat.id); productsRef.current?.scrollIntoView({ behavior:"smooth", block:"start" }); }}
+                  style={{ background:"#fff",border:`1.5px solid ${isActive?BURG:"#f0f0f0"}`,borderRadius:"14px",padding:0,cursor:"pointer",overflow:"hidden",transition:"all .22s",transform:isActive?"translateY(-3px)":"none",boxShadow:isActive?`0 10px 28px rgba(155,0,32,.18)`:"0 1px 4px rgba(0,0,0,.04)",textAlign:"center" }}
+                  onMouseEnter={e => { if(!isActive){ e.currentTarget.style.borderColor="rgba(155,0,32,.25)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.08)"; } }}
+                  onMouseLeave={e => { if(!isActive){ e.currentTarget.style.borderColor="#f0f0f0"; e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,.04)"; } }}
+                >
+                  <div style={{ height:"88px",overflow:"hidden",position:"relative",background:"#f8f6f4" }}>
+                    <img src={cat.img} alt={cat.label} style={{ width:"100%",height:"100%",objectFit:"cover" }} onError={e => { (e.target as HTMLImageElement).style.display="none"; }} />
+                    {isActive && <div style={{ position:"absolute",inset:0,background:"rgba(155,0,32,.15)" }} />}
+                  </div>
+                  <div style={{ padding:"9px 6px 11px" }}>
+                    <div style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"11px",fontWeight:600,color:isActive?BURG:"#111",lineHeight:1.3,marginBottom:"2px" }}>{cat.label}</div>
+                    <div style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"10px",color:"#aaa" }}>{cat.count}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Video grid */}
-        {filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "80px 20px" }}>
-            <div style={{ fontSize: "48px", marginBottom: "16px" }}>🎬</div>
-            <h3 style={{ fontSize: "20px", fontFamily: "'Playfair Display',serif", color: "#111", marginBottom: "8px" }}>No videos found</h3>
-            <p style={{ fontSize: "14px", color: "#666", marginBottom: "20px" }}>Try a different search or category</p>
-            <button onClick={() => { setSearchQuery(""); setActiveCategory("All"); }} style={{ padding: "10px 22px", borderRadius: "8px", background: "#9B0020", color: "#fff", border: "none", fontSize: "13px", fontWeight: "600", cursor: "pointer", fontFamily: "inherit" }}>
-              Clear filters
+          {CATEGORIES.length > 16 && (
+            <div style={{ textAlign:"center",marginTop:"18px" }}>
+              <button onClick={() => setShowAllCats(!showAllCats)} style={{ padding:"9px 24px",borderRadius:"8px",border:"1px solid rgba(155,0,32,.2)",background:"transparent",color:BURG,fontSize:"12px",fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif" }}>
+                {showAllCats ? "Show Less ↑" : `Show All ${CATEGORIES.length} Categories ↓`}
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ══ PRODUCTS ══════════════════════════════════════ */}
+      <section ref={productsRef} style={{ padding:"0 48px 72px",background:"#f8f8f8" }}>
+        <div style={{ maxWidth:"1280px",margin:"0 auto" }}>
+
+          {/* Sticky filter bar */}
+          <div style={{ position:"sticky",top:"68px",zIndex:50,background:"#f8f8f8",paddingTop:"28px",paddingBottom:"16px",borderBottom:"1px solid #ebebeb",marginBottom:"24px" }}>
+            <div style={{ display:"flex",gap:"10px",flexWrap:"wrap",alignItems:"center",marginBottom:"12px" }}>
+              <div style={{ flex:1,minWidth:"220px",position:"relative" }}>
+                <span style={{ position:"absolute",left:"12px",top:"50%",transform:"translateY(-50%)",fontSize:"14px",pointerEvents:"none" }}>🔍</span>
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..." style={{ width:"100%",padding:"10px 14px 10px 36px",borderRadius:"8px",border:"1.5px solid #e0e0e0",fontSize:"13px",color:"#111",background:"#fff",fontFamily:"'DM Sans',sans-serif" }} />
+                {search && <button onClick={() => setSearch("")} style={{ position:"absolute",right:"12px",top:"50%",transform:"translateY(-50%)",background:"none",border:"none",fontSize:"18px",color:"#bbb",cursor:"pointer",padding:0,lineHeight:1 }}>×</button>}
+              </div>
+              <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ padding:"10px 14px",borderRadius:"8px",border:"1.5px solid #e0e0e0",fontSize:"13px",color:"#111",background:"#fff",cursor:"pointer",fontFamily:"'DM Sans',sans-serif" }}>
+                <option value="default">Featured First</option>
+                <option value="az">A – Z</option>
+                <option value="moq-low">MOQ: Low to High</option>
+                <option value="moq-high">MOQ: High to Low</option>
+              </select>
+              {activeCat !== "All" && (
+                <button onClick={() => setActiveCat("All")} style={{ padding:"10px 16px",borderRadius:"8px",border:"1px solid rgba(155,0,32,.2)",background:"rgba(155,0,32,.07)",color:BURG,fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif" }}>
+                  {CATEGORIES.find(c => c.id === activeCat)?.label} ×
+                </button>
+              )}
+            </div>
+            <div style={{ display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap" }}>
+              <span style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"13px",color:"#888" }}>
+                Showing <strong style={{ color:"#111" }}>{filtered.length}</strong> products
+                {activeCat !== "All" && <> in <strong style={{ color:BURG }}>{CATEGORIES.find(c => c.id === activeCat)?.label}</strong></>}
+              </span>
+              {!isLoggedIn && (
+                <div style={{ padding:"4px 12px",borderRadius:"99px",background:"rgba(155,0,32,.07)",border:"1px solid rgba(155,0,32,.18)",fontSize:"11px",fontWeight:600,color:BURG,fontFamily:"'DM Sans',sans-serif",display:"flex",alignItems:"center",gap:"4px" }}>
+                  🔒 Sign in to view prices & place orders
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Category pills */}
+          <div style={{ display:"flex",gap:"8px",flexWrap:"wrap",marginBottom:"24px" }}>
+            <button onClick={() => setActiveCat("All")} style={{ padding:"7px 16px",borderRadius:"99px",border:`1px solid ${activeCat==="All"?BURG:"#ddd"}`,background:activeCat==="All"?BURG:"#fff",color:activeCat==="All"?"#fff":"#555",fontSize:"12px",fontWeight:500,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",transition:"all .18s" }}>
+              All Products
             </button>
-          </div>
-        ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
-            {filtered.map((v) => (
-              <VideoCard
-                key={v.id}
-                v={v}
-                isLoggedIn={isLoggedIn}
-                onLockClick={() => setShowLoginModal(true)}
-                onPlay={() => setPlayingVideo(v)}
-              />
+            {PILLS.filter(c => c !== "All").slice(0, 12).map(cat => (
+              <button key={cat} onClick={() => setActiveCat(activeCat === cat ? "All" : cat)} style={{ padding:"7px 16px",borderRadius:"99px",border:`1px solid ${activeCat===cat?BURG:"#ddd"}`,background:activeCat===cat?BURG:"#fff",color:activeCat===cat?"#fff":"#555",fontSize:"12px",fontWeight:500,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",transition:"all .18s" }}>
+                {CATEGORIES.find(c => c.id === cat)?.label ?? cat}
+              </button>
             ))}
           </div>
-        )}
 
-        {/* Bottom CTA for guests */}
-        {!isLoggedIn && (
-          <div style={{ marginTop: "60px", padding: "48px 40px", borderRadius: "20px", background: "#fff", border: "1.5px solid rgba(155,0,32,.15)", textAlign: "center", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(155,0,32,.04) 1px, transparent 1px)", backgroundSize: "24px 24px", pointerEvents: "none" }} />
-            <div style={{ position: "relative" }}>
-              <div style={{ fontSize: "40px", marginBottom: "16px" }}>🎓</div>
-              <h3 style={{ fontSize: "26px", fontFamily: "'Playfair Display',serif", color: "#fff", marginBottom: "12px", fontWeight: "400" }}>
-                Access the Full Training Library
-              </h3>
-              <p style={{ fontSize: "15px", color: "rgba(245,230,200,.6)", marginBottom: "28px", maxWidth: "480px", margin: "0 auto 28px", lineHeight: "1.75" }}>
-                Get unlimited access to {lockedCount} expert-led training videos on antique identification, valuation, business growth, and restoration.
-              </p>
-              <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-                <Link href="/register" style={{ padding: "13px 30px", borderRadius: "8px", background: "#9B0020", color: "#fff", fontSize: "14px", fontWeight: "700", textDecoration: "none", letterSpacing: ".02em" }}>
-                  Register as Seller →
-                </Link>
-                <Link href="/login" style={{ padding: "13px 30px", borderRadius: "8px", border: "1.5px solid rgba(155,0,32,.35)", color: "#9B0020", fontSize: "14px", fontWeight: "600", textDecoration: "none" }}>
-                  Already a Seller? Sign In
-                </Link>
+          {/* Grid */}
+          {filtered.length === 0 ? (
+            <div style={{ textAlign:"center",padding:"80px 20px",background:"#fff",borderRadius:"20px",border:"1px solid #f0f0f0" }}>
+              <div style={{ fontSize:"48px",marginBottom:"16px" }}>🔍</div>
+              <h3 style={{ fontFamily:"'Playfair Display',serif",fontSize:"22px",color:"#111",marginBottom:"8px" }}>No products found</h3>
+              <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"14px",color:"#888",marginBottom:"20px" }}>Try a different category or search term</p>
+              <button onClick={() => { setActiveCat("All"); setSearch(""); }} style={{ padding:"11px 24px",borderRadius:"8px",background:BURG,color:"#fff",border:"none",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif" }}>
+                Show All Products
+              </button>
+            </div>
+          ) : (
+            <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:"20px" }}>
+              {filtered.map((p, i) => (
+                <div key={p.id} style={{ animation:`sk-fade .4s ${Math.min(i, 8) * 0.05}s ease both` }}>
+                  <ProductCard p={p} onLock={() => setShowLogin(true)} wishlisted={wishlist.has(p.id)} onWish={() => toggleWish(p.id)} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ══ UNLOCK CTA — only for guests ═════════════════ */}
+      {!isLoggedIn && (
+        <section style={{ padding:"0 48px 72px",background:"#f8f8f8" }}>
+          <div style={{ maxWidth:"1280px",margin:"0 auto" }}>
+            <div style={{ borderRadius:"24px",background:"#fff",border:"1.5px solid rgba(155,0,32,.15)",padding:"64px 48px",textAlign:"center",position:"relative",overflow:"hidden" }}>
+              <div style={{ position:"absolute",inset:0,backgroundImage:`radial-gradient(rgba(155,0,32,.055) 1.5px,transparent 1.5px)`,backgroundSize:"26px 26px",pointerEvents:"none" }} />
+              <div style={{ position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"72px",height:"4px",background:BURG,borderRadius:"0 0 5px 5px" }} />
+              <div style={{ position:"relative" }}>
+                <div style={{ width:"64px",height:"64px",borderRadius:"50%",background:"rgba(155,0,32,.07)",border:"1px solid rgba(155,0,32,.15)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px",fontSize:"28px" }}>🔒</div>
+                <h2 style={{ fontFamily:"'Playfair Display',serif",fontSize:"clamp(24px,3.5vw,40px)",fontWeight:700,color:"#111",lineHeight:1.1,marginBottom:"14px" }}>
+                  Unlock Full Gallery Access
+                </h2>
+                <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"15px",color:"#555",lineHeight:1.85,maxWidth:"500px",margin:"0 auto 20px" }}>
+                  Prices are <strong style={{ color:BURG }}>exclusively available to verified sellers.</strong> Register free to unlock pricing, bulk order capabilities, and direct-from-manufacturer rates.
+                </p>
+                <div style={{ display:"flex",gap:"8px",justifyContent:"center",flexWrap:"wrap",marginBottom:"36px" }}>
+                  {["✓ View all prices","✓ Bulk ordering","✓ Best margins","✓ GST invoices","✓ Direct from warehouse"].map(f => (
+                    <span key={f} style={{ padding:"5px 14px",borderRadius:"99px",background:"rgba(155,0,32,.07)",color:BURG,fontSize:"12px",fontWeight:600,fontFamily:"'DM Sans',sans-serif" }}>{f}</span>
+                  ))}
+                </div>
+                <div style={{ display:"flex",gap:"14px",justifyContent:"center",flexWrap:"wrap" }}>
+                  <Link href="/register" style={{ padding:"15px 44px",borderRadius:"10px",background:BURG,color:"#fff",fontSize:"14px",fontWeight:600,textDecoration:"none",fontFamily:"'DM Sans',sans-serif",boxShadow:"0 10px 28px rgba(155,0,32,.28)",letterSpacing:".04em" }}>
+                    Register as Seller — Free →
+                  </Link>
+                  <Link href="/login" style={{ padding:"15px 36px",borderRadius:"10px",border:"1.5px solid #ddd",color:"#333",fontSize:"14px",fontWeight:500,textDecoration:"none",fontFamily:"'DM Sans',sans-serif" }}>
+                    Already a Seller? Sign In
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </section>
+      )}
 
-      <style>{`
-        @keyframes scaleIn {
-          from { opacity: 0; transform: scale(0.93); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        input::placeholder { color: rgba(245,230,200,.32) !important; }
-      `}</style>
     </div>
   );
 }
