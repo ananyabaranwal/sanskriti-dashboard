@@ -11,26 +11,44 @@ const navGroups = [
   {
     label: "Overview",
     items: [
-      { label:"Dashboard",  href:"/admin",                icon:"📊", exact:true  },
+      { label:"Dashboard",    href:"/admin",                  icon:"📊", exact:true  },
+      { label:"Search",       href:"/admin/search",           icon:"🔍", exact:false },
     ]
   },
   {
     label: "Commerce",
     items: [
-      { label:"Sellers",    href:"/admin/sellers",         icon:"👥", exact:false },
-      { label:"Orders",     href:"/admin/orders",          icon:"📦", exact:false },
-      { label:"Payouts",    href:"/admin/payouts",         icon:"💸", exact:false },
-      { label:"Gallery",    href:"/admin/gallery",         icon:"🏺", exact:false },
-      { label:"Returns",    href:"/admin/returns",         icon:"↩️", exact:false },
+      { label:"Sellers",      href:"/admin/sellers",          icon:"👥", exact:false },
+      { label:"Orders",       href:"/admin/orders",           icon:"📦", exact:false },
+      { label:"Clients",      href:"/admin/clients",          icon:"🤝", exact:false },
+      { label:"Payouts",      href:"/admin/payouts",          icon:"💸", exact:false },
+      { label:"Returns",      href:"/admin/returns",          icon:"↩️", exact:false },
+      { label:"Notifications", href:"/admin/notifications", icon:"📢", exact:false },
+    ]
+  },
+  {
+    label: "Finance",
+    items: [
+      { label:"Billing",      href:"/admin/billing",          icon:"🧾", exact:false },
+      { label:"Reports",      href:"/admin/reports",          icon:"📈", exact:false },
+      { label:"Export Center",href:"/admin/export",           icon:"⬇️", exact:false },
+    ]
+  },
+  {
+    label: "Inventory",
+    items: [
+      { label:"Inventory",    href:"/admin/inventory",        icon:"📋", exact:false },
     ]
   },
   {
     label: "Platform",
     items: [
-      { label:"Content",    href:"/admin/content",         icon:"🎬", exact:false },
-      { label:"Settings",   href:"/admin/settings",        icon:"⚙️", exact:false },
+      { label:"Content",      href:"/admin/content",          icon:"🎬", exact:false },
+      { label:"Gallery",      href:"/admin/gallery",          icon:"🏺", exact:false },
+      { label:"Settings",     href:"/admin/settings",         icon:"⚙️", exact:false },
+      { label:"Activity Log", href:"/admin/activity",         icon:"🕐", exact:false },
     ]
-  }
+  },
 ];
 
 const allNavItems = navGroups.flatMap(g => g.items);
@@ -165,7 +183,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <button className="hide-desktop" onClick={()=>setMobileOpen(true)} style={{ background:"none", border:"none", cursor:"pointer", padding:"5px", display:"flex", flexDirection:"column", gap:"4px" }}>
               {[0,1,2].map(i=><span key={i} style={{ display:"block", width:"18px", height:"2px", background:"#374151", borderRadius:"1px" }}/>)}
             </button>
-            {/* Breadcrumb */}
             <div style={{ display:"flex", alignItems:"center", gap:"6px" }}>
               <span style={{ fontSize:"13px", color:"#9ca3af" }}>Admin</span>
               <span style={{ color:"#d1d5db", fontSize:"13px" }}>/</span>
@@ -174,31 +191,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-            {/* Live status */}
             <div style={{ display:"flex", alignItems:"center", gap:"6px", padding:"5px 12px", borderRadius:"99px", background:"#f0fdf4", border:"1px solid #bbf7d0" }}>
               <span style={{ width:"7px", height:"7px", borderRadius:"50%", background:"#22c55e", boxShadow:"0 0 6px #22c55e", animation:"pulse 2s infinite" }}/>
               <span style={{ fontSize:"11px", color:"#15803d", fontWeight:600 }}>Live</span>
             </div>
 
-            {/* Notifications */}
             <div ref={notifRef} style={{ position:"relative" }}>
-              <button onClick={()=>setShowNotif(!showNotif)} style={{ position:"relative", width:"36px", height:"36px", borderRadius:"9px", background:showNotif?"#f3f4f6":"#fff", border:"1px solid #e5e7eb", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:"16px", transition:"all .2s" }}>
+              <button onClick={()=>setShowNotif(!showNotif)} style={{ position:"relative", width:"36px", height:"36px", borderRadius:"9px", background:showNotif?"#f3f4f6":"#fff", border:"1px solid #e5e7eb", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:"16px" }}>
                 🔔
                 {notifications>0&&<span style={{ position:"absolute", top:"4px", right:"4px", width:"14px", height:"14px", borderRadius:"50%", background:"#ef4444", color:"#fff", fontSize:"9px", fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", border:"2px solid #fff" }}>{notifications}</span>}
               </button>
               {showNotif && (
-                <div style={{ position:"absolute", top:"calc(100% + 8px)", right:0, width:"320px", background:"#fff", border:"1px solid #e5e7eb", borderRadius:"12px", boxShadow:"0 10px 40px rgba(0,0,0,.1)", zIndex:200, overflow:"hidden", animation:"fadeDown .2s ease" }}>
+                <div style={{ position:"absolute", top:"calc(100% + 8px)", right:0, width:"320px", background:"#fff", border:"1px solid #e5e7eb", borderRadius:"12px", boxShadow:"0 10px 40px rgba(0,0,0,.1)", zIndex:200, overflow:"hidden" }}>
                   <div style={{ padding:"13px 16px", borderBottom:"1px solid #f3f4f6", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                     <span style={{ fontSize:"14px", fontWeight:600, color:"#111827" }}>Notifications</span>
                     <span style={{ fontSize:"11px", color:"#C9A84C", fontWeight:600, cursor:"pointer" }}>Mark all read</span>
                   </div>
                   {[
-                    { icon:"👥", title:"New seller registered",        sub:"Ananya Seller joined today",           time:"2h ago",  unread:true  },
-                    { icon:"💸", title:"Payout request received",      sub:"₹2,400 — Ananya Seller",               time:"5h ago",  unread:true  },
-                    { icon:"📦", title:"New order placed",             sub:"SNK-2605-0004 — ₹9,440",               time:"1d ago",  unread:true  },
-                    { icon:"🧾", title:"Invoice generated",            sub:"INV-2605-0001 — Rahul Sharma",         time:"2d ago",  unread:false },
+                    { icon:"👥", title:"New seller registered",   sub:"Ananya Seller joined today",     time:"2h ago",  unread:true  },
+                    { icon:"💸", title:"Payout request received", sub:"₹2,400 — Ananya Seller",         time:"5h ago",  unread:true  },
+                    { icon:"📦", title:"New order placed",        sub:"SNK-2605-0004 — ₹9,440",         time:"1d ago",  unread:true  },
+                    { icon:"🧾", title:"Invoice generated",       sub:"INV-2605-0001 — Rahul Sharma",   time:"2d ago",  unread:false },
                   ].map((n,i)=>(
-                    <div key={i} style={{ display:"flex", gap:"12px", padding:"11px 16px", borderBottom:"1px solid #f9fafb", background:n.unread?"#fffbeb":"#fff", cursor:"pointer", transition:"background .15s" }}>
+                    <div key={i} style={{ display:"flex", gap:"12px", padding:"11px 16px", borderBottom:"1px solid #f9fafb", background:n.unread?"#fffbeb":"#fff", cursor:"pointer" }}>
                       <div style={{ width:"34px", height:"34px", borderRadius:"8px", background:n.unread?"rgba(201,168,76,.1)":"#f3f4f6", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"15px", flexShrink:0 }}>{n.icon}</div>
                       <div style={{ flex:1, minWidth:0 }}>
                         <div style={{ fontSize:"13px", fontWeight:n.unread?600:400, color:"#111827" }}>{n.title}</div>
@@ -211,7 +226,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               )}
             </div>
 
-            {/* Admin avatar */}
             <div style={{ display:"flex", alignItems:"center", gap:"8px", padding:"5px 10px", borderRadius:"9px", background:"#f9fafb", border:"1px solid #e5e7eb", cursor:"pointer" }}>
               <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"linear-gradient(135deg,#C9A84C,#8B6914)", display:"flex", alignItems:"center", justifyContent:"center", color:"#111827", fontSize:"12px", fontWeight:700 }}>{adminName.charAt(0).toUpperCase()}</div>
               <span style={{ fontSize:"13px", fontWeight:500, color:"#374151" }}>{adminName.split(" ")[0]}</span>
@@ -219,7 +233,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        {/* Page content */}
         <div style={{ flex:1, padding:"24px", overflowY:"auto" }}>{children}</div>
       </div>
 
