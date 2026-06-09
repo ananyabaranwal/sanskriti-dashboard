@@ -137,12 +137,12 @@ export default function Navbar() {
 
                   {/* Level 1 — Ebook + Videos */}
                   {dropLevel === 1 && (
-                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "230px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .2s ease" }}>
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "200px", maxWidth: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .2s ease" }}>
                       <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>Training</div>
 
                       {/* Ebook */}
-                      <Link href="/training/ebook" onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
-                        <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>📖</div>
+                      <Link href="/training/ebook" onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "9px 14px", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
+                        <span style={{ fontSize: "16px", flexShrink: 0 }}>📖</span>
                         <div>
                           <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Ebook</div>
                           <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Download seller guides</div>
@@ -150,9 +150,9 @@ export default function Navbar() {
                       </Link>
 
                       {/* Videos → */}
-                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "12px 16px", cursor: "pointer", background: "rgba(155,0,32,.03)" }} className="sk-dd-row">
+                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "9px 14px", cursor: "pointer", background: "rgba(155,0,32,.03)" }} className="sk-dd-row">
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>🎬</div>
+                          <span style={{ fontSize: "16px", flexShrink: 0 }}>🎬</span>
                           <div>
                             <div style={{ fontSize: "14px", fontWeight: 600, color: BURG, fontFamily: "'DM Sans',sans-serif" }}>Videos</div>
                             <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Expert training library</div>
@@ -165,16 +165,16 @@ export default function Navbar() {
 
                   {/* Level 2 — Website + Amazon */}
                   {dropLevel === 2 && (
-                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "230px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "200px", maxWidth: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
                       <div onClick={() => setDropLevel(1)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "9px 16px", fontSize: "12px", fontWeight: 500, color: BURG, cursor: "pointer", borderBottom: "1px solid #f5f5f5", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>
                         ← Back
                       </div>
                       <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>Videos</div>
 
                       {/* Website */}
-                      <div onClick={() => { setPlatform("website"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", cursor: "pointer", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
+                      <div onClick={() => { setPlatform("website"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 14px", cursor: "pointer", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>🌐</div>
+                          <span style={{ fontSize: "16px", flexShrink: 0 }}>🌐</span>
                           <div>
                             <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Website</div>
                             <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Sell on your own site</div>
@@ -184,9 +184,9 @@ export default function Navbar() {
                       </div>
 
                       {/* Amazon */}
-                      <div onClick={() => { setPlatform("amazon"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", cursor: "pointer" }} className="sk-dd-row">
+                      <div onClick={() => { setPlatform("amazon"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 14px", cursor: "pointer" }} className="sk-dd-row">
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>📦</div>
+                          <span style={{ fontSize: "16px", flexShrink: 0 }}>📦</span>
                           <div>
                             <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Amazon</div>
                             <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Sell on Amazon marketplace</div>
@@ -199,7 +199,7 @@ export default function Navbar() {
 
                   {/* Level 3 — 3 tracks */}
                   {dropLevel === 3 && platform && (
-                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "230px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "200px", maxWidth: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
                       <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "9px 16px", fontSize: "12px", fontWeight: 500, color: BURG, cursor: "pointer", borderBottom: "1px solid #f5f5f5", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>
                         ← Back
                       </div>
@@ -209,7 +209,7 @@ export default function Navbar() {
 
                       {tracks.map((t, i) => (
                         <Link key={t.slug} href={`/training/videos/${platform}/${t.slug}`} onClick={closeAll}
-                          style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 16px", textDecoration: "none", borderBottom: i < tracks.length - 1 ? "1px solid #f5f5f5" : "none" }}
+                          style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 14px", textDecoration: "none", borderBottom: i < tracks.length - 1 ? "1px solid #f5f5f5" : "none" }}
                           className="sk-dd-row"
                         >
                           <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: BURG, opacity: .45, flexShrink: 0 }} />
@@ -228,7 +228,7 @@ export default function Navbar() {
           {/* CTA buttons */}
           <div className="sk-desk" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             {loggedIn ? (
-              <Link href="/dashboard" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: `linear-gradient(135deg,${BURG},#8B6914)`, boxShadow: `0 4px 14px rgba(155,0,32,.25)` }}>
+              <Link href="/dashboard" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: BURG, boxShadow: `0 4px 14px rgba(155,0,32,.3)` }}>
                 Dashboard →
               </Link>
             ) : (
@@ -236,7 +236,7 @@ export default function Navbar() {
                 <Link href="/login" className="sk-signin" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 500, color: "#333", textDecoration: "none", padding: "8px 20px", borderRadius: "6px", border: "1.5px solid #ddd", transition: "all .2s" }}>
                   Sign In
                 </Link>
-                <Link href="/register" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: `linear-gradient(135deg,${BURG},#8B6914)`, boxShadow: `0 4px 14px rgba(155,0,32,.25)` }}>
+                <Link href="/register" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: BURG, boxShadow: `0 4px 14px rgba(155,0,32,.3)` }}>
                   Join as Seller
                 </Link>
               </>
@@ -345,7 +345,7 @@ export default function Navbar() {
           {mobileStep === "root" && (
             <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "14px", marginTop: "10px", display: "flex", gap: "10px" }}>
               <Link href="/login" style={{ flex: 1, padding: "12px", borderRadius: "8px", border: "1.5px solid #ddd", color: "#333", fontSize: "14px", fontWeight: 500, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Sign In</Link>
-              <Link href="/register" style={{ flex: 1, padding: "12px", borderRadius: "8px", background: `linear-gradient(135deg,${BURG},#8B6914)`, color: "#fff", fontSize: "14px", fontWeight: 600, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Join as Seller</Link>
+              <Link href="/register" style={{ flex: 1, padding: "12px", borderRadius: "8px", background: BURG, color: "#fff", fontSize: "14px", fontWeight: 600, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Join as Seller</Link>
             </div>
           )}
         </div>
