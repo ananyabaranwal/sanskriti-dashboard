@@ -312,7 +312,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Videos */}
-                    <button onClick={() => setMobileSection(mobileSection === "videos" ? "training" : "videos")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: "8px", marginBottom: "4px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+                    <button onClick={() => setMobileSection(s => s === "videos" ? "training" : "videos")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: "8px", marginBottom: "4px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <span>🎬</span>
                         <span style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Videos</span>
@@ -320,7 +320,7 @@ export default function Navbar() {
                       <span style={{ fontSize: "11px", color: "#aaa" }}>▸</span>
                     </button>
 
-                    {mobileSection === "videos" && (
+                    {(mobileSection as string) === "videos" && (
                       <div style={{ paddingLeft: "14px" }}>
                         {[{ label: "Website", icon: "🌐" }, { label: "Amazon", icon: "📦" }].map(platform => (
                           <div key={platform.label} style={{ marginBottom: "8px" }}>
