@@ -59,7 +59,7 @@ export default function Navbar() {
   const [loggedIn,      setLoggedIn]       = useState(false);
   const [trainingOpen,  setTrainingOpen]   = useState(false);
   const [videosHover,   setVideosHover]    = useState(false);
-  const [mobileSection, setMobileSection] = useState<string | null>(null);
+  const [mobileSection, setMobileSection] = useState<"training" | "videos" | null>(null);
   const dropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
