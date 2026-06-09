@@ -15,51 +15,17 @@ const NAV_LINKS = [
   { label: "Contact",  href: "/contact",  hasDropdown: false },
 ];
 
-const TRAINING_DROPDOWN = [
-  {
-    label: "Ebook",
-    href: "/training/ebook",
-    icon: "📖",
-    desc: "Download our comprehensive seller guides",
-  },
-  {
-    label: "Videos",
-    href: "/training/videos",
-    icon: "🎬",
-    desc: "Expert training video library",
-    submenu: [
-      {
-        label: "Website",
-        href: "/training/videos/website",
-        icon: "🌐",
-        children: [
-          { label: "75 Days Training", href: "/training/videos/website/75-days" },
-          { label: "Live Training",    href: "/training/videos/website/live" },
-          { label: "Social Media Content", href: "/training/videos/website/social-media" },
-        ],
-      },
-      {
-        label: "Amazon",
-        href: "/training/videos/amazon",
-        icon: "📦",
-        children: [
-          { label: "75 Days Training", href: "/training/videos/amazon/75-days" },
-          { label: "Live Training",    href: "/training/videos/amazon/live" },
-          { label: "Social Media Content", href: "/training/videos/amazon/social-media" },
-        ],
-      },
-    ],
-  },
-];
+type DropLevel = 0 | 1 | 2 | 3;
+type Platform  = "website" | "amazon" | null;
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [scrolled,      setScrolled]      = useState(false);
-  const [menuOpen,      setMenuOpen]       = useState(false);
-  const [loggedIn,      setLoggedIn]       = useState(false);
-  const [trainingOpen,  setTrainingOpen]   = useState(false);
-  const [videosHover,   setVideosHover]    = useState(false);
-  const [mobileSection, setMobileSection] = useState<"training" | "videos" | null>(null);
+  const [scrolled,   setScrolled]   = useState(false);
+  const [menuOpen,   setMenuOpen]    = useState(false);
+  const [loggedIn,   setLoggedIn]    = useState(false);
+  const [dropLevel,  setDropLevel]   = useState<DropLevel>(0);
+  const [platform,   setPlatform]    = useState<Platform>(null);
+  const [mobileStep, setMobileStep]  = useState<"root" | "videos" | "website" | "amazon">("root");
   const dropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,14 +37,14 @@ export default function Navbar() {
   useEffect(() => {
     setLoggedIn(!!localStorage.getItem("accessToken"));
     setMenuOpen(false);
-    setTrainingOpen(false);
+    setDropLevel(0);
+    setMobileStep("root");
   }, [pathname]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropRef.current && !dropRef.current.contains(e.target as Node)) {
-        setTrainingOpen(false);
-        setVideosHover(false);
+        setDropLevel(0);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -92,17 +58,23 @@ export default function Navbar() {
   const isAuthPage  = pathname === "/login" || pathname === "/register";
   if (isDashboard || isAuthPage) return null;
 
+  const tracks = [
+    { label: "75 Days Training",    slug: "75-days"      },
+    { label: "Live Training",       slug: "live"         },
+    { label: "Social Media Content",slug: "social-media" },
+  ];
+
+  const closeAll = () => { setDropLevel(0); setMenuOpen(false); setMobileStep("root"); };
+
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
-        .sk-nav-link:hover  { color: ${BURG} !important; }
-        .sk-signin:hover    { border-color: ${BURG} !important; color: ${BURG} !important; }
+        .sk-nav-link:hover   { color: ${BURG} !important; }
+        .sk-signin:hover     { border-color: ${BURG} !important; color: ${BURG} !important; }
         .sk-mobile-lnk:hover { background: rgba(155,0,32,.06) !important; color: ${BURG} !important; }
-        .sk-drop-item:hover { background: rgba(155,0,32,.05) !important; }
-        .sk-sub-item:hover  { background: rgba(155,0,32,.06) !important; color: ${BURG} !important; }
+        .sk-dd-row:hover     { background: rgba(155,0,32,.04) !important; }
         @keyframes sk-slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes sk-fadeIn    { from{opacity:0} to{opacity:1} }
         @media (max-width: 768px) { .sk-desk { display: none !important; } .sk-ham { display: flex !important; } }
         @media (min-width: 769px) { .sk-ham  { display: none !important; } }
       `}</style>
@@ -145,104 +117,106 @@ export default function Navbar() {
                 );
               }
 
-              // Training dropdown
               return (
                 <div key={l.href} ref={dropRef} style={{ position: "relative" }}>
+                  {/* Training button */}
                   <button
-                    onClick={() => setTrainingOpen(!trainingOpen)}
-                    className="sk-nav-link"
+                    onClick={() => setDropLevel(dropLevel > 0 ? 0 : 1)}
                     style={{
                       padding: "7px 14px", borderRadius: "8px",
-                      fontSize: "14px", fontWeight: isActive(l.href) ? 600 : 500,
-                      color: isActive(l.href) || trainingOpen ? BURG : "#333",
-                      background: isActive(l.href) || trainingOpen ? `rgba(155,0,32,.07)` : "transparent",
-                      border: "none", cursor: "pointer",
-                      fontFamily: "'DM Sans',sans-serif",
+                      fontSize: "14px", fontWeight: isActive(l.href) || dropLevel > 0 ? 600 : 500,
+                      color: isActive(l.href) || dropLevel > 0 ? BURG : "#333",
+                      background: isActive(l.href) || dropLevel > 0 ? `rgba(155,0,32,.07)` : "transparent",
+                      border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif",
                       display: "flex", alignItems: "center", gap: "5px",
                     }}
                   >
                     {l.label}
-                    <span style={{ fontSize: "10px", transition: "transform .2s", transform: trainingOpen ? "rotate(180deg)" : "none" }}>▾</span>
+                    <span style={{ fontSize: "10px", transition: "transform .2s", display: "inline-block", transform: dropLevel > 0 ? "rotate(180deg)" : "none" }}>▾</span>
                   </button>
 
-                  {trainingOpen && (
-                    <div style={{
-                      position: "absolute", top: "calc(100% + 8px)", left: 0,
-                      background: "#fff", borderRadius: "14px",
-                      border: "1px solid rgba(155,0,32,.12)",
-                      boxShadow: "0 16px 48px rgba(0,0,0,.12)",
-                      minWidth: "220px", zIndex: 200,
-                      animation: "sk-slideDown .2s ease",
-                      overflow: "hidden",
-                    }}>
-                      {TRAINING_DROPDOWN.map(item => (
-                        <div key={item.label}>
-                          {!item.submenu ? (
-                            <Link href={item.href} className="sk-drop-item" style={{
-                              display: "flex", alignItems: "flex-start", gap: "12px",
-                              padding: "14px 16px", textDecoration: "none",
-                              borderBottom: "1px solid #f5f5f5", transition: "background .15s",
-                            }} onClick={() => setTrainingOpen(false)}>
-                              <span style={{ fontSize: "20px", flexShrink: 0 }}>{item.icon}</span>
-                              <div>
-                                <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>{item.label}</div>
-                                <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", fontFamily: "'DM Sans',sans-serif" }}>{item.desc}</div>
-                              </div>
-                            </Link>
-                          ) : (
-                            <div
-                              className="sk-drop-item"
-                              onMouseEnter={() => setVideosHover(true)}
-                              onMouseLeave={() => setVideosHover(false)}
-                              style={{ position: "relative", cursor: "pointer", borderBottom: "1px solid #f5f5f5", transition: "background .15s" }}
-                            >
-                              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px", padding: "14px 16px" }}>
-                                <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-                                  <span style={{ fontSize: "20px", flexShrink: 0 }}>{item.icon}</span>
-                                  <div>
-                                    <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>{item.label}</div>
-                                    <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", fontFamily: "'DM Sans',sans-serif" }}>{item.desc}</div>
-                                  </div>
-                                </div>
-                                <span style={{ fontSize: "12px", color: "#aaa", marginTop: "2px" }}>▸</span>
-                              </div>
+                  {/* Level 1 — Ebook + Videos */}
+                  {dropLevel === 1 && (
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "230px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .2s ease" }}>
+                      <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>Training</div>
 
-                              {/* Videos submenu */}
-                              {videosHover && (
-                                <div style={{
-                                  position: "absolute", left: "100%", top: 0,
-                                  background: "#fff", borderRadius: "14px",
-                                  border: "1px solid rgba(155,0,32,.12)",
-                                  boxShadow: "0 16px 48px rgba(0,0,0,.12)",
-                                  minWidth: "260px", zIndex: 201,
-                                  animation: "sk-fadeIn .15s ease",
-                                  overflow: "hidden",
-                                }}>
-                                  {item.submenu.map(sub => (
-                                    <div key={sub.label} style={{ borderBottom: "1px solid #f5f5f5" }}>
-                                      <div style={{ padding: "10px 16px 6px", display: "flex", alignItems: "center", gap: "8px" }}>
-                                        <span style={{ fontSize: "14px" }}>{sub.icon}</span>
-                                        <span style={{ fontSize: "12px", fontWeight: 700, color: BURG, letterSpacing: ".06em", textTransform: "uppercase", fontFamily: "'DM Sans',sans-serif" }}>{sub.label}</span>
-                                      </div>
-                                      {sub.children.map(child => (
-                                        <Link key={child.href} href={child.href} className="sk-sub-item" style={{
-                                          display: "flex", alignItems: "center", gap: "8px",
-                                          padding: "8px 16px 8px 38px",
-                                          fontSize: "13px", color: "#444",
-                                          textDecoration: "none", fontFamily: "'DM Sans',sans-serif",
-                                          transition: "all .15s",
-                                        }} onClick={() => { setTrainingOpen(false); setVideosHover(false); }}>
-                                          <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: BURG, opacity: .4, flexShrink: 0 }} />
-                                          {child.label}
-                                        </Link>
-                                      ))}
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          )}
+                      {/* Ebook */}
+                      <Link href="/training/ebook" onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
+                        <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>📖</div>
+                        <div>
+                          <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Ebook</div>
+                          <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Download seller guides</div>
                         </div>
+                      </Link>
+
+                      {/* Videos → */}
+                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "12px 16px", cursor: "pointer", background: "rgba(155,0,32,.03)" }} className="sk-dd-row">
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                          <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>🎬</div>
+                          <div>
+                            <div style={{ fontSize: "14px", fontWeight: 600, color: BURG, fontFamily: "'DM Sans',sans-serif" }}>Videos</div>
+                            <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Expert training library</div>
+                          </div>
+                        </div>
+                        <span style={{ fontSize: "13px", color: "#aaa" }}>▸</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Level 2 — Website + Amazon */}
+                  {dropLevel === 2 && (
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "230px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
+                      <div onClick={() => setDropLevel(1)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "9px 16px", fontSize: "12px", fontWeight: 500, color: BURG, cursor: "pointer", borderBottom: "1px solid #f5f5f5", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>
+                        ← Back
+                      </div>
+                      <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>Videos</div>
+
+                      {/* Website */}
+                      <div onClick={() => { setPlatform("website"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", cursor: "pointer", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                          <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>🌐</div>
+                          <div>
+                            <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Website</div>
+                            <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Sell on your own site</div>
+                          </div>
+                        </div>
+                        <span style={{ fontSize: "13px", color: "#aaa" }}>▸</span>
+                      </div>
+
+                      {/* Amazon */}
+                      <div onClick={() => { setPlatform("amazon"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", cursor: "pointer" }} className="sk-dd-row">
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                          <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: "rgba(155,0,32,.07)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>📦</div>
+                          <div>
+                            <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Amazon</div>
+                            <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Sell on Amazon marketplace</div>
+                          </div>
+                        </div>
+                        <span style={{ fontSize: "13px", color: "#aaa" }}>▸</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Level 3 — 3 tracks */}
+                  {dropLevel === 3 && platform && (
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "230px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
+                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "9px 16px", fontSize: "12px", fontWeight: 500, color: BURG, cursor: "pointer", borderBottom: "1px solid #f5f5f5", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>
+                        ← Back
+                      </div>
+                      <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>
+                        {platform === "website" ? "🌐 Website" : "📦 Amazon"}
+                      </div>
+
+                      {tracks.map((t, i) => (
+                        <Link key={t.slug} href={`/training/videos/${platform}/${t.slug}`} onClick={closeAll}
+                          style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 16px", textDecoration: "none", borderBottom: i < tracks.length - 1 ? "1px solid #f5f5f5" : "none" }}
+                          className="sk-dd-row"
+                        >
+                          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: BURG, opacity: .45, flexShrink: 0 }} />
+                          <div>
+                            <div style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>{t.label}</div>
+                          </div>
+                        </Link>
                       ))}
                     </div>
                   )}
@@ -274,8 +248,7 @@ export default function Navbar() {
             style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", flexDirection: "column", gap: "5px", display: "none" }}>
             {[0, 1, 2].map(i => (
               <span key={i} style={{
-                display: "block", width: "22px", height: "2px", background: "#333",
-                borderRadius: "2px", transition: "all .25s",
+                display: "block", width: "22px", height: "2px", background: "#333", borderRadius: "2px", transition: "all .25s",
                 transform: menuOpen ? i === 0 ? "rotate(45deg) translate(5px,5px)" : i === 2 ? "rotate(-45deg) translate(5px,-5px)" : "scaleX(0)" : "none",
                 opacity: menuOpen && i === 1 ? 0 : 1,
               }} />
@@ -287,70 +260,94 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div style={{ position: "fixed", top: "68px", left: 0, right: 0, zIndex: 999, background: "rgba(255,255,255,.98)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderBottom: "1px solid #f0f0f0", padding: "12px 20px 20px", boxShadow: "0 8px 32px rgba(0,0,0,.08)", animation: "sk-slideDown .25s ease", maxHeight: "80vh", overflowY: "auto" }}>
-          {NAV_LINKS.map(l => {
-            if (!l.hasDropdown) {
-              return (
-                <Link key={l.href} href={l.href} className="sk-mobile-lnk" style={{ display: "block", padding: "12px 16px", borderRadius: "10px", marginBottom: "2px", fontSize: "15px", fontWeight: isActive(l.href) ? 600 : 400, color: isActive(l.href) ? BURG : "#222", background: isActive(l.href) ? `rgba(155,0,32,.06)` : "transparent", textDecoration: "none", fontFamily: "'DM Sans',sans-serif", transition: "all .2s" }}>
-                  {l.label}
-                </Link>
-              );
-            }
 
-            return (
-              <div key={l.href}>
-                <button onClick={() => setMobileSection(mobileSection === "training" ? null : "training")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: "10px", marginBottom: "2px", fontSize: "15px", fontWeight: 600, color: BURG, background: `rgba(155,0,32,.06)`, border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
-                  Training
-                  <span style={{ transform: mobileSection === "training" ? "rotate(180deg)" : "none", transition: "transform .2s", fontSize: "12px" }}>▾</span>
-                </button>
+          {/* Step: root */}
+          {mobileStep === "root" && (
+            <>
+              {NAV_LINKS.map(l => {
+                if (!l.hasDropdown) return (
+                  <Link key={l.href} href={l.href} className="sk-mobile-lnk" onClick={closeAll} style={{ display: "block", padding: "12px 16px", borderRadius: "10px", marginBottom: "2px", fontSize: "15px", fontWeight: isActive(l.href) ? 600 : 400, color: isActive(l.href) ? BURG : "#222", background: isActive(l.href) ? `rgba(155,0,32,.06)` : "transparent", textDecoration: "none", fontFamily: "'DM Sans',sans-serif" }}>
+                    {l.label}
+                  </Link>
+                );
+                return (
+                  <button key={l.href} onClick={() => setMobileStep("videos")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: "10px", marginBottom: "2px", fontSize: "15px", fontWeight: 600, color: BURG, background: `rgba(155,0,32,.06)`, border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+                    Training <span style={{ fontSize: "12px" }}>▸</span>
+                  </button>
+                );
+              })}
+            </>
+          )}
 
-                {mobileSection === "training" && (
-                  <div style={{ paddingLeft: "16px", marginBottom: "8px" }}>
-                    {/* Ebook */}
-                    <Link href="/training/ebook" style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 14px", borderRadius: "8px", textDecoration: "none", marginBottom: "4px", background: "#fafafa" }} onClick={() => setMenuOpen(false)}>
-                      <span>📖</span>
-                      <span style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Ebook</span>
-                    </Link>
-
-                    {/* Videos */}
-                    <button onClick={() => setMobileSection(s => s === "videos" ? "training" : "videos")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: "8px", marginBottom: "4px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <span>🎬</span>
-                        <span style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Videos</span>
-                      </div>
-                      <span style={{ fontSize: "11px", color: "#aaa" }}>▸</span>
-                    </button>
-
-                    {(mobileSection as string) === "videos" && (
-                      <div style={{ paddingLeft: "14px" }}>
-                        {[{ label: "Website", icon: "🌐" }, { label: "Amazon", icon: "📦" }].map(platform => (
-                          <div key={platform.label} style={{ marginBottom: "8px" }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "6px 10px", fontSize: "12px", fontWeight: 700, color: BURG, textTransform: "uppercase", letterSpacing: ".06em", fontFamily: "'DM Sans',sans-serif" }}>
-                              <span>{platform.icon}</span>{platform.label}
-                            </div>
-                            {["75 Days Training", "Live Training", "Social Media Content"].map(item => {
-                              const slug = item.toLowerCase().replace(/ /g, "-");
-                              const platformSlug = platform.label.toLowerCase();
-                              return (
-                                <Link key={item} href={`/training/videos/${platformSlug}/${slug}`} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "8px 10px", borderRadius: "6px", textDecoration: "none", fontSize: "13px", color: "#555", fontFamily: "'DM Sans',sans-serif" }} onClick={() => setMenuOpen(false)}>
-                                  <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: BURG, opacity: .4, flexShrink: 0 }} />
-                                  {item}
-                                </Link>
-                              );
-                            })}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+          {/* Step: videos (Ebook + Website + Amazon) */}
+          {mobileStep === "videos" && (
+            <>
+              <button onClick={() => setMobileStep("root")} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: BURG, background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>← Back</button>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "4px 16px 8px", fontFamily: "'DM Sans',sans-serif" }}>Training</div>
+              <Link href="/training/ebook" onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", borderRadius: "10px", marginBottom: "4px", textDecoration: "none", background: "#fafafa" }}>
+                <span style={{ fontSize: "20px" }}>📖</span>
+                <div>
+                  <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Ebook</div>
+                  <div style={{ fontSize: "11px", color: "#888", fontFamily: "'DM Sans',sans-serif" }}>Download seller guides</div>
+                </div>
+              </Link>
+              <button onClick={() => setMobileStep("website")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: "10px", marginBottom: "4px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ fontSize: "20px" }}>🌐</span>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Website</div>
+                    <div style={{ fontSize: "11px", color: "#888" }}>Sell on your own site</div>
                   </div>
-                )}
-              </div>
-            );
-          })}
+                </div>
+                <span style={{ fontSize: "12px", color: "#aaa" }}>▸</span>
+              </button>
+              <button onClick={() => setMobileStep("amazon")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: "10px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ fontSize: "20px" }}>📦</span>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Amazon</div>
+                    <div style={{ fontSize: "11px", color: "#888" }}>Sell on Amazon</div>
+                  </div>
+                </div>
+                <span style={{ fontSize: "12px", color: "#aaa" }}>▸</span>
+              </button>
+            </>
+          )}
 
-          <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "14px", marginTop: "10px", display: "flex", gap: "10px" }}>
-            <Link href="/login" style={{ flex: 1, padding: "12px", borderRadius: "8px", border: "1.5px solid #ddd", color: "#333", fontSize: "14px", fontWeight: 500, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Sign In</Link>
-            <Link href="/register" style={{ flex: 1, padding: "12px", borderRadius: "8px", background: `linear-gradient(135deg,${BURG},#8B6914)`, color: "#fff", fontSize: "14px", fontWeight: 600, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Join as Seller</Link>
-          </div>
+          {/* Step: website tracks */}
+          {mobileStep === "website" && (
+            <>
+              <button onClick={() => setMobileStep("videos")} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: BURG, background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>← Back</button>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "4px 16px 8px", fontFamily: "'DM Sans',sans-serif" }}>🌐 Website</div>
+              {tracks.map(t => (
+                <Link key={t.slug} href={`/training/videos/website/${t.slug}`} onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", borderRadius: "10px", marginBottom: "4px", textDecoration: "none", background: "#fafafa" }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: BURG, opacity: .45, flexShrink: 0 }} />
+                  <span style={{ fontSize: "14px", fontWeight: 500, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>{t.label}</span>
+                </Link>
+              ))}
+            </>
+          )}
+
+          {/* Step: amazon tracks */}
+          {mobileStep === "amazon" && (
+            <>
+              <button onClick={() => setMobileStep("videos")} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: BURG, background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>← Back</button>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "4px 16px 8px", fontFamily: "'DM Sans',sans-serif" }}>📦 Amazon</div>
+              {tracks.map(t => (
+                <Link key={t.slug} href={`/training/videos/amazon/${t.slug}`} onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", borderRadius: "10px", marginBottom: "4px", textDecoration: "none", background: "#fafafa" }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: BURG, opacity: .45, flexShrink: 0 }} />
+                  <span style={{ fontSize: "14px", fontWeight: 500, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>{t.label}</span>
+                </Link>
+              ))}
+            </>
+          )}
+
+          {mobileStep === "root" && (
+            <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "14px", marginTop: "10px", display: "flex", gap: "10px" }}>
+              <Link href="/login" style={{ flex: 1, padding: "12px", borderRadius: "8px", border: "1.5px solid #ddd", color: "#333", fontSize: "14px", fontWeight: 500, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Sign In</Link>
+              <Link href="/register" style={{ flex: 1, padding: "12px", borderRadius: "8px", background: `linear-gradient(135deg,${BURG},#8B6914)`, color: "#fff", fontSize: "14px", fontWeight: 600, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Join as Seller</Link>
+            </div>
+          )}
         </div>
       )}
     </>
