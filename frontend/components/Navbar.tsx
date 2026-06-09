@@ -312,7 +312,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Videos */}
-                    <button onClick={() => setMobileSection(prev => prev === "videos" ? "training" : "videos")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: "8px", marginBottom: "4px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+                    <button onClick={() => setMobileSection(mobileSection === "videos" ? "training" : "videos")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: "8px", marginBottom: "4px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <span>🎬</span>
                         <span style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Videos</span>
