@@ -9,6 +9,13 @@ export default function AdminSearchPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  let debounceTimer: ReturnType<typeof setTimeout>;
+  const handleChange = (val: string) => {
+    setQuery(val);
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => search(val), 350);
+  };
+
   const search = async (q: string) => {
     if (!q || q.trim().length < 2) { setResults(null); return; }
     setLoading(true);
@@ -19,13 +26,6 @@ export default function AdminSearchPage() {
     finally { setLoading(false); }
   };
 
-  let debounceTimer: ReturnType<typeof setTimeout>;
-  const handleChange = (val: string) => {
-    setQuery(val);
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => search(val), 350);
-  };
-
   const sections = [
     { key: "orders",   label: "Orders",   icon: "📦" },
     { key: "bills",    label: "Bills",    icon: "🧾" },
@@ -33,8 +33,8 @@ export default function AdminSearchPage() {
     { key: "products", label: "Products", icon: "📋" },
   ];
 
-  const totalResults = results
-    ? Object.values(results).reduce((s: number, v: any) => s + (v?.count || 0), 0)
+  const totalResults: number = results
+    ? (Object.values(results) as any[]).reduce((s: number, v: any) => s + (v?.count || 0), 0)
     : 0;
 
   const navMap: Record<string, string> = {
@@ -58,9 +58,9 @@ export default function AdminSearchPage() {
 
       {results && (
         <div>
-          <div style={{ fontSize: "13px", color: "#A08060", marginBottom: "16px" }}>{totalResults} results for "{query}"</div>
+          <div style={{ fontSize: "13px", color: "#A08060", marginBottom: "16px" }}>{String(totalResults)} results for &quot;{query}&quot;</div>
           {sections.map(s => {
-            const data = results[s.key]?.data || [];
+            const data = (results[s.key]?.data || []) as any[];
             if (!data.length) return null;
             return (
               <div key={s.key} style={{ marginBottom: "20px" }}>
@@ -84,7 +84,7 @@ export default function AdminSearchPage() {
                       <div style={{ textAlign: "right" }}>
                         {(item.total || item.grandTotal || item.totalRevenue || item.sellingPrice) ? (
                           <div style={{ fontSize: "13px", fontWeight: 700, color: "#8B6914" }}>
-                            ₹{(item.total || item.grandTotal || item.totalRevenue || item.sellingPrice)?.toLocaleString("en-IN")}
+                            ₹{Number(item.total || item.grandTotal || item.totalRevenue || item.sellingPrice).toLocaleString("en-IN")}
                           </div>
                         ) : null}
                         <div style={{ fontSize: "10px", color: "#A08060" }}>{item.status || item.paymentStatus || item.stockStatus || ""}</div>
