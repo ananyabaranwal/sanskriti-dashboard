@@ -167,7 +167,7 @@ export default function Navbar() {
                       </div>
                       <div onClick={() => { setPlatform("amazon"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", cursor: "pointer" }} className="sk-dd-row">
                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2.5" style={{flexShrink:0}}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                           <span style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Amazon</span>
                         </div>
                         <span style={{ fontSize: "11px", color: "#bbb" }}>›</span>
@@ -271,7 +271,7 @@ export default function Navbar() {
               </button>
               <button onClick={() => setMobileStep("amazon")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: "10px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2.5" style={{flexShrink:0}}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                   <div style={{ textAlign: "left" }}>
                     <div style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Amazon</div>
                     <div style={{ fontSize: "11px", color: "#888" }}>Sell on Amazon</div>
