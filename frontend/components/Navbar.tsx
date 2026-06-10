@@ -137,85 +137,53 @@ export default function Navbar() {
 
                   {/* Level 1 — Ebook + Videos */}
                   {dropLevel === 1 && (
-                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "200px", maxWidth: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .2s ease" }}>
-                      <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>Training</div>
-
-                      {/* Ebook */}
-                      <Link href="/training/ebook" onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "9px 14px", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
-                        <span style={{ fontSize: "16px", flexShrink: 0 }}>📖</span>
-                        <div>
-                          <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Ebook</div>
-                          <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Download seller guides</div>
-                        </div>
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "12px", border: "1px solid rgba(155,0,32,.15)", boxShadow: "0 8px 24px rgba(0,0,0,.1)", width: "180px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .2s ease" }}>
+                      <div style={{ fontSize: "10px", fontWeight: 700, color: "#bbb", letterSpacing: ".12em", textTransform: "uppercase", padding: "8px 14px 4px", fontFamily: "'DM Sans',sans-serif" }}>Training</div>
+                      <Link href="/training/ebook" onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 14px", textDecoration: "none", borderBottom: "1px solid #f0f0f0" }} className="sk-dd-row">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        <span style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Ebook</span>
                       </Link>
-
-                      {/* Videos → */}
-                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "9px 14px", cursor: "pointer", background: "rgba(155,0,32,.03)" }} className="sk-dd-row">
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <span style={{ fontSize: "16px", flexShrink: 0 }}>🎬</span>
-                          <div>
-                            <div style={{ fontSize: "14px", fontWeight: 600, color: BURG, fontFamily: "'DM Sans',sans-serif" }}>Videos</div>
-                            <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Expert training library</div>
-                          </div>
+                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", cursor: "pointer" }} className="sk-dd-row">
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                          <span style={{ fontSize: "13px", fontWeight: 600, color: BURG, fontFamily: "'DM Sans',sans-serif" }}>Videos</span>
                         </div>
-                        <span style={{ fontSize: "13px", color: "#aaa" }}>▸</span>
+                        <span style={{ fontSize: "11px", color: "#bbb" }}>›</span>
                       </div>
                     </div>
                   )}
 
                   {/* Level 2 — Website + Amazon */}
                   {dropLevel === 2 && (
-                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "200px", maxWidth: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
-                      <div onClick={() => setDropLevel(1)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "9px 16px", fontSize: "12px", fontWeight: 500, color: BURG, cursor: "pointer", borderBottom: "1px solid #f5f5f5", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>
-                        ← Back
-                      </div>
-                      <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>Videos</div>
-
-                      {/* Website */}
-                      <div onClick={() => { setPlatform("website"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 14px", cursor: "pointer", borderBottom: "1px solid #f5f5f5" }} className="sk-dd-row">
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <span style={{ fontSize: "16px", flexShrink: 0 }}>🌐</span>
-                          <div>
-                            <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Website</div>
-                            <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Sell on your own site</div>
-                          </div>
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "12px", border: "1px solid rgba(155,0,32,.15)", boxShadow: "0 8px 24px rgba(0,0,0,.1)", width: "180px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
+                      <div onClick={() => setDropLevel(1)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 14px", fontSize: "11px", fontWeight: 600, color: BURG, cursor: "pointer", borderBottom: "1px solid #f0f0f0", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>← Back</div>
+                      <div style={{ fontSize: "10px", fontWeight: 700, color: "#bbb", letterSpacing: ".12em", textTransform: "uppercase", padding: "8px 14px 4px", fontFamily: "'DM Sans',sans-serif" }}>Videos</div>
+                      <div onClick={() => { setPlatform("website"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", cursor: "pointer", borderBottom: "1px solid #f0f0f0" }} className="sk-dd-row">
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          <span style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Website</span>
                         </div>
-                        <span style={{ fontSize: "13px", color: "#aaa" }}>▸</span>
+                        <span style={{ fontSize: "11px", color: "#bbb" }}>›</span>
                       </div>
-
-                      {/* Amazon */}
-                      <div onClick={() => { setPlatform("amazon"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 14px", cursor: "pointer" }} className="sk-dd-row">
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <span style={{ fontSize: "16px", flexShrink: 0 }}>📦</span>
-                          <div>
-                            <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Amazon</div>
-                            <div style={{ fontSize: "11px", color: "#888", marginTop: "1px", fontFamily: "'DM Sans',sans-serif" }}>Sell on Amazon marketplace</div>
-                          </div>
+                      <div onClick={() => { setPlatform("amazon"); setDropLevel(3); }} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", cursor: "pointer" }} className="sk-dd-row">
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                          <span style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Amazon</span>
                         </div>
-                        <span style={{ fontSize: "13px", color: "#aaa" }}>▸</span>
+                        <span style={{ fontSize: "11px", color: "#bbb" }}>›</span>
                       </div>
                     </div>
                   )}
 
                   {/* Level 3 — 3 tracks */}
                   {dropLevel === 3 && platform && (
-                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "14px", border: "1px solid rgba(155,0,32,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.12)", minWidth: "200px", maxWidth: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
-                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "9px 16px", fontSize: "12px", fontWeight: 500, color: BURG, cursor: "pointer", borderBottom: "1px solid #f5f5f5", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>
-                        ← Back
-                      </div>
-                      <div style={{ fontSize: "10px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "10px 16px 4px", fontFamily: "'DM Sans',sans-serif" }}>
-                        {platform === "website" ? "🌐 Website" : "📦 Amazon"}
-                      </div>
-
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "12px", border: "1px solid rgba(155,0,32,.15)", boxShadow: "0 8px 24px rgba(0,0,0,.1)", width: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
+                      <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 14px", fontSize: "11px", fontWeight: 600, color: BURG, cursor: "pointer", borderBottom: "1px solid #f0f0f0", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>← Back</div>
+                      <div style={{ fontSize: "10px", fontWeight: 700, color: "#bbb", letterSpacing: ".12em", textTransform: "uppercase", padding: "8px 14px 4px", fontFamily: "'DM Sans',sans-serif" }}>{platform === "website" ? "Website" : "Amazon"}</div>
                       {tracks.map((t, i) => (
-                        <Link key={t.slug} href={`/training/videos/${platform}/${t.slug}`} onClick={closeAll}
-                          style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 14px", textDecoration: "none", borderBottom: i < tracks.length - 1 ? "1px solid #f5f5f5" : "none" }}
-                          className="sk-dd-row"
-                        >
-                          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: BURG, opacity: .45, flexShrink: 0 }} />
-                          <div>
-                            <div style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>{t.label}</div>
-                          </div>
+                        <Link key={t.slug} href={`/training/videos/${platform}/${t.slug}`} onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 14px", textDecoration: "none", borderBottom: i < tracks.length - 1 ? "1px solid #f0f0f0" : "none" }} className="sk-dd-row">
+                          <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: BURG, opacity: .5, flexShrink: 0 }} />
+                          <span style={{ fontSize: "13px", fontWeight: 500, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>{t.label}</span>
                         </Link>
                       ))}
                     </div>
@@ -285,7 +253,7 @@ export default function Navbar() {
               <button onClick={() => setMobileStep("root")} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: BURG, background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>← Back</button>
               <div style={{ fontSize: "11px", fontWeight: 600, color: "#aaa", letterSpacing: ".1em", textTransform: "uppercase", padding: "4px 16px 8px", fontFamily: "'DM Sans',sans-serif" }}>Training</div>
               <Link href="/training/ebook" onClick={closeAll} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", borderRadius: "10px", marginBottom: "4px", textDecoration: "none", background: "#fafafa" }}>
-                <span style={{ fontSize: "20px" }}>📖</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                 <div>
                   <div style={{ fontSize: "14px", fontWeight: 600, color: "#111", fontFamily: "'DM Sans',sans-serif" }}>Ebook</div>
                   <div style={{ fontSize: "11px", color: "#888", fontFamily: "'DM Sans',sans-serif" }}>Download seller guides</div>
@@ -293,7 +261,7 @@ export default function Navbar() {
               </Link>
               <button onClick={() => setMobileStep("website")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: "10px", marginBottom: "4px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <span style={{ fontSize: "20px" }}>🌐</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                   <div style={{ textAlign: "left" }}>
                     <div style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Website</div>
                     <div style={{ fontSize: "11px", color: "#888" }}>Sell on your own site</div>
@@ -303,7 +271,7 @@ export default function Navbar() {
               </button>
               <button onClick={() => setMobileStep("amazon")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: "10px", background: "#fafafa", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <span style={{ fontSize: "20px" }}>📦</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9B0020" strokeWidth="2" style={{flexShrink:0}}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
                   <div style={{ textAlign: "left" }}>
                     <div style={{ fontSize: "14px", fontWeight: 600, color: "#111" }}>Amazon</div>
                     <div style={{ fontSize: "11px", color: "#888" }}>Sell on Amazon</div>
