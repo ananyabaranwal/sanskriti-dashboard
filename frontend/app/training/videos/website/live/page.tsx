@@ -41,22 +41,6 @@ export default function Page() {
             Live website training sessions are being scheduled. Register as a seller to get notified when sessions go live — interactive coaching, Q&A, and website reviews.
           </p>
 
-          {/* Features */}
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px", marginBottom:"36px", textAlign:"left" }}>
-            {[
-              { icon:"🖥️", label:"Website Audit", desc:"Live review of your store" },
-              { icon:"🔍", label:"SEO Deep Dive", desc:"Rank higher on Google" },
-              { icon:"📈", label:"Conversion Tips", desc:"Turn visitors to buyers" },
-              { icon:"❓", label:"Live Q&A", desc:"Ask experts directly" },
-            ].map(f => (
-              <div key={f.label} style={{ padding:"14px", borderRadius:"10px", background:"#fafafa", border:"1px solid #f0f0f0" }}>
-                <div style={{ fontSize:"20px", marginBottom:"6px" }}>{f.icon}</div>
-                <div style={{ fontSize:"13px", fontWeight:600, color:"#111", fontFamily:"'DM Sans',sans-serif", marginBottom:"2px" }}>{f.label}</div>
-                <div style={{ fontSize:"11px", color:"#aaa", fontFamily:"'DM Sans',sans-serif" }}>{f.desc}</div>
-              </div>
-            ))}
-          </div>
-
           <div style={{ display:"flex", gap:"10px", justifyContent:"center", flexWrap:"wrap" }}>
             <Link href="/register" style={{ padding:"12px 28px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", fontFamily:"'DM Sans',sans-serif" }}>
               Register to Get Notified →
