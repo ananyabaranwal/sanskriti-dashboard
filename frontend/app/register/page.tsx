@@ -66,21 +66,31 @@ export default function RegisterPage() {
     <div style={{ minHeight: "100vh", display: "flex", fontFamily: "'Segoe UI', sans-serif", paddingTop: "72px" }}>
 
       {/* ── Left panel ── */}
-      <div style={{ width: "40%", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 36px", borderRight: "2px solid #8B1A1A" }} className="hide-mobile">
-        <img src="/logo.png" alt="Sanskriti The Antique" style={{ height: "110px", width: "auto", objectFit: "contain", display: "block", margin: "0 auto 24px", mixBlendMode: "multiply" }} />
-        <h2 style={{ fontSize: "20px", fontFamily: "Georgia,serif", color: "#1a0a0a", lineHeight: "1.4", marginBottom: "12px", fontWeight: 400, textAlign: "center" }}>
-          Join India's Premier Antique Marketplace
-        </h2>
-        <p style={{ fontSize: "13px", color: "#9a7070", lineHeight: "1.75", marginBottom: "32px", textAlign: "center" }}>
-          Register as a verified seller and reach thousands of collectors across India and internationally.
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
-          {["Free to register", "KYC verified badge", "GST invoice generation", "Wallet & payment system", "Training video access", "Dedicated seller support"].map(b => (
-            <div key={b} style={{ fontSize: "13px", color: "#3a2020", display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ width: "20px", height: "20px", borderRadius: "50%", background: "rgba(139,26,26,.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "11px", color: "#8B1A1A", fontWeight: 700 }}>✓</span>
-              {b}
-            </div>
-          ))}
+      <div
+        style={{ width: "42%", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 0", borderRight: "2px solid #8B1A1A" }}
+        className="hide-mobile"
+      >
+        {/* inner container — centers content and keeps max width */}
+        <div style={{ width: "100%", maxWidth: "320px", margin: "0 auto", padding: "0 32px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <img
+            src="/logo.png"
+            alt="Sanskriti The Antique"
+            style={{ height: "110px", width: "auto", objectFit: "contain", display: "block", margin: "0 auto 24px", mixBlendMode: "multiply" }}
+          />
+          <h2 style={{ fontSize: "20px", fontFamily: "Georgia,serif", color: "#1a0a0a", lineHeight: "1.4", marginBottom: "12px", fontWeight: 400, textAlign: "center" }}>
+            Join India's Premier Antique Marketplace
+          </h2>
+          <p style={{ fontSize: "13px", color: "#9a7070", lineHeight: "1.75", marginBottom: "32px", textAlign: "center" }}>
+            Register as a verified seller and reach thousands of collectors across India and internationally.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
+            {["Free to register", "KYC verified badge", "GST invoice generation", "Wallet & payment system", "Training video access", "Dedicated seller support"].map(b => (
+              <div key={b} style={{ fontSize: "13px", color: "#3a2020", display: "flex", alignItems: "center", gap: "10px" }}>
+                <span style={{ width: "20px", height: "20px", borderRadius: "50%", background: "rgba(139,26,26,.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "11px", color: "#8B1A1A", fontWeight: 700 }}>✓</span>
+                {b}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
