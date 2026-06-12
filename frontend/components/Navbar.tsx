@@ -56,12 +56,13 @@ export default function Navbar() {
 
   const isDashboard = pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
   const isAuthPage  = pathname === "/login" || pathname === "/register";
-  if (isDashboard || isAuthPage) return null;
+
+  if (isDashboard) return null;
 
   const tracks = [
-    { label: "75 Days Training",    slug: "75-days"      },
-    { label: "Live Training",       slug: "live"         },
-    { label: "Social Media Content",slug: "social-media" },
+    { label: "75 Days Training",     slug: "75-days"      },
+    { label: "Live Training",        slug: "live"         },
+    { label: "Social Media Content", slug: "social-media" },
   ];
 
   const closeAll = () => { setDropLevel(0); setMenuOpen(false); setMobileStep("root"); };
@@ -82,10 +83,10 @@ export default function Navbar() {
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
         height: "68px", display: "flex", alignItems: "center", padding: "0 48px",
-        background: scrolled ? "rgba(255,255,255,.97)" : "transparent",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(155,0,32,.1)" : "none",
+        background: scrolled || isAuthPage ? "rgba(255,255,255,.97)" : "transparent",
+        backdropFilter: scrolled || isAuthPage ? "blur(20px)" : "none",
+        WebkitBackdropFilter: scrolled || isAuthPage ? "blur(20px)" : "none",
+        borderBottom: scrolled || isAuthPage ? "1px solid rgba(155,0,32,.1)" : "none",
         transition: "all .35s ease",
       }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -101,7 +102,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop nav links */}
           <div className="sk-desk" style={{ display: "flex", alignItems: "center", gap: "2px" }}>
             {NAV_LINKS.map(l => {
               if (!l.hasDropdown) {
@@ -119,7 +120,6 @@ export default function Navbar() {
 
               return (
                 <div key={l.href} ref={dropRef} style={{ position: "relative" }}>
-                  {/* Training button */}
                   <button
                     onClick={() => setDropLevel(dropLevel > 0 ? 0 : 1)}
                     style={{
@@ -135,7 +135,6 @@ export default function Navbar() {
                     <span style={{ fontSize: "10px", transition: "transform .2s", display: "inline-block", transform: dropLevel > 0 ? "rotate(180deg)" : "none" }}>▾</span>
                   </button>
 
-                  {/* Level 1 — Ebook + Videos */}
                   {dropLevel === 1 && (
                     <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "12px", border: "1px solid rgba(155,0,32,.15)", boxShadow: "0 8px 24px rgba(0,0,0,.1)", width: "180px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .2s ease" }}>
                       <div style={{ fontSize: "10px", fontWeight: 700, color: "#bbb", letterSpacing: ".12em", textTransform: "uppercase", padding: "8px 14px 4px", fontFamily: "'DM Sans',sans-serif" }}>Training</div>
@@ -153,7 +152,6 @@ export default function Navbar() {
                     </div>
                   )}
 
-                  {/* Level 2 — Website + Amazon */}
                   {dropLevel === 2 && (
                     <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "12px", border: "1px solid rgba(155,0,32,.15)", boxShadow: "0 8px 24px rgba(0,0,0,.1)", width: "180px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
                       <div onClick={() => setDropLevel(1)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 14px", fontSize: "11px", fontWeight: 600, color: BURG, cursor: "pointer", borderBottom: "1px solid #f0f0f0", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>← Back</div>
@@ -175,7 +173,6 @@ export default function Navbar() {
                     </div>
                   )}
 
-                  {/* Level 3 — 3 tracks */}
                   {dropLevel === 3 && platform && (
                     <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#fff", borderRadius: "12px", border: "1px solid rgba(155,0,32,.15)", boxShadow: "0 8px 24px rgba(0,0,0,.1)", width: "200px", zIndex: 200, overflow: "hidden", animation: "sk-slideDown .15s ease" }}>
                       <div onClick={() => setDropLevel(2)} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 14px", fontSize: "11px", fontWeight: 600, color: BURG, cursor: "pointer", borderBottom: "1px solid #f0f0f0", background: "#fafafa", fontFamily: "'DM Sans',sans-serif" }}>← Back</div>
@@ -193,23 +190,25 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* CTA buttons */}
-          <div className="sk-desk" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            {loggedIn ? (
-              <Link href="/dashboard" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: BURG, boxShadow: `0 4px 14px rgba(155,0,32,.3)` }}>
-                Dashboard →
-              </Link>
-            ) : (
-              <>
-                <Link href="/login" className="sk-signin" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 500, color: "#333", textDecoration: "none", padding: "8px 20px", borderRadius: "6px", border: "1.5px solid #ddd", transition: "all .2s" }}>
-                  Sign In
+          {/* CTA buttons — hidden on auth pages */}
+          {!isAuthPage && (
+            <div className="sk-desk" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              {loggedIn ? (
+                <Link href="/dashboard" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: BURG, boxShadow: `0 4px 14px rgba(155,0,32,.3)` }}>
+                  Dashboard →
                 </Link>
-                <Link href="/register" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: BURG, boxShadow: `0 4px 14px rgba(155,0,32,.3)` }}>
-                  Join as Seller
-                </Link>
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <Link href="/login" className="sk-signin" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 500, color: "#333", textDecoration: "none", padding: "8px 20px", borderRadius: "6px", border: "1.5px solid #ddd", transition: "all .2s" }}>
+                    Sign In
+                  </Link>
+                  <Link href="/register" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "13px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: "6px", background: BURG, boxShadow: `0 4px 14px rgba(155,0,32,.3)` }}>
+                    Join as Seller
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Hamburger */}
           <button onClick={() => setMenuOpen(!menuOpen)} className="sk-ham" aria-label="Toggle menu"
@@ -229,7 +228,6 @@ export default function Navbar() {
       {menuOpen && (
         <div style={{ position: "fixed", top: "68px", left: 0, right: 0, zIndex: 999, background: "rgba(255,255,255,.98)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderBottom: "1px solid #f0f0f0", padding: "12px 20px 20px", boxShadow: "0 8px 32px rgba(0,0,0,.08)", animation: "sk-slideDown .25s ease", maxHeight: "80vh", overflowY: "auto" }}>
 
-          {/* Step: root */}
           {mobileStep === "root" && (
             <>
               {NAV_LINKS.map(l => {
@@ -244,10 +242,17 @@ export default function Navbar() {
                   </button>
                 );
               })}
+
+              {/* Mobile CTA — hidden on auth pages */}
+              {!isAuthPage && (
+                <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "14px", marginTop: "10px", display: "flex", gap: "10px" }}>
+                  <Link href="/login" style={{ flex: 1, padding: "12px", borderRadius: "8px", border: "1.5px solid #ddd", color: "#333", fontSize: "14px", fontWeight: 500, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Sign In</Link>
+                  <Link href="/register" style={{ flex: 1, padding: "12px", borderRadius: "8px", background: BURG, color: "#fff", fontSize: "14px", fontWeight: 600, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Join as Seller</Link>
+                </div>
+              )}
             </>
           )}
 
-          {/* Step: videos (Ebook + Website + Amazon) */}
           {mobileStep === "videos" && (
             <>
               <button onClick={() => setMobileStep("root")} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: BURG, background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>← Back</button>
@@ -282,7 +287,6 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Step: website tracks */}
           {mobileStep === "website" && (
             <>
               <button onClick={() => setMobileStep("videos")} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: BURG, background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>← Back</button>
@@ -296,7 +300,6 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Step: amazon tracks */}
           {mobileStep === "amazon" && (
             <>
               <button onClick={() => setMobileStep("videos")} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: BURG, background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>← Back</button>
@@ -308,13 +311,6 @@ export default function Navbar() {
                 </Link>
               ))}
             </>
-          )}
-
-          {mobileStep === "root" && (
-            <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "14px", marginTop: "10px", display: "flex", gap: "10px" }}>
-              <Link href="/login" style={{ flex: 1, padding: "12px", borderRadius: "8px", border: "1.5px solid #ddd", color: "#333", fontSize: "14px", fontWeight: 500, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Sign In</Link>
-              <Link href="/register" style={{ flex: 1, padding: "12px", borderRadius: "8px", background: BURG, color: "#fff", fontSize: "14px", fontWeight: 600, textDecoration: "none", textAlign: "center", fontFamily: "'DM Sans',sans-serif" }}>Join as Seller</Link>
-            </div>
           )}
         </div>
       )}
