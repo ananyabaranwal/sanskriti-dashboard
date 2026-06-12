@@ -71,9 +71,9 @@ export default function AdminLoginPage() {
           <img
             src="/logo.png"
             alt="Sanskriti The Antique"
-            style={{ height:"90px", width:"auto", objectFit:"contain", margin:"0 auto", display:"block" }}
+            style={{ height:"110px", width:"auto", objectFit:"contain", margin:"0 auto", display:"block", mixBlendMode:"multiply" }}
           />
-          <div style={{ marginTop:"10px", fontSize:"11px", letterSpacing:".18em", color:"#8B1A1A", textTransform:"uppercase", fontWeight:600 }}>Admin Panel</div>
+          <div style={{ marginTop:"8px", fontSize:"11px", letterSpacing:".18em", color:"#8B1A1A", textTransform:"uppercase", fontWeight:600 }}>Admin Panel</div>
         </div>
 
         {/* Glass card with deep red outline */}
