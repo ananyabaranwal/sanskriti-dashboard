@@ -1,178 +1,198 @@
 "use client";
-
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
-const timeline = [
-  { year: "2008", title: "Founded in Lucknow",         desc: "Started as a small antique shop in Hazratganj, Lucknow by the Baranwal family." },
-  { year: "2012", title: "First Exhibition",            desc: "Participated in the National Crafts Mela, Delhi — won recognition for authentic Mughal-era pieces." },
-  { year: "2016", title: "Digital Expansion",           desc: "Launched our first online catalogue, connecting with buyers across India and internationally." },
-  { year: "2019", title: "Seller Network Launch",       desc: "Opened the platform to verified sellers across India, building a community of 200+ antique dealers." },
-  { year: "2022", title: "Training Programme",          desc: "Launched the Sanskriti Training Academy — professional education for antique sellers." },
-  { year: "2024", title: "1,200+ Sellers Strong",       desc: "Grew to over 1,200 verified sellers with ₹50Cr+ in annual transactions through the platform." },
+const BURG = "#9B0020";
+const GF = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');`;
+
+const STATS = [
+  { value:"1L+",   label:"Products Listed"     },
+  { value:"25+",   label:"Categories"           },
+  { value:"5,000+",label:"Active Sellers"       },
+  { value:"12+",   label:"Years of Experience"  },
 ];
 
-const team = [
-  { name: "Vikas Arya",   role: "Founder & CEO",          initials: "VA", bio: "Third-generation antique dealer with 20+ years in the Indian heritage market." },
-  { name: "Rajesh Kumar",      role: "Head of Authentication",  initials: "RK", bio: "Certified gemologist and antique appraiser with expertise in brass, bronze, and silver." },
-  { name: "Priya Sharma",      role: "Business Development",   initials: "PS", bio: "MBA with specialisation in luxury goods and heritage market strategy." },
-  { name: "Arjun Nair",        role: "Digital & Marketing",    initials: "AN", bio: "Digital marketing expert helping antique sellers build strong online presence." },
+const VALUES = [
+  { icon:"🏛️", title:"Heritage First",       desc:"Every antique listed on our platform is verified for authenticity. We protect India's cultural legacy one piece at a time." },
+  { icon:"🤝", title:"Seller Success",       desc:"We grow when our sellers grow. Our entire platform is built to help artisans and dealers build sustainable digital businesses." },
+  { icon:"🔍", title:"Transparency",         desc:"Clear pricing, honest descriptions, and full disclosure of condition. Buyers and sellers both deserve complete transparency." },
+  { icon:"🌐", title:"Digital India",        desc:"We believe every Indian artisan deserves access to global markets. We bridge the gap between heritage craftsmanship and modern e-commerce." },
+];
+
+const TEAM = [
+  { name:"Vipul Kumar Arya",  role:"Founder & CEO",          initials:"VK", desc:"Author of The Zero-Inventory Empire. 12+ years in antique trade and e-commerce." },
+  { name:"Operations Team",   role:"Platform & Seller Support",initials:"OT", desc:"Dedicated team managing seller onboarding, KYC, orders, and platform operations." },
+  { name:"Content Team",      role:"Training & Education",    initials:"CT", desc:"Experts creating training videos, ebooks, and seller education programmes." },
+  { name:"Tech Team",         role:"Platform Development",    initials:"TT", desc:"Building the technology that powers Sanskriti's seller and buyer experience." },
 ];
 
 export default function AboutPage() {
-  return (
-    <div style={{ background: "#FBF7F0", minHeight: "100vh", paddingTop: "72px" }}>
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const [visible, setVisible] = useState<Set<string>>(new Set());
 
-      {/* ── HERO ── */}
-      <div style={{ background: "linear-gradient(160deg, #1A0F0A 0%, #2C1810 50%, #3D2B1F 100%)", padding: "72px 0 64px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(201,168,76,.04) 1px, transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
-            <Link href="/" style={{ fontSize: "13px", color: "rgba(201,168,76,.6)", textDecoration: "none" }}>Home</Link>
-            <span style={{ color: "rgba(201,168,76,.3)" }}>›</span>
-            <span style={{ fontSize: "13px", color: "rgba(201,168,76,.9)" }}>About Us</span>
-          </div>
-          <div style={{ maxWidth: "680px" }}>
-            <h1 style={{ fontSize: "clamp(32px, 5vw, 56px)", fontFamily: "Georgia, serif", color: "#F5E6C8", lineHeight: "1.1", marginBottom: "20px", fontWeight: "400" }}>
-              Preserving India's Heritage,<br />
-              <span style={{ background: "linear-gradient(135deg, #C9A84C, #E8C86A)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>One Piece at a Time</span>
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) setVisible(prev => new Set([...prev, (e.target as HTMLElement).dataset.sec!])); }),
+      { threshold: 0.1 }
+    );
+    Object.values(sectionRefs.current).forEach(el => el && obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  const ref = (id: string) => (el: HTMLElement | null) => {
+    if (el) { el.dataset.sec = id; sectionRefs.current[id] = el; }
+  };
+  const vis = (id: string) => visible.has(id);
+
+  return (
+    <div style={{ fontFamily:"'DM Sans',sans-serif", background:"#fff", paddingTop:"68px" }}>
+      <style>{`
+        ${GF}
+        *{box-sizing:border-box;margin:0;padding:0}
+        @keyframes reveal{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .val-card:hover{border-color:${BURG}!important;transform:translateY(-3px)!important;box-shadow:0 10px 28px rgba(155,0,32,.08)!important}
+        .team-card:hover{border-color:${BURG}!important;box-shadow:0 8px 24px rgba(155,0,32,.08)!important}
+      `}</style>
+
+      {/* ── HERO — no big banner, clean white ─────────────────── */}
+      <section style={{ padding:"64px 48px 56px", background:"#fff", borderBottom:"1px solid #f0f0f0" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"64px", alignItems:"center" }}>
+          <div>
+            <div style={{ display:"inline-flex", alignItems:"center", gap:"7px", padding:"4px 14px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.18)`, background:`rgba(155,0,32,.04)`, marginBottom:"18px" }}>
+              <span style={{ width:"5px", height:"5px", borderRadius:"50%", background:BURG, animation:"pulse 2s infinite", display:"inline-block" }} />
+              <span style={{ fontSize:"10px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase" }}>About Sanskriti</span>
+            </div>
+            <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(32px,4vw,52px)", fontWeight:700, color:"#111", lineHeight:1.08, marginBottom:"18px" }}>
+              Preserving India's
+              <span style={{ display:"block", fontStyle:"italic", color:BURG, fontWeight:400 }}>Heritage, Digitally.</span>
             </h1>
-            <p style={{ fontSize: "17px", color: "rgba(245,230,200,.62)", lineHeight: "1.75" }}>
+            <p style={{ fontSize:"15px", color:"#555", lineHeight:1.85, marginBottom:"14px" }}>
               Sanskriti The Antique is India's most trusted marketplace for authentic antiques — connecting passionate sellers with discerning collectors since 2008.
             </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── STORY ── */}
-      <section style={{ padding: "80px 0", background: "#FFFDF9" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "center" }}>
-            <div>
-              <span style={{ fontSize: "11px", fontWeight: "600", letterSpacing: ".18em", textTransform: "uppercase", color: "#A08060", display: "block", marginBottom: "10px" }}>Our story</span>
-              <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", fontFamily: "Georgia, serif", color: "#2C1810", marginBottom: "20px" }}>A Legacy of Authenticity</h2>
-              <div style={{ width: "52px", height: "2px", background: "linear-gradient(90deg, #C9A84C, #8B6914)", borderRadius: "1px", marginBottom: "24px" }} />
-              <p style={{ fontSize: "15px", color: "#6B4F12", lineHeight: "1.85", marginBottom: "16px" }}>
-                What began as a small family antique shop in the lanes of Hazratganj, Lucknow has grown into India's largest verified antique marketplace. Founded by Ananya Baranwal in 2008, Sanskriti The Antique was built on a simple belief — that every authentic antique deserves to find the right home.
-              </p>
-              <p style={{ fontSize: "15px", color: "#A08060", lineHeight: "1.85", marginBottom: "24px" }}>
-                Today, we connect over 1,200 verified sellers with thousands of collectors, interior designers, and heritage enthusiasts across India and internationally. Every piece on our platform has been assessed for authenticity, ensuring buyers can trust what they purchase.
-              </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                {[
-                  { value: "1,200+", label: "Verified Sellers" },
-                  { value: "5,000+", label: "Authentic Pieces" },
-                  { value: "15+",    label: "Years in Business" },
-                  { value: "98%",    label: "Authenticity Rate" },
-                ].map((s) => (
-                  <div key={s.label} style={{ background: "#FBF7F0", borderRadius: "12px", padding: "16px", border: "1px solid #E8D5A3" }}>
-                    <div style={{ fontSize: "24px", fontWeight: "700", color: "#C9A84C", fontFamily: "Georgia, serif" }}>{s.value}</div>
-                    <div style={{ fontSize: "12px", color: "#A08060", marginTop: "3px" }}>{s.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div style={{ background: "linear-gradient(135deg, #2C1810, #3D2B1F)", borderRadius: "20px", padding: "48px", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(201,168,76,.05) 1px, transparent 1px)", backgroundSize: "20px 20px", pointerEvents: "none" }} />
-              <div style={{ position: "relative", textAlign: "center" }}>
-                <div style={{ fontSize: "80px", marginBottom: "24px" }}>🏺</div>
-                <blockquote style={{ fontSize: "18px", fontFamily: "Georgia, serif", color: "#F5E6C8", lineHeight: "1.65", fontStyle: "italic", marginBottom: "20px" }}>
-                  "Every antique carries the soul of its era. Our mission is to ensure these pieces of history find homes where they will be cherished for generations."
-                </blockquote>
-                <div style={{ fontSize: "14px", fontWeight: "600", color: "#C9A84C" }}>— Ananya Baranwal</div>
-                <div style={{ fontSize: "12px", color: "rgba(201,168,76,.55)", marginTop: "3px" }}>Founder & CEO</div>
-              </div>
+            <p style={{ fontSize:"15px", color:"#555", lineHeight:1.85, marginBottom:"28px" }}>
+              We serve <strong style={{ color:"#111" }}>25+ categories</strong> with over <strong style={{ color:"#111" }}>1 lakh products</strong> — helping every artisan and dealer build a sustainable digital business without needing inventory, warehouse, or manpower.
+            </p>
+            <div style={{ display:"flex", gap:"12px", flexWrap:"wrap" }}>
+              <Link href="/register" style={{ padding:"12px 28px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"13px", fontWeight:700, textDecoration:"none", boxShadow:`0 4px 16px rgba(155,0,32,.28)` }}>Join as Seller →</Link>
+              <Link href="/services" style={{ padding:"12px 24px", borderRadius:"8px", border:"1.5px solid #e5e5e5", color:"#333", fontSize:"13px", fontWeight:500, textDecoration:"none" }}>Our Services</Link>
             </div>
           </div>
+
+          {/* Stats grid */}
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px", background:"#f0f0f0", borderRadius:"16px", overflow:"hidden" }}>
+            {STATS.map(s => (
+              <div key={s.label} style={{ padding:"28px 24px", background:"#fff", textAlign:"center" }}>
+                <div style={{ fontFamily:"'Playfair Display',serif", fontSize:"36px", fontWeight:700, color:BURG, lineHeight:1, marginBottom:"6px" }}>{s.value}</div>
+                <div style={{ fontSize:"12px", color:"#888", letterSpacing:".08em", textTransform:"uppercase" }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── TIMELINE ── */}
-      <section style={{ padding: "80px 0", background: "#FBF7F0" }}>
-        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <span style={{ fontSize: "11px", fontWeight: "600", letterSpacing: ".18em", textTransform: "uppercase", color: "#A08060", display: "block", marginBottom: "10px" }}>Our journey</span>
-            <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", fontFamily: "Georgia, serif", color: "#2C1810" }}>15 Years of Heritage</h2>
-            <div style={{ width: "52px", height: "2px", background: "linear-gradient(90deg, #C9A84C, #8B6914)", borderRadius: "1px", margin: "16px auto 0" }} />
+      {/* ── OUR STORY ─────────────────────────────────────────── */}
+      <section ref={ref("story")} style={{ padding:"72px 48px", background:"#f9f9f9", opacity:vis("story")?1:0, transform:vis("story")?"none":"translateY(28px)", transition:"all .7s ease" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"64px", alignItems:"center" }}>
+          <div>
+            <div style={{ fontSize:"11px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase", marginBottom:"10px" }}>Our Story</div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(26px,3vw,40px)", fontWeight:700, color:"#111", lineHeight:1.1, marginBottom:"20px" }}>
+              A Legacy of
+              <span style={{ fontStyle:"italic", color:BURG, fontWeight:400 }}> Authenticity</span>
+            </h2>
+            <p style={{ fontSize:"14px", color:"#555", lineHeight:1.85, marginBottom:"14px" }}>
+              What began as a small family antique shop in the lanes of Hazratganj, Lucknow has grown into India's premier digital antique marketplace. Founded by Vipul Kumar Arya — author of <em>The Zero-Inventory Empire</em> — Sanskriti was built on a simple belief: every Indian artisan deserves access to a global market.
+            </p>
+            <p style={{ fontSize:"14px", color:"#555", lineHeight:1.85, marginBottom:"14px" }}>
+              Over 12 years, we have helped thousands of sellers across India digitise their antique businesses — from brass craftsmen in Moradabad to Madhubani painters in Bihar and silver jewellers in Rajasthan.
+            </p>
+            <p style={{ fontSize:"14px", color:"#555", lineHeight:1.85 }}>
+              Today, Sanskriti is not just a marketplace — it is a complete seller ecosystem offering e-commerce setup, branding, photoshoots, manufacturing support, and expert training to help every seller thrive.
+            </p>
           </div>
-          <div style={{ position: "relative" }}>
-            <div style={{ position: "absolute", left: "71px", top: "0", bottom: "0", width: "1px", background: "linear-gradient(180deg, transparent, #E8D5A3 10%, #E8D5A3 90%, transparent)" }} />
-            {timeline.map((t, i) => (
-              <div key={t.year} style={{ display: "flex", gap: "24px", marginBottom: "36px", position: "relative" }}>
-                <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "linear-gradient(135deg, #C9A84C, #8B6914)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 16px rgba(139,105,20,.3)", zIndex: 1 }}>
-                  <span style={{ fontSize: "12px", fontWeight: "700", color: "#3D2B1F", fontFamily: "Georgia, serif" }}>{t.year}</span>
+
+          {/* Visual card */}
+          <div style={{ borderRadius:"20px", overflow:"hidden", background:BURG, padding:"40px 36px", position:"relative" }}>
+            <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px)", backgroundSize:"24px 24px", pointerEvents:"none" }} />
+            <div style={{ position:"relative" }}>
+              <div style={{ fontSize:"48px", marginBottom:"20px" }}>🏺</div>
+              <h3 style={{ fontFamily:"'Playfair Display',serif", fontSize:"22px", fontWeight:700, color:"#fff", marginBottom:"12px" }}>The Zero-Inventory Model</h3>
+              <p style={{ fontSize:"13px", color:"rgba(255,255,255,.75)", lineHeight:1.8, marginBottom:"20px" }}>
+                Sell lakhs of products online without stocking a single item. Our model lets you earn margin on every order while we handle packaging and dispatch from our warehouse.
+              </p>
+              {["No inventory investment", "No warehouse required", "No manpower needed", "Earn margin on every sale"].map(f => (
+                <div key={f} style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"8px" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style={{ fontSize:"13px", color:"rgba(255,255,255,.85)" }}>{f}</span>
                 </div>
-                <div style={{ paddingTop: "16px" }}>
-                  <h3 style={{ fontSize: "17px", fontWeight: "600", color: "#2C1810", marginBottom: "6px", fontFamily: "Georgia, serif" }}>{t.title}</h3>
-                  <p style={{ fontSize: "14px", color: "#A08060", lineHeight: "1.65" }}>{t.desc}</p>
-                </div>
+              ))}
+              <Link href="/training/ebook" style={{ display:"inline-block", marginTop:"18px", padding:"10px 22px", borderRadius:"8px", background:"#fff", color:BURG, fontSize:"12px", fontWeight:700, textDecoration:"none" }}>
+                Read the Book →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── VALUES ────────────────────────────────────────────── */}
+      <section ref={ref("values")} style={{ padding:"72px 48px", background:"#fff", opacity:vis("values")?1:0, transform:vis("values")?"none":"translateY(28px)", transition:"all .7s ease" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom:"44px" }}>
+            <div style={{ fontSize:"11px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase", marginBottom:"10px" }}>Our Values</div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(26px,3vw,40px)", fontWeight:700, color:"#111" }}>
+              What We Stand For
+            </h2>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:"14px" }}>
+            {VALUES.map((v, i) => (
+              <div key={v.title} className="val-card" style={{ padding:"26px 22px", borderRadius:"14px", border:"1.5px solid #f0f0f0", background:"#fff", transition:"all .25s", animation:vis("values")?`reveal .5s ${i*.08}s ease both`:"none" }}>
+                <div style={{ fontSize:"28px", marginBottom:"12px" }}>{v.icon}</div>
+                <h3 style={{ fontFamily:"'Playfair Display',serif", fontSize:"17px", fontWeight:600, color:"#111", marginBottom:"8px" }}>{v.title}</h3>
+                <p style={{ fontSize:"13px", color:"#666", lineHeight:1.75 }}>{v.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── TEAM ── */}
-      <section style={{ padding: "80px 0", background: "#FFFDF9" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <span style={{ fontSize: "11px", fontWeight: "600", letterSpacing: ".18em", textTransform: "uppercase", color: "#A08060", display: "block", marginBottom: "10px" }}>The people behind it</span>
-            <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", fontFamily: "Georgia, serif", color: "#2C1810" }}>Our Team</h2>
-            <div style={{ width: "52px", height: "2px", background: "linear-gradient(90deg, #C9A84C, #8B6914)", borderRadius: "1px", margin: "16px auto 0" }} />
+      {/* ── TEAM ──────────────────────────────────────────────── */}
+      <section ref={ref("team")} style={{ padding:"72px 48px", background:"#f9f9f9", opacity:vis("team")?1:0, transform:vis("team")?"none":"translateY(28px)", transition:"all .7s ease" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom:"44px" }}>
+            <div style={{ fontSize:"11px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase", marginBottom:"10px" }}>Our Team</div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(26px,3vw,40px)", fontWeight:700, color:"#111" }}>
+              The People Behind Sanskriti
+            </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "20px" }}>
-            {team.map((m) => (
-              <div key={m.name} style={{ background: "#FFFDF9", border: "1px solid #E8D5A3", borderRadius: "16px", padding: "28px 24px", textAlign: "center" }}>
-                <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "linear-gradient(135deg, #C9A84C, #8B6914)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", color: "#3D2B1F", fontSize: "18px", fontWeight: "700" }}>{m.initials}</div>
-                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#2C1810", marginBottom: "4px", fontFamily: "Georgia, serif" }}>{m.name}</h3>
-                <div style={{ fontSize: "12px", color: "#C9A84C", fontWeight: "600", marginBottom: "10px", letterSpacing: ".03em" }}>{m.role}</div>
-                <p style={{ fontSize: "13px", color: "#A08060", lineHeight: "1.65" }}>{m.bio}</p>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))", gap:"14px" }}>
+            {TEAM.map((t, i) => (
+              <div key={t.name} className="team-card" style={{ padding:"24px 20px", borderRadius:"14px", border:"1.5px solid #f0f0f0", background:"#fff", transition:"all .25s", textAlign:"center", animation:vis("team")?`reveal .5s ${i*.08}s ease both`:"none" }}>
+                <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:BURG, display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:"16px", fontWeight:700, margin:"0 auto 14px" }}>{t.initials}</div>
+                <div style={{ fontFamily:"'Playfair Display',serif", fontSize:"16px", fontWeight:600, color:"#111", marginBottom:"4px" }}>{t.name}</div>
+                <div style={{ fontSize:"11px", color:BURG, fontWeight:600, letterSpacing:".06em", textTransform:"uppercase", marginBottom:"10px" }}>{t.role}</div>
+                <p style={{ fontSize:"12px", color:"#888", lineHeight:1.65 }}>{t.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── MISSION + VALUES ── */}
-      <section style={{ padding: "80px 0", background: "linear-gradient(160deg, #1A0F0A, #2C1810, #3D2B1F)", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(201,168,76,.03) 1px, transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <span style={{ fontSize: "11px", fontWeight: "600", letterSpacing: ".18em", textTransform: "uppercase", color: "rgba(201,168,76,.6)", display: "block", marginBottom: "10px" }}>What drives us</span>
-            <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", fontFamily: "Georgia, serif", color: "#F5E6C8" }}>Our Mission & Values</h2>
-            <div style={{ width: "52px", height: "2px", background: "linear-gradient(90deg, #C9A84C, #8B6914)", borderRadius: "1px", margin: "16px auto 0" }} />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "20px" }}>
-            {[
-              { icon: "🔍", title: "Authenticity First",  desc: "Every piece is assessed. We never compromise on the integrity of what we list." },
-              { icon: "🌱", title: "Heritage Preservation",desc: "We believe India's cultural history deserves to be preserved and celebrated." },
-              { icon: "🤝", title: "Seller Success",       desc: "Our sellers' growth is our growth. We invest deeply in their education and tools." },
-              { icon: "🌍", title: "Global Reach",         desc: "Connecting Indian heritage with collectors and enthusiasts around the world." },
-            ].map((v) => (
-              <div key={v.title} style={{ background: "rgba(201,168,76,.05)", border: "1px solid rgba(201,168,76,.12)", borderRadius: "16px", padding: "28px 24px", textAlign: "center" }}>
-                <div style={{ fontSize: "32px", marginBottom: "14px" }}>{v.icon}</div>
-                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#F5E6C8", marginBottom: "8px", fontFamily: "Georgia, serif" }}>{v.title}</h3>
-                <p style={{ fontSize: "13px", color: "rgba(245,230,200,.6)", lineHeight: "1.65" }}>{v.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section style={{ padding: "80px 24px", background: "#FFFDF9", textAlign: "center" }}>
-        <div style={{ maxWidth: "520px", margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(26px, 3.5vw, 38px)", fontFamily: "Georgia, serif", color: "#2C1810", marginBottom: "14px" }}>Join Our Community</h2>
-          <div style={{ width: "52px", height: "2px", background: "linear-gradient(90deg, #C9A84C, #8B6914)", borderRadius: "1px", margin: "0 auto 20px" }} />
-          <p style={{ fontSize: "15px", color: "#A08060", lineHeight: "1.75", marginBottom: "32px" }}>
-            Be part of India's most trusted antique marketplace. Register as a seller today.
+      {/* ── CTA ───────────────────────────────────────────────── */}
+      <section style={{ padding:"72px 48px", background:"#fff", textAlign:"center" }}>
+        <div style={{ maxWidth:"560px", margin:"0 auto" }}>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(26px,3vw,40px)", fontWeight:700, color:"#111", marginBottom:"12px" }}>
+            Be Part of the
+            <span style={{ fontStyle:"italic", color:BURG, fontWeight:400 }}> Sanskriti Story</span>
+          </h2>
+          <p style={{ fontSize:"14px", color:"#666", lineHeight:1.85, marginBottom:"28px" }}>
+            Join thousands of sellers building real businesses on India's most trusted antique platform.
           </p>
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/register" className="btn btn-gold btn-lg">Register as Seller →</Link>
-            <Link href="/contact" className="btn btn-outline-gold btn-lg">Talk to Us</Link>
+          <div style={{ display:"flex", gap:"12px", justifyContent:"center", flexWrap:"wrap" }}>
+            <Link href="/register" style={{ padding:"13px 32px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"13px", fontWeight:700, textDecoration:"none", boxShadow:`0 4px 16px rgba(155,0,32,.28)` }}>Join as Seller →</Link>
+            <Link href="/contact" style={{ padding:"13px 28px", borderRadius:"8px", border:"1.5px solid #e5e5e5", color:"#333", fontSize:"13px", fontWeight:500, textDecoration:"none" }}>Contact Us</Link>
           </div>
         </div>
       </section>
-
     </div>
   );
 }
