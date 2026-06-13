@@ -1,109 +1,197 @@
 "use client";
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import api from "@/lib/api";
 
-import { useState } from "react";
-
-type Product = {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  originalPrice?: number;
-  condition: string;
-  age: string;
-  origin: string;
-  material: string;
-  dimensions: string;
-  weight: string;
-  description: string;
-  inStock: boolean;
-  featured: boolean;
-  certificate: boolean;
-  seller: string;
-  createdAt: string;
-};
-
-const MOCK_PRODUCTS: Product[] = [
-  { id:"p1", name:"Brass Ganesh Idol — 18th Century",         category:"Idols & Figurines",    price:85000, originalPrice:95000, condition:"Excellent", age:"300+ years", origin:"Rajasthan",       material:"Solid Brass",    dimensions:`12" H × 8" W`, weight:"4.2 kg", description:"An extraordinary 18th-century Ganesha idol cast in solid brass.", inStock:true,  featured:true,  certificate:true,  seller:"Ananya Seller", createdAt:"2026-05-02" },
-  { id:"p2", name:"Mughal Miniature Painting — Shah Jahan Era",category:"Paintings & Art",      price:220000,                   condition:"Good",      age:"380+ years", origin:"Agra",            material:"Natural pigments", dimensions:`9" × 6"`,       weight:"0.3 kg", description:"A stunning Mughal miniature from the Shah Jahan period.",     inStock:true,  featured:true,  certificate:true,  seller:"Ananya Seller", createdAt:"2026-05-02" },
-  { id:"p3", name:"Teak Wood Carved Cabinet — Victorian Era",  category:"Furniture",            price:145000,originalPrice:160000,condition:"Good",     age:"150+ years", origin:"Kolkata",         material:"Burma Teak",      dimensions:`48" H × 36" W`, weight:"68 kg",  description:"A Victorian-era teak cabinet crafted in Kolkata.",            inStock:true,  featured:false, certificate:false, seller:"Ananya Seller", createdAt:"2026-05-01" },
-  { id:"p4", name:"Silver Bidri Work Box — Hyderabad",         category:"Metalwork",            price:38000,                    condition:"Excellent", age:"100+ years", origin:"Hyderabad",       material:"Zinc + Silver",    dimensions:`8" × 5" × 3"`,  weight:"1.1 kg", description:"Authentic Bidriware from Hyderabad with silver inlay.",       inStock:true,  featured:true,  certificate:true,  seller:"Ananya Seller", createdAt:"2026-04-30" },
-  { id:"p5", name:"Terracotta Horse — Bankura",                 category:"Pottery & Ceramics",  price:12000,                    condition:"Excellent", age:"80+ years",  origin:"Bankura",         material:"Terracotta",       dimensions:`14" H × 12" L`, weight:"2.8 kg", description:"A classic Bankura horse — genuine older piece.",               inStock:true,  featured:false, certificate:false, seller:"Ananya Seller", createdAt:"2026-04-29" },
-  { id:"p6", name:"Pashmina Carpet — Kashmir",                  category:"Textiles",             price:195000,                   condition:"Good",      age:"120+ years", origin:"Srinagar",        material:"Pure Pashmina",    dimensions:`8' × 5'`,       weight:"6.5 kg", description:"An antique Kashmiri carpet hand-knotted from pure pashmina.", inStock:false, featured:false, certificate:true,  seller:"Ananya Seller", createdAt:"2026-04-28" },
-];
-
-const CATEGORIES = ["All","Idols & Figurines","Paintings & Art","Furniture","Metalwork","Pottery & Ceramics","Textiles"];
+const BURG = "#9B0020";
 
 function Toast({ msg, type, onClose }: { msg:string; type:"success"|"error"; onClose:()=>void }) {
+  useEffect(() => { const t = setTimeout(onClose, 3500); return () => clearTimeout(t); }, []);
   return (
-    <div style={{ position:"fixed", top:"24px", right:"24px", zIndex:9999, padding:"12px 16px", borderRadius:"10px", background:type==="success"?"#f0fdf4":"#fef2f2", border:`1px solid ${type==="success"?"#bbf7d0":"#fecaca"}`, color:type==="success"?"#15803d":"#dc2626", fontSize:"13px", fontWeight:500, boxShadow:"0 4px 16px rgba(0,0,0,.08)", display:"flex", alignItems:"center", gap:"10px", maxWidth:"360px", animation:"slideDown .3s ease", fontFamily:"inherit" }}>
-      <span>{type==="success"?"✅":"❌"}</span><span style={{flex:1}}>{msg}</span>
-      <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",fontSize:"16px",color:"inherit",padding:0,opacity:.6}}>×</button>
+    <div style={{ position:"fixed",top:"24px",right:"24px",zIndex:9999,padding:"12px 16px",borderRadius:"12px",background:type==="success"?"#f0fdf4":"#fef2f2",border:`1px solid ${type==="success"?"#bbf7d0":"#fecaca"}`,color:type==="success"?"#15803d":"#dc2626",fontSize:"13px",fontWeight:500,display:"flex",alignItems:"center",gap:"10px",maxWidth:"380px",boxShadow:"0 4px 16px rgba(0,0,0,.08)" }}>
+      {type==="success"?"✅":"❌"}<span style={{ flex:1 }}>{msg}</span>
+      <button onClick={onClose} style={{ background:"none",border:"none",cursor:"pointer",fontSize:"16px",opacity:.6 }}>×</button>
     </div>
   );
 }
 
-function EditModal({ product, onClose, onSave }: { product:Product; onClose:()=>void; onSave:(p:Product)=>void }) {
+const CATEGORIES = ["All","Idols & Figurines","Paintings & Art","Furniture","Metalwork","Pottery & Ceramics","Textiles","Jewellery","Wooden Crafts","Coins & Stamps"];
+const CONDITIONS  = ["Excellent","Good","Fair","Restoration Needed"];
+
+// Mock products — replace with API call
+const MOCK: any[] = [
+  { _id:"1", name:"Brass Ganesh Idol",       origin:"Rajasthan · 300+ years", category:"Idols & Figurines", price:85000, mrp:95000, condition:"Excellent", inStock:true,  featured:true,  certificate:true,  image:"", desc:"Handcrafted brass Ganesh idol from Rajasthan." },
+  { _id:"2", name:"Mughal Miniature Painting",origin:"Agra · 380+ years",     category:"Paintings & Art",   price:220000,mrp:250000,condition:"Good",      inStock:true,  featured:true,  certificate:true,  image:"", desc:"Original Mughal miniature painting." },
+  { _id:"3", name:"Teak Wood Carved Cabinet", origin:"Kolkata · 150+ years",  category:"Furniture",         price:145000,mrp:160000,condition:"Good",      inStock:true,  featured:false, certificate:false, image:"", desc:"Hand-carved teak wood cabinet." },
+  { _id:"4", name:"Silver Bidri Work Box",    origin:"Bidar · 200+ years",    category:"Metalwork",         price:38000, mrp:45000, condition:"Excellent", inStock:false, featured:false, certificate:true,  image:"", desc:"Traditional Bidri silver inlay work box." },
+  { _id:"5", name:"Terracotta Horse Set",     origin:"West Bengal · 100 yrs", category:"Pottery & Ceramics",price:12000, mrp:15000, condition:"Good",      inStock:true,  featured:true,  certificate:false, image:"", desc:"Set of 3 Bankura terracotta horses." },
+  { _id:"6", name:"Pashmina Shawl",           origin:"Kashmir · Heritage",    category:"Textiles",          price:18000, mrp:22000, condition:"Excellent", inStock:true,  featured:false, certificate:false, image:"", desc:"Pure Pashmina handwoven shawl." },
+];
+
+function EditModal({ product, onClose, onSave }: { product:any; onClose:()=>void; onSave:(p:any)=>void }) {
   const [form, setForm] = useState({ ...product });
-  const inp: React.CSSProperties = { width:"100%", padding:"9px 12px", borderRadius:"7px", border:"1.5px solid #e5e7eb", fontSize:"13px", color:"#111827", background:"#f9fafb", outline:"none", fontFamily:"inherit" };
-  const lbl: React.CSSProperties = { fontSize:"11px", fontWeight:700, color:"#6b7280", display:"block", marginBottom:"4px", letterSpacing:".04em", textTransform:"uppercase" };
-
   return (
-    <div onClick={(e)=>{if(e.target===e.currentTarget)onClose();}} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.6)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000, padding:"20px", backdropFilter:"blur(6px)" }}>
-      <div style={{ background:"#fff", borderRadius:"16px", width:"100%", maxWidth:"620px", maxHeight:"90vh", overflowY:"auto", boxShadow:"0 24px 64px rgba(0,0,0,.25)", animation:"scaleIn .3s ease" }}>
-        <div style={{ padding:"20px 24px 18px", borderBottom:"1px solid #f3f4f6", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <div>
-            <h2 style={{ fontSize:"17px", fontWeight:700, color:"#111827" }}>Edit Listing</h2>
-            <p style={{ fontSize:"12px", color:"#9ca3af", marginTop:"2px" }}>Update product details for the gallery</p>
-          </div>
-          <button onClick={onClose} style={{ width:"30px", height:"30px", borderRadius:"50%", background:"#f3f4f6", border:"none", color:"#374151", fontSize:"16px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"inherit" }}>×</button>
+    <div onClick={e => e.target===e.currentTarget&&onClose()} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.45)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2000,padding:"20px",backdropFilter:"blur(4px)" }}>
+      <div style={{ background:"#fff",borderRadius:"18px",width:"100%",maxWidth:"540px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 24px 64px rgba(0,0,0,.15)" }}>
+        <div style={{ padding:"20px 24px",borderBottom:"1px solid #f0f0f0",display:"flex",justifyContent:"space-between",alignItems:"center",position:"sticky",top:0,background:"#fff",zIndex:1 }}>
+          <h3 style={{ fontSize:"17px",fontWeight:700,color:"#111",fontFamily:"Georgia,serif" }}>Edit Product</h3>
+          <button onClick={onClose} style={{ background:"none",border:"none",fontSize:"20px",cursor:"pointer",color:"#aaa" }}>×</button>
         </div>
-        <div style={{ padding:"20px 24px", display:"flex", flexDirection:"column", gap:"14px" }}>
-          <div><label style={lbl}>Product Name *</label><input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} style={inp}/></div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
-            <div><label style={lbl}>Category</label>
-              <select value={form.category} onChange={e=>setForm({...form,category:e.target.value})} style={{...inp,cursor:"pointer"}}>
-                {CATEGORIES.filter(c=>c!=="All").map(c=><option key={c}>{c}</option>)}
+        <div style={{ padding:"20px 24px",display:"flex",flexDirection:"column",gap:"14px" }}>
+          {[
+            ["Product Name","name","text"],
+            ["Origin / Provenance","origin","text"],
+            ["Description","desc","text"],
+            ["Image URL","image","text"],
+          ].map(([label,key,type]) => (
+            <div key={key}>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>{label}</label>
+              <input type={type} value={form[key]||""} onChange={e=>setForm({...form,[key]:e.target.value})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }}
+                onFocus={e=>(e.target as HTMLElement).style.borderColor=BURG}
+                onBlur={e=>(e.target as HTMLElement).style.borderColor="#f0f0f0"}
+              />
+            </div>
+          ))}
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px" }}>
+            <div>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>Price (₹)</label>
+              <input type="number" value={form.price||""} onChange={e=>setForm({...form,price:Number(e.target.value)})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }} />
+            </div>
+            <div>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>MRP (₹)</label>
+              <input type="number" value={form.mrp||""} onChange={e=>setForm({...form,mrp:Number(e.target.value)})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }} />
+            </div>
+          </div>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px" }}>
+            <div>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>Category</label>
+              <select value={form.category||""} onChange={e=>setForm({...form,category:e.target.value})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }}>
+                {CATEGORIES.filter(c=>c!=="All").map(c=><option key={c} value={c}>{c}</option>)}
               </select>
             </div>
-            <div><label style={lbl}>Condition</label>
-              <select value={form.condition} onChange={e=>setForm({...form,condition:e.target.value})} style={{...inp,cursor:"pointer"}}>
-                {["Excellent","Good","Fair","Restoration Needed"].map(c=><option key={c}>{c}</option>)}
+            <div>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>Condition</label>
+              <select value={form.condition||""} onChange={e=>setForm({...form,condition:e.target.value})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }}>
+                {CONDITIONS.map(c=><option key={c} value={c}>{c}</option>)}
               </select>
             </div>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
-            <div><label style={lbl}>Price (₹) *</label><input type="number" value={form.price} onChange={e=>setForm({...form,price:Number(e.target.value)})} style={inp}/></div>
-            <div><label style={lbl}>Original Price (₹)</label><input type="number" value={form.originalPrice||""} onChange={e=>setForm({...form,originalPrice:Number(e.target.value)||undefined})} placeholder="Optional" style={inp}/></div>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
-            <div><label style={lbl}>Age</label><input value={form.age} onChange={e=>setForm({...form,age:e.target.value})} placeholder="e.g. 100+ years" style={inp}/></div>
-            <div><label style={lbl}>Origin</label><input value={form.origin} onChange={e=>setForm({...form,origin:e.target.value})} placeholder="City, State" style={inp}/></div>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
-            <div><label style={lbl}>Material</label><input value={form.material} onChange={e=>setForm({...form,material:e.target.value})} style={inp}/></div>
-            <div><label style={lbl}>Weight</label><input value={form.weight} onChange={e=>setForm({...form,weight:e.target.value})} placeholder="e.g. 2.5 kg" style={inp}/></div>
-          </div>
-          <div><label style={lbl}>Dimensions</label><input value={form.dimensions} onChange={e=>setForm({...form,dimensions:e.target.value})} placeholder={`e.g. 12" H × 8" W`} style={inp}/></div>
-          <div><label style={lbl}>Description</label><textarea value={form.description} onChange={e=>setForm({...form,description:e.target.value})} rows={3} style={{...inp,resize:"none"}}/></div>
-
-          {/* Toggles */}
-          <div style={{ display:"flex", gap:"12px", flexWrap:"wrap" }}>
-            {[
-              {key:"inStock",    label:"In Stock"},
-              {key:"featured",   label:"Featured"},
-              {key:"certificate",label:"Certificate Included"},
-            ].map(t=>(
-              <label key={t.key} style={{ display:"flex", alignItems:"center", gap:"8px", cursor:"pointer", padding:"8px 14px", borderRadius:"8px", background:form[t.key as keyof typeof form]?"rgba(201,168,76,.1)":"#f9fafb", border:`1px solid ${form[t.key as keyof typeof form]?"#C9A84C":"#e5e7eb"}`, transition:"all .15s" }}>
-                <input type="checkbox" checked={!!form[t.key as keyof typeof form]} onChange={e=>setForm({...form,[t.key]:e.target.checked})} style={{ accentColor:"#C9A84C" }}/>
-                <span style={{ fontSize:"13px", fontWeight:500, color:"#374151" }}>{t.label}</span>
+          <div style={{ display:"flex",gap:"16px" }}>
+            {[["inStock","In Stock"],["featured","Featured"],["certificate","Certificate"]].map(([k,l])=>(
+              <label key={k} style={{ display:"flex",alignItems:"center",gap:"7px",cursor:"pointer",fontSize:"13px",fontWeight:500,color:"#333" }}>
+                <input type="checkbox" checked={!!form[k]} onChange={e=>setForm({...form,[k]:e.target.checked})} style={{ accentColor:BURG,width:"15px",height:"15px" }} />
+                {l}
               </label>
             ))}
           </div>
-
-          <div style={{ display:"flex", gap:"10px", paddingTop:"4px" }}>
-            <button onClick={onClose} style={{ flex:1, padding:"10px", borderRadius:"8px", border:"1.5px solid #e5e7eb", background:"transparent", color:"#374151", fontSize:"14px", fontWeight:500, cursor:"pointer", fontFamily:"inherit" }}>Cancel</button>
-            <button onClick={()=>{onSave(form);onClose();}} style={{ flex:2, padding:"10px", borderRadius:"8px", background:"linear-gradient(135deg,#C9A84C,#8B6914)", color:"#2C1810", border:"none", fontSize:"14px", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Save Changes</button>
+          <div style={{ display:"flex",gap:"10px",paddingTop:"4px" }}>
+            <button onClick={onClose} style={{ flex:1,padding:"11px",borderRadius:"8px",border:"1.5px solid #e5e5e5",background:"transparent",color:"#333",fontSize:"13px",fontWeight:500,cursor:"pointer",fontFamily:"inherit" }}>Cancel</button>
+            <button onClick={()=>{onSave(form);onClose();}} style={{ flex:2,padding:"11px",borderRadius:"8px",background:BURG,color:"#fff",border:"none",fontSize:"13px",fontWeight:700,cursor:"pointer",fontFamily:"inherit" }}>Save Changes</button>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AddProductModal({ onClose, onAdd }: { onClose:()=>void; onAdd:(p:any)=>void }) {
+  const [form, setForm] = useState({ name:"",origin:"",category:"Idols & Figurines",condition:"Good",price:"",mrp:"",image:"",desc:"",inStock:true,featured:false,certificate:false });
+  return (
+    <div onClick={e=>e.target===e.currentTarget&&onClose()} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.45)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2000,padding:"20px",backdropFilter:"blur(4px)" }}>
+      <div style={{ background:"#fff",borderRadius:"18px",width:"100%",maxWidth:"540px",maxHeight:"90vh",overflowY:"auto",boxShadow:"0 24px 64px rgba(0,0,0,.15)" }}>
+        <div style={{ padding:"20px 24px",borderBottom:"1px solid #f0f0f0",display:"flex",justifyContent:"space-between",alignItems:"center",position:"sticky",top:0,background:"#fff",zIndex:1 }}>
+          <h3 style={{ fontSize:"17px",fontWeight:700,color:"#111",fontFamily:"Georgia,serif" }}>Add New Product</h3>
+          <button onClick={onClose} style={{ background:"none",border:"none",fontSize:"20px",cursor:"pointer",color:"#aaa" }}>×</button>
+        </div>
+        <div style={{ padding:"20px 24px",display:"flex",flexDirection:"column",gap:"14px" }}>
+          {[["Product Name","name"],["Origin / Provenance","origin"],["Description","desc"],["Image URL","image"]].map(([l,k])=>(
+            <div key={k}>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>{l}</label>
+              <input value={(form as any)[k]} onChange={e=>setForm({...form,[k]:e.target.value})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }} />
+            </div>
+          ))}
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px" }}>
+            {[["Price (₹)","price"],["MRP (₹)","mrp"]].map(([l,k])=>(
+              <div key={k}>
+                <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>{l}</label>
+                <input type="number" value={(form as any)[k]} onChange={e=>setForm({...form,[k]:e.target.value})}
+                  style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }} />
+              </div>
+            ))}
+          </div>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px" }}>
+            <div>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>Category</label>
+              <select value={form.category} onChange={e=>setForm({...form,category:e.target.value})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }}>
+                {CATEGORIES.filter(c=>c!=="All").map(c=><option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ fontSize:"12px",fontWeight:600,color:"#888",display:"block",marginBottom:"5px" }}>Condition</label>
+              <select value={form.condition} onChange={e=>setForm({...form,condition:e.target.value})}
+                style={{ width:"100%",padding:"9px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }}>
+                {CONDITIONS.map(c=><option key={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+          <div style={{ display:"flex",gap:"16px" }}>
+            {[["inStock","In Stock"],["featured","Featured"],["certificate","Certificate"]].map(([k,l])=>(
+              <label key={k} style={{ display:"flex",alignItems:"center",gap:"7px",cursor:"pointer",fontSize:"13px",fontWeight:500,color:"#333" }}>
+                <input type="checkbox" checked={!!(form as any)[k]} onChange={e=>setForm({...form,[k]:e.target.checked})} style={{ accentColor:BURG,width:"15px",height:"15px" }} />
+                {l}
+              </label>
+            ))}
+          </div>
+          <div style={{ display:"flex",gap:"10px",paddingTop:"4px" }}>
+            <button onClick={onClose} style={{ flex:1,padding:"11px",borderRadius:"8px",border:"1.5px solid #e5e5e5",background:"transparent",color:"#333",fontSize:"13px",fontWeight:500,cursor:"pointer",fontFamily:"inherit" }}>Cancel</button>
+            <button onClick={()=>{onAdd({...form,_id:Date.now().toString(),price:Number(form.price),mrp:Number(form.mrp)});onClose();}} style={{ flex:2,padding:"11px",borderRadius:"8px",background:BURG,color:"#fff",border:"none",fontSize:"13px",fontWeight:700,cursor:"pointer",fontFamily:"inherit" }}>Add Product</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── View mode: grid card (mirrors seller gallery) ─────────────
+function ProductCard({ p, onEdit, onToggleFeatured, onToggleStock, onDelete, showToast }: any) {
+  const [hov, setHov] = useState(false);
+  const discount = p.mrp > p.price ? Math.round((1 - p.price/p.mrp)*100) : 0;
+  return (
+    <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
+      style={{ borderRadius:"14px",border:`1.5px solid ${hov?BURG:"#f0f0f0"}`,background:"#fff",overflow:"hidden",transition:"all .2s",transform:hov?"translateY(-3px)":"none",boxShadow:hov?`0 12px 32px rgba(155,0,32,.08)`:"0 2px 8px rgba(0,0,0,.04)" }}>
+      {/* Image */}
+      <div style={{ height:"180px",background:p.image?"transparent":"linear-gradient(135deg,#f9f9f9,#f0f0f0)",display:"flex",alignItems:"center",justifyContent:"center",position:"relative",overflow:"hidden" }}>
+        {p.image ? <img src={p.image} alt={p.name} style={{ width:"100%",height:"100%",objectFit:"cover" }} /> : <span style={{ fontSize:"48px",opacity:.3 }}>🏺</span>}
+        {/* Badges */}
+        <div style={{ position:"absolute",top:"10px",left:"10px",display:"flex",gap:"4px",flexWrap:"wrap" }}>
+          {p.certificate && <span style={{ padding:"2px 8px",borderRadius:"99px",background:BURG,color:"#fff",fontSize:"9px",fontWeight:700,letterSpacing:".06em" }}>CERTIFIED</span>}
+          {p.featured    && <span style={{ padding:"2px 8px",borderRadius:"99px",background:"#f59e0b",color:"#fff",fontSize:"9px",fontWeight:700 }}>⭐ FEATURED</span>}
+          {!p.inStock    && <span style={{ padding:"2px 8px",borderRadius:"99px",background:"#dc2626",color:"#fff",fontSize:"9px",fontWeight:700 }}>OUT OF STOCK</span>}
+        </div>
+        {discount > 0 && <span style={{ position:"absolute",top:"10px",right:"10px",padding:"2px 8px",borderRadius:"6px",background:"#15803d",color:"#fff",fontSize:"10px",fontWeight:700 }}>-{discount}%</span>}
+      </div>
+      {/* Info */}
+      <div style={{ padding:"14px" }}>
+        <div style={{ fontSize:"10px",color:BURG,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",marginBottom:"3px" }}>{p.category}</div>
+        <div style={{ fontSize:"14px",fontWeight:700,color:"#111",marginBottom:"3px",fontFamily:"Georgia,serif",lineHeight:1.3 }}>{p.name}</div>
+        <div style={{ fontSize:"11px",color:"#aaa",marginBottom:"10px" }}>{p.origin}</div>
+        <div style={{ display:"flex",alignItems:"center",gap:"8px",marginBottom:"12px" }}>
+          <span style={{ fontSize:"16px",fontWeight:700,color:"#111" }}>₹{p.price?.toLocaleString("en-IN")}</span>
+          {p.mrp > p.price && <span style={{ fontSize:"12px",color:"#aaa",textDecoration:"line-through" }}>₹{p.mrp?.toLocaleString("en-IN")}</span>}
+        </div>
+        {/* Admin actions */}
+        <div style={{ display:"flex",gap:"6px",flexWrap:"wrap" }}>
+          <button onClick={()=>onEdit(p)} style={{ flex:1,padding:"6px",borderRadius:"7px",background:BURG,color:"#fff",border:"none",fontSize:"11px",fontWeight:600,cursor:"pointer",fontFamily:"inherit" }}>Edit</button>
+          <button onClick={()=>onToggleFeatured(p._id)} style={{ padding:"6px 8px",borderRadius:"7px",background:p.featured?"#fff8d0":"#f9f9f9",border:`1px solid ${p.featured?"#f59e0b":"#e5e5e5"}`,color:p.featured?"#d97706":"#888",fontSize:"11px",cursor:"pointer",fontFamily:"inherit" }}>⭐</button>
+          <button onClick={()=>onToggleStock(p._id)} style={{ padding:"6px 8px",borderRadius:"7px",background:p.inStock?"#f0fdf4":"#fef2f2",border:`1px solid ${p.inStock?"#bbf7d0":"#fecaca"}`,color:p.inStock?"#15803d":"#dc2626",fontSize:"11px",cursor:"pointer",fontFamily:"inherit" }}>{p.inStock?"✓":"✗"}</button>
+          <button onClick={()=>onDelete(p._id)} style={{ padding:"6px 8px",borderRadius:"7px",background:"#fef2f2",border:"1px solid #fecaca",color:"#dc2626",fontSize:"11px",cursor:"pointer",fontFamily:"inherit" }}>🗑</button>
         </div>
       </div>
     </div>
@@ -111,180 +199,170 @@ function EditModal({ product, onClose, onSave }: { product:Product; onClose:()=>
 }
 
 export default function AdminGalleryPage() {
-  const [products, setProducts]     = useState<Product[]>(MOCK_PRODUCTS);
-  const [category, setCategory]     = useState("All");
-  const [search, setSearch]         = useState("");
-  const [editingProduct, setEditingProduct] = useState<Product|null>(null);
-  const [toast, setToast]           = useState<{msg:string;type:"success"|"error"}|null>(null);
-  const [filter, setFilter]         = useState<"all"|"featured"|"out_of_stock">("all");
+  const [products,  setProducts]  = useState<any[]>(MOCK);
+  const [category,  setCategory]  = useState("All");
+  const [search,    setSearch]    = useState("");
+  const [view,      setView]      = useState<"grid"|"list">("grid");
+  const [editing,   setEditing]   = useState<any>(null);
+  const [showAdd,   setShowAdd]   = useState(false);
+  const [toast,     setToast]     = useState<any>(null);
 
-  const showToast = (msg:string,type:"success"|"error"="success")=>{ setToast({msg,type}); setTimeout(()=>setToast(null),4000); };
+  const showT = (msg:string, type:"success"|"error"="success") => setToast({ msg, type });
 
-  const handleSave = (updated: Product) => {
-    setProducts(prev => prev.map(p => p.id===updated.id ? updated : p));
-    showToast(`"${updated.name.split("—")[0].trim()}" updated successfully!`);
-  };
+  const filtered = products.filter(p =>
+    (category==="All" || p.category===category) &&
+    (!search || p.name.toLowerCase().includes(search.toLowerCase()) || p.origin.toLowerCase().includes(search.toLowerCase()))
+  );
 
   const toggleFeatured = (id:string) => {
-    setProducts(prev => prev.map(p => p.id===id ? {...p,featured:!p.featured} : p));
-    const p = products.find(x=>x.id===id);
-    showToast(p?.featured ? "Removed from featured" : "Added to featured! ⭐");
+    setProducts(prev => prev.map(p => p._id===id?{...p,featured:!p.featured}:p));
+    showT(products.find(p=>p._id===id)?.featured?"Removed from featured":"Added to featured ⭐");
   };
-
   const toggleStock = (id:string) => {
-    setProducts(prev => prev.map(p => p.id===id ? {...p,inStock:!p.inStock} : p));
-    const p = products.find(x=>x.id===id);
-    showToast(p?.inStock ? "Marked as out of stock" : "Marked as in stock");
+    setProducts(prev => prev.map(p => p._id===id?{...p,inStock:!p.inStock}:p));
+    showT(products.find(p=>p._id===id)?.inStock?"Marked out of stock":"Marked in stock");
   };
-
   const deleteProduct = (id:string) => {
-    const p = products.find(x=>x.id===id);
-    if (!confirm(`Delete "${p?.name}"? This cannot be undone.`)) return;
-    setProducts(prev => prev.filter(x=>x.id!==id));
-    showToast("Product removed from gallery","error");
+    if (!confirm("Delete this product?")) return;
+    setProducts(prev => prev.filter(p => p._id!==id));
+    showT("Product deleted","error");
+  };
+  const saveProduct = (updated:any) => {
+    setProducts(prev => prev.map(p => p._id===updated._id?updated:p));
+    showT(`"${updated.name}" updated!`);
+  };
+  const addProduct = (p:any) => {
+    setProducts(prev => [...prev, p]);
+    showT(`"${p.name}" added to gallery!`);
   };
 
-  const filtered = products.filter(p => {
-    const matchCat    = category==="All" || p.category===category;
-    const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.origin.toLowerCase().includes(search.toLowerCase());
-    const matchFilter = filter==="all" || (filter==="featured"&&p.featured) || (filter==="out_of_stock"&&!p.inStock);
-    return matchCat && matchSearch && matchFilter;
-  });
-
-  const conditionStyle = (c:string) => ({
-    Excellent:          {bg:"#f0fdf4",color:"#15803d"},
-    Good:               {bg:"#eff6ff",color:"#1d4ed8"},
-    Fair:               {bg:"#fffbeb",color:"#854d0e"},
-    "Restoration Needed":{bg:"#fef2f2",color:"#dc2626"},
-  }[c]||{bg:"#f3f4f6",color:"#374151"});
+  const CONDITION_COLORS: Record<string,any> = {
+    Excellent:            { bg:"#f0fdf4",color:"#15803d" },
+    Good:                 { bg:"#eff6ff",color:"#1d4ed8" },
+    Fair:                 { bg:"#fffbeb",color:"#854d0e" },
+    "Restoration Needed": { bg:"#fef2f2",color:"#dc2626" },
+  };
 
   return (
     <div style={{ maxWidth:"1200px" }}>
-      {toast&&<Toast msg={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
-      {editingProduct&&<EditModal product={editingProduct} onClose={()=>setEditingProduct(null)} onSave={handleSave}/>}
+      {toast && <Toast msg={toast.msg} type={toast.type} onClose={()=>setToast(null)} />}
+      {editing  && <EditModal product={editing} onClose={()=>setEditing(null)} onSave={saveProduct} />}
+      {showAdd  && <AddProductModal onClose={()=>setShowAdd(false)} onAdd={addProduct} />}
 
       {/* Header */}
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"24px", flexWrap:"wrap", gap:"12px" }}>
+      <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"24px",flexWrap:"wrap",gap:"12px" }}>
         <div>
-          <h1 style={{ fontSize:"22px", fontWeight:700, color:"#111827", marginBottom:"4px" }}>Gallery Management</h1>
-          <p style={{ fontSize:"14px", color:"#6b7280" }}>{products.length} listings · Edit prices, details, and visibility</p>
+          <p style={{ fontSize:"12px",color:"#aaa",letterSpacing:".1em",textTransform:"uppercase",marginBottom:"4px" }}>Admin</p>
+          <h1 style={{ fontSize:"26px",fontFamily:"Georgia,serif",color:"#111",fontWeight:400 }}>Gallery Management</h1>
+          <p style={{ fontSize:"13px",color:"#aaa",marginTop:"3px" }}>{products.length} listings · Edit prices, details, and visibility</p>
         </div>
-        <a href="/dashboard/gallery" target="_blank" style={{ padding:"9px 18px", borderRadius:"8px", background:"linear-gradient(135deg,#C9A84C,#8B6914)", color:"#2C1810", border:"none", fontSize:"13px", fontWeight:700, cursor:"pointer", fontFamily:"inherit", textDecoration:"none", display:"flex", alignItems:"center", gap:"6px" }}>
-          ↗ View Seller Gallery
-        </a>
+        <div style={{ display:"flex",gap:"10px",alignItems:"center" }}>
+          <Link href="/gallery" target="_blank" style={{ padding:"9px 16px",borderRadius:"8px",border:`1.5px solid rgba(155,0,32,.2)`,color:BURG,fontSize:"12px",fontWeight:600,textDecoration:"none" }}>↗ View Live Gallery</Link>
+          <button onClick={()=>setShowAdd(true)} style={{ padding:"9px 18px",borderRadius:"8px",background:BURG,color:"#fff",border:"none",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"inherit" }}>+ Add Product</button>
+        </div>
       </div>
 
-      {/* Summary stats */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))", gap:"12px", marginBottom:"22px" }}>
+      {/* Stats */}
+      <div style={{ display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:"12px",marginBottom:"22px" }}>
         {[
-          {icon:"🏺",label:"Total Listings",  value:String(products.length),                           color:"rgba(79,70,229,.1)"},
-          {icon:"✅",label:"In Stock",         value:String(products.filter(p=>p.inStock).length),      color:"rgba(16,185,129,.1)"},
-          {icon:"⭐",label:"Featured",         value:String(products.filter(p=>p.featured).length),     color:"rgba(245,158,11,.1)"},
-          {icon:"❌",label:"Out of Stock",      value:String(products.filter(p=>!p.inStock).length),     color:"rgba(239,68,68,.08)"},
-          {icon:"📜",label:"Certified",        value:String(products.filter(p=>p.certificate).length),  color:"rgba(201,168,76,.1)"},
-        ].map(s=>(
-          <div key={s.label} style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:"10px", padding:"14px 16px" }}>
-            <div style={{ width:"32px", height:"32px", borderRadius:"8px", background:s.color, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"15px", marginBottom:"8px" }}>{s.icon}</div>
-            <div style={{ fontSize:"20px", fontWeight:700, color:"#111827", lineHeight:1 }}>{s.value}</div>
-            <div style={{ fontSize:"11px", color:"#9ca3af", marginTop:"3px" }}>{s.label}</div>
+          { icon:"🏺", label:"Total",       value:products.length,                                color:`rgba(155,0,32,.07)` },
+          { icon:"✅", label:"In Stock",     value:products.filter(p=>p.inStock).length,           color:"rgba(16,185,129,.07)" },
+          { icon:"⭐", label:"Featured",     value:products.filter(p=>p.featured).length,          color:"rgba(245,158,11,.07)" },
+          { icon:"❌", label:"Out of Stock", value:products.filter(p=>!p.inStock).length,          color:"rgba(239,68,68,.07)" },
+          { icon:"📜", label:"Certified",   value:products.filter(p=>p.certificate).length,       color:"rgba(99,102,241,.07)" },
+        ].map(s => (
+          <div key={s.label} style={{ background:"#fff",border:"1px solid #f0f0f0",borderRadius:"12px",padding:"14px 16px" }}>
+            <div style={{ width:"32px",height:"32px",borderRadius:"8px",background:s.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"15px",marginBottom:"8px" }}>{s.icon}</div>
+            <div style={{ fontSize:"22px",fontWeight:700,color:"#111",lineHeight:1 }}>{s.value}</div>
+            <div style={{ fontSize:"11px",color:"#aaa",marginTop:"3px" }}>{s.label}</div>
           </div>
         ))}
       </div>
 
-      {/* Filters */}
-      <div style={{ display:"flex", gap:"10px", marginBottom:"14px", flexWrap:"wrap" }}>
-        <div style={{ flex:1, minWidth:"200px", position:"relative" }}>
-          <span style={{ position:"absolute", left:"12px", top:"50%", transform:"translateY(-50%)", fontSize:"14px", pointerEvents:"none" }}>🔍</span>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search products..." style={{ width:"100%", padding:"9px 14px 9px 34px", borderRadius:"8px", border:"1.5px solid #e5e7eb", fontSize:"13px", color:"#111827", background:"#fff", outline:"none", fontFamily:"inherit" }}/>
-          {search&&<button onClick={()=>setSearch("")} style={{ position:"absolute", right:"12px", top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", fontSize:"16px", color:"#9ca3af", padding:0, lineHeight:1 }}>×</button>}
+      {/* Search + view toggle */}
+      <div style={{ display:"flex",gap:"10px",marginBottom:"16px",alignItems:"center",flexWrap:"wrap" }}>
+        <div style={{ position:"relative",flex:1,minWidth:"200px" }}>
+          <span style={{ position:"absolute",left:"12px",top:"50%",transform:"translateY(-50%)",fontSize:"14px",opacity:.4 }}>🔍</span>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search products..." style={{ width:"100%",padding:"9px 12px 9px 36px",borderRadius:"9px",border:"1.5px solid #f0f0f0",fontSize:"13px",fontFamily:"inherit",outline:"none" }} />
         </div>
-        <select value={filter} onChange={e=>setFilter(e.target.value as any)} style={{ padding:"9px 14px", borderRadius:"8px", border:"1.5px solid #e5e7eb", fontSize:"13px", color:"#111827", background:"#fff", outline:"none", cursor:"pointer", fontFamily:"inherit" }}>
-          <option value="all">All Products</option>
-          <option value="featured">Featured Only</option>
-          <option value="out_of_stock">Out of Stock</option>
-        </select>
+        <div style={{ display:"flex",border:"1px solid #f0f0f0",borderRadius:"8px",overflow:"hidden" }}>
+          {(["grid","list"] as const).map(v => (
+            <button key={v} onClick={()=>setView(v)} style={{ padding:"8px 14px",background:view===v?BURG:"#fff",color:view===v?"#fff":"#888",border:"none",cursor:"pointer",fontSize:"13px",fontFamily:"inherit" }}>
+              {v==="grid"?"▦":"☰"}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Category tabs */}
-      <div style={{ display:"flex", gap:"6px", flexWrap:"wrap", marginBottom:"18px" }}>
-        {CATEGORIES.map(cat=>(
-          <button key={cat} onClick={()=>setCategory(cat)} style={{ padding:"6px 14px", borderRadius:"99px", border:`1.5px solid ${category===cat?"#C9A84C":"#e5e7eb"}`, background:category===cat?"linear-gradient(135deg,#C9A84C,#8B6914)":"#fff", color:category===cat?"#2C1810":"#374151", fontSize:"12px", fontWeight:category===cat?700:400, cursor:"pointer", fontFamily:"inherit", transition:"all .15s" }}>
-            {cat}
+      {/* Category tabs — mirrors seller gallery */}
+      <div style={{ display:"flex",gap:"6px",marginBottom:"20px",overflowX:"auto",paddingBottom:"4px" }}>
+        {CATEGORIES.map(c => (
+          <button key={c} onClick={()=>setCategory(c)} style={{ padding:"7px 16px",borderRadius:"99px",border:`1.5px solid ${category===c?BURG:"#f0f0f0"}`,background:category===c?BURG:"#fff",color:category===c?"#fff":"#666",fontSize:"12px",fontWeight:category===c?700:500,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit",transition:"all .15s",flexShrink:0 }}>
+            {c}
           </button>
         ))}
       </div>
 
-      {/* Products table */}
-      <div style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:"12px", overflow:"hidden" }}>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 110px 120px 90px 80px 90px 160px", padding:"10px 20px", background:"#111827" }}>
-          {["Product","Price","Category","Condition","Stock","Featured","Actions"].map(h=>(
-            <div key={h} style={{ fontSize:"10px", fontWeight:700, color:"rgba(255,255,255,.5)", letterSpacing:".08em", textTransform:"uppercase" }}>{h}</div>
+      {/* Grid view — mirrors how seller sees gallery */}
+      {view === "grid" && (
+        <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:"16px" }}>
+          {filtered.map(p => (
+            <ProductCard key={p._id} p={p} onEdit={setEditing} onToggleFeatured={toggleFeatured} onToggleStock={toggleStock} onDelete={deleteProduct} showToast={showT} />
           ))}
         </div>
+      )}
 
-        {filtered.length===0 ? (
-          <div style={{ padding:"56px 20px", textAlign:"center" }}>
-            <div style={{ fontSize:"44px", marginBottom:"14px" }}>🏺</div>
-            <p style={{ fontSize:"16px", fontWeight:500, color:"#111827", marginBottom:"6px" }}>No products found</p>
-            <p style={{ fontSize:"13px", color:"#9ca3af" }}>Try different filters</p>
+      {/* List view — table */}
+      {view === "list" && (
+        <div style={{ background:"#fff",borderRadius:"14px",border:"1px solid #f0f0f0",overflow:"hidden" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 80px 80px 120px",gap:"0",padding:"11px 16px",background:"#f9f9f9",borderBottom:"1px solid #f0f0f0",fontSize:"11px",fontWeight:700,color:"#aaa",letterSpacing:".08em",textTransform:"uppercase" }}>
+            <span>Product</span><span>Price</span><span>Category</span><span>Condition</span><span>Stock</span><span>Featured</span><span>Actions</span>
           </div>
-        ) : (
-          filtered.map((p,i)=>{
-            const cc = conditionStyle(p.condition);
+          {filtered.map((p,i) => {
+            const cc = CONDITION_COLORS[p.condition]||{bg:"#f5f5f5",color:"#888"};
             return (
-              <div key={p.id} style={{ display:"grid", gridTemplateColumns:"1fr 110px 120px 90px 80px 90px 160px", padding:"14px 20px", borderBottom:i<filtered.length-1?"1px solid #f9fafb":"none", background:i%2===0?"#fff":"#fafafa", alignItems:"center", transition:"background .15s" }}
-                onMouseEnter={e=>(e.currentTarget as HTMLElement).style.background="#fffbeb"}
-                onMouseLeave={e=>(e.currentTarget as HTMLElement).style.background=i%2===0?"#fff":"#fafafa"}
-              >
-                {/* Product */}
-                <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-                  <div style={{ width:"40px", height:"40px", borderRadius:"8px", background:"linear-gradient(135deg,#2C1810,#3D2B1F)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"18px", flexShrink:0 }}>🏺</div>
-                  <div style={{ minWidth:0 }}>
-                    <div style={{ fontSize:"13px", fontWeight:600, color:"#111827", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{p.name.split("—")[0].trim()}</div>
-                    <div style={{ fontSize:"11px", color:"#9ca3af" }}>{p.origin} · {p.age}</div>
-                    {p.certificate&&<span style={{ fontSize:"9px", fontWeight:700, color:"#C9A84C", background:"rgba(201,168,76,.1)", padding:"1px 5px", borderRadius:"3px" }}>CERTIFIED</span>}
+              <div key={p._id} style={{ display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 80px 80px 120px",gap:"0",padding:"12px 16px",borderBottom:i<filtered.length-1?"1px solid #f9f9f9":"none",alignItems:"center" }}>
+                <div style={{ display:"flex",alignItems:"center",gap:"10px" }}>
+                  <div style={{ width:"36px",height:"36px",borderRadius:"8px",background:"#f5f5f5",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0 }}>
+                    {p.image?<img src={p.image} alt="" style={{ width:"100%",height:"100%",objectFit:"cover" }}/>:<span style={{ fontSize:"16px" }}>🏺</span>}
+                  </div>
+                  <div>
+                    <div style={{ fontSize:"13px",fontWeight:600,color:"#111" }}>{p.name}</div>
+                    <div style={{ fontSize:"11px",color:"#aaa" }}>{p.origin}</div>
+                    {p.certificate&&<span style={{ fontSize:"9px",padding:"1px 6px",borderRadius:"99px",background:`rgba(155,0,32,.08)`,color:BURG,fontWeight:700 }}>CERTIFIED</span>}
                   </div>
                 </div>
-
-                {/* Price */}
                 <div>
-                  <div style={{ fontSize:"13px", fontWeight:700, color:"#111827" }}>₹{p.price.toLocaleString("en-IN")}</div>
-                  {p.originalPrice&&<div style={{ fontSize:"11px", color:"#9ca3af", textDecoration:"line-through" }}>₹{p.originalPrice.toLocaleString("en-IN")}</div>}
+                  <div style={{ fontSize:"13px",fontWeight:700,color:"#111" }}>₹{p.price?.toLocaleString("en-IN")}</div>
+                  {p.mrp>p.price&&<div style={{ fontSize:"11px",color:"#aaa",textDecoration:"line-through" }}>₹{p.mrp?.toLocaleString("en-IN")}</div>}
                 </div>
-
-                {/* Category */}
-                <div style={{ fontSize:"12px", color:"#374151", fontWeight:500 }}>{p.category}</div>
-
-                {/* Condition */}
-                <span style={{ display:"inline-block", padding:"3px 8px", borderRadius:"99px", fontSize:"10px", fontWeight:700, background:cc.bg, color:cc.color }}>{p.condition}</span>
-
-                {/* Stock */}
-                <button onClick={()=>toggleStock(p.id)} style={{ padding:"4px 10px", borderRadius:"99px", fontSize:"10px", fontWeight:700, background:p.inStock?"#f0fdf4":"#fef2f2", color:p.inStock?"#15803d":"#dc2626", border:`1px solid ${p.inStock?"#bbf7d0":"#fecaca"}`, cursor:"pointer", fontFamily:"inherit", transition:"all .15s" }}>
-                  {p.inStock?"In Stock":"Out"}
-                </button>
-
-                {/* Featured */}
-                <button onClick={()=>toggleFeatured(p.id)} style={{ padding:"4px 10px", borderRadius:"99px", fontSize:"10px", fontWeight:700, background:p.featured?"rgba(245,158,11,.1)":"#f9fafb", color:p.featured?"#d97706":"#9ca3af", border:`1px solid ${p.featured?"#fde68a":"#e5e7eb"}`, cursor:"pointer", fontFamily:"inherit", transition:"all .15s" }}>
-                  {p.featured?"⭐ Yes":"No"}
-                </button>
-
-                {/* Actions */}
-                <div style={{ display:"flex", gap:"5px" }}>
-                  <button onClick={()=>setEditingProduct(p)} style={{ padding:"6px 12px", borderRadius:"6px", background:"linear-gradient(135deg,#C9A84C,#8B6914)", color:"#2C1810", border:"none", fontSize:"11px", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>✏ Edit</button>
-                  <button onClick={()=>deleteProduct(p.id)} style={{ padding:"6px 10px", borderRadius:"6px", background:"#fef2f2", border:"1px solid #fecaca", color:"#dc2626", fontSize:"11px", cursor:"pointer", fontFamily:"inherit" }}>🗑</button>
+                <div style={{ fontSize:"12px",color:"#666" }}>{p.category}</div>
+                <div><span style={{ padding:"3px 9px",borderRadius:"99px",fontSize:"11px",fontWeight:600,background:cc.bg,color:cc.color }}>{p.condition}</span></div>
+                <div>
+                  <button onClick={()=>toggleStock(p._id)} style={{ padding:"4px 10px",borderRadius:"6px",background:p.inStock?"#f0fdf4":"#fef2f2",border:`1px solid ${p.inStock?"#bbf7d0":"#fecaca"}`,color:p.inStock?"#15803d":"#dc2626",fontSize:"11px",fontWeight:600,cursor:"pointer",fontFamily:"inherit" }}>
+                    {p.inStock?"In Stock":"OOS"}
+                  </button>
+                </div>
+                <div>
+                  <button onClick={()=>toggleFeatured(p._id)} style={{ padding:"4px 10px",borderRadius:"6px",background:p.featured?"#fff8d0":"#f9f9f9",border:`1px solid ${p.featured?"#f59e0b":"#e5e5e5"}`,color:p.featured?"#d97706":"#aaa",fontSize:"11px",fontWeight:600,cursor:"pointer",fontFamily:"inherit" }}>
+                    {p.featured?"⭐ Yes":"No"}
+                  </button>
+                </div>
+                <div style={{ display:"flex",gap:"6px" }}>
+                  <button onClick={()=>setEditing(p)} style={{ padding:"5px 12px",borderRadius:"6px",background:BURG,color:"#fff",border:"none",fontSize:"11px",fontWeight:600,cursor:"pointer",fontFamily:"inherit" }}>Edit</button>
+                  <button onClick={()=>deleteProduct(p._id)} style={{ padding:"5px 8px",borderRadius:"6px",background:"#fef2f2",border:"1px solid #fecaca",color:"#dc2626",fontSize:"11px",cursor:"pointer",fontFamily:"inherit" }}>🗑</button>
                 </div>
               </div>
             );
-          })
-        )}
-      </div>
+          })}
+        </div>
+      )}
 
-      <style>{`
-        @keyframes scaleIn {from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
-        @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-        input::placeholder,textarea::placeholder{color:#9ca3af;}
-        input:focus,select:focus,textarea:focus{border-color:#C9A84C !important;}
-      `}</style>
+      {filtered.length === 0 && (
+        <div style={{ textAlign:"center",padding:"60px",color:"#aaa",fontSize:"13px" }}>
+          No products found. <button onClick={()=>setShowAdd(true)} style={{ color:BURG,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600 }}>Add one?</button>
+        </div>
+      )}
     </div>
   );
 }
