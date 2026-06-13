@@ -107,7 +107,7 @@ const MEDIA_TABS = [
 // ── ADD A SHOWCASE VIDEO (optional) ──────────────────────────
 // Place video in frontend/public/about/videos/ and set path below
 // Supports: .mp4, .webm, or YouTube embed URL
-const SHOWCASE_VIDEO = "";
+const SHOWCASE_VIDEO: string = "";
 // Example: const SHOWCASE_VIDEO = "/about/videos/company-intro.mp4";
 // ─────────────────────────────────────────────────────────────
 
