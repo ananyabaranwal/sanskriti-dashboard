@@ -5,7 +5,7 @@ export const BRAND = {
   domain: "vyrelle.in",
   email: "teamsanskrititheantique@gmail.com",
   phone: "+91 9971529900",
-  whatsapp: "+91 9971529900",
+  whatsapp: "+919971529900",
   address: "Karawal Nagar Delhi-94",
   gst: "09ABCDE1234F1Z5",
   social: {

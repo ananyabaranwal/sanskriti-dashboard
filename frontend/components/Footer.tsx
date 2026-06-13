@@ -47,7 +47,7 @@ export default function Footer() {
               </div>
             </div>
             <p style={{ fontSize: "13px", color: "#777", lineHeight: 1.78, marginBottom: "22px", maxWidth: "220px" }}>
-              Preserving India's heritage through authentic antiques. Your trusted marketplace for verified collectibles and cultural treasures.
+              A complete platform that transforms artisans and entrepreneurs into thriving digital-first businesses.
             </p>
             <div style={{ display: "flex", gap: "8px" }}>
               {[

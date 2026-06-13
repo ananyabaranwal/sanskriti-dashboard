@@ -1,322 +1,369 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import api from "@/lib/api";
 
-function Toast({ msg, type, onClose }: { msg:string; type:"success"|"error"|"info"; onClose:()=>void }) {
-  useEffect(()=>{ const t=setTimeout(onClose,4000); return ()=>clearTimeout(t); },[]);
-  const c={success:{bg:"#F0FDF4",border:"#BBF7D0",color:"#15803d",icon:"✅"},error:{bg:"#FEF2F2",border:"#FECACA",color:"#dc2626",icon:"❌"},info:{bg:"#EFF6FF",border:"#BFDBFE",color:"#1d4ed8",icon:"💡"}}[type];
+const BURG = "#9B0020";
+
+function Toast({ msg, type, onClose }: { msg: string; type: "success"|"error"; onClose: () => void }) {
+  useEffect(() => { const t = setTimeout(onClose, 4000); return () => clearTimeout(t); }, []);
   return (
-    <div style={{position:"fixed",top:"24px",right:"24px",zIndex:9999,padding:"12px 16px",borderRadius:"12px",background:c.bg,border:`1px solid ${c.border}`,color:c.color,fontSize:"13px",fontWeight:500,boxShadow:"0 6px 24px rgba(0,0,0,.1)",display:"flex",alignItems:"center",gap:"10px",maxWidth:"360px",animation:"slideDown .3s ease",fontFamily:"inherit"}}>
-      <span>{c.icon}</span><span style={{flex:1,lineHeight:1.5}}>{msg}</span>
-      <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",fontSize:"17px",color:"inherit",padding:0,opacity:.6}}>×</button>
+    <div style={{ position:"fixed", top:"24px", right:"24px", zIndex:9999, padding:"12px 16px", borderRadius:"12px", background:type==="success"?"#F0FDF4":"#FEF2F2", border:`1px solid ${type==="success"?"#BBF7D0":"#FECACA"}`, color:type==="success"?"#15803d":"#dc2626", fontSize:"13px", fontWeight:500, display:"flex", alignItems:"center", gap:"10px", maxWidth:"400px", fontFamily:"inherit" }}>
+      {type==="success"?"✅":"❌"} <span style={{ flex:1 }}>{msg}</span>
+      <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer", fontSize:"17px", color:"inherit", opacity:.6 }}>×</button>
     </div>
   );
 }
 
-function Toggle({ checked, onChange, label, desc }: { checked:boolean; onChange:(v:boolean)=>void; label:string; desc?:string }) {
+// ── Tab 1: Duplicate Orders ───────────────────────────────────
+function DuplicatesTab() {
+  const [data,    setData]    = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [hours,   setHours]   = useState(24);
+
+  const check = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get(`/admin/duplicates?hours=${hours}`);
+      setData(res.data);
+    } catch(e) { console.error(e); }
+    setLoading(false);
+  };
+
   return (
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 0",borderBottom:"1px solid #F0E4C0"}}>
-      <div><div style={{fontSize:"14px",fontWeight:500,color:"#2C1810"}}>{label}</div>{desc&&<div style={{fontSize:"12px",color:"#A08060",marginTop:"2px"}}>{desc}</div>}</div>
-      <button onClick={()=>onChange(!checked)} style={{width:"44px",height:"24px",borderRadius:"99px",background:checked?"linear-gradient(135deg,#C9A84C,#8B6914)":"#E8D5A3",border:"none",cursor:"pointer",position:"relative",transition:"background .2s",flexShrink:0}}>
-        <span style={{position:"absolute",top:"2px",left:checked?"22px":"2px",width:"20px",height:"20px",borderRadius:"50%",background:"#fff",boxShadow:"0 1px 4px rgba(0,0,0,.15)",transition:"left .2s"}}/>
-      </button>
+    <div>
+      <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"20px", flexWrap:"wrap" }}>
+        <select value={hours} onChange={e => setHours(Number(e.target.value))} style={{ padding:"8px 12px", borderRadius:"8px", border:"1.5px solid #e5e7eb", fontSize:"13px", fontFamily:"inherit" }}>
+          <option value={6}>Last 6 hours</option>
+          <option value={24}>Last 24 hours</option>
+          <option value={48}>Last 48 hours</option>
+          <option value={168}>Last 7 days</option>
+        </select>
+        <button onClick={check} disabled={loading} style={{ padding:"9px 20px", borderRadius:"8px", background:BURG, color:"#fff", border:"none", fontSize:"13px", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+          {loading ? "Checking..." : "Scan for Duplicates"}
+        </button>
+      </div>
+
+      {data && (
+        <div>
+          <div style={{ padding:"12px 16px", borderRadius:"10px", background:data.count===0?"#F0FDF4":"#FEF2F2", border:`1px solid ${data.count===0?"#BBF7D0":"#FECACA"}`, marginBottom:"16px", fontSize:"13px", color:data.count===0?"#15803d":"#dc2626", fontWeight:600 }}>
+            {data.count===0 ? `✅ No duplicates found in ${data.checkedOrders} orders` : `⚠️ Found ${data.count} duplicate groups in ${data.checkedOrders} orders`}
+          </div>
+
+          {data.duplicates?.map((d: any, i: number) => (
+            <div key={i} style={{ border:"1.5px solid #FECACA", borderRadius:"12px", marginBottom:"12px", overflow:"hidden" }}>
+              <div style={{ padding:"12px 16px", background:"#FEF2F2", borderBottom:"1px solid #FECACA" }}>
+                <div style={{ fontSize:"13px", fontWeight:600, color:"#dc2626" }}>🔴 {d.count} duplicate orders — {d.buyerName} ({d.buyerPhone})</div>
+                <div style={{ fontSize:"11px", color:"#888", marginTop:"2px" }}>Items: {d.itemsSummary}</div>
+              </div>
+              {d.orders.map((o: any) => (
+                <div key={o._id} style={{ display:"flex", justifyContent:"space-between", padding:"10px 16px", borderBottom:"1px solid #f5f5f5", fontSize:"13px" }}>
+                  <span style={{ fontWeight:600, color:"#111" }}>{o.orderNumber}</span>
+                  <span style={{ color:"#888" }}>₹{o.total?.toLocaleString("en-IN")}</span>
+                  <span style={{ color:"#888" }}>{o.status}</span>
+                  <span style={{ color:"#aaa" }}>{new Date(o.createdAt).toLocaleDateString("en-IN")}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-const inp: React.CSSProperties = { width:"100%", padding:"10px 13px", borderRadius:"8px", border:"1.5px solid #E8D5A3", fontSize:"14px", color:"#2C1810", background:"#FBF7F0", outline:"none", fontFamily:"inherit", transition:"border-color .2s" };
-const lbl: React.CSSProperties = { fontSize:"11px", fontWeight:700, color:"#6B4F12", display:"block", marginBottom:"5px", letterSpacing:".04em", textTransform:"uppercase" };
+// ── Tab 2: Roles Management ───────────────────────────────────
+function RolesTab() {
+  const [staff,   setStaff]   = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAdd, setShowAdd] = useState(false);
+  const [toast,   setToast]   = useState<any>(null);
+  const [form,    setForm]    = useState({ name:"", email:"", phone:"", password:"", role:"manager" });
+  const [saving,  setSaving]  = useState(false);
 
-export default function AdminSettingsPage() {
-  const [activeTab, setActiveTab] = useState<"platform"|"commission"|"notifications"|"security">("platform");
-  const [saving, setSaving]       = useState(false);
-  const [toast, setToast]         = useState<{msg:string;type:"success"|"error"|"info"}|null>(null);
-  const showToast = (msg:string,type:"success"|"error"|"info"="success")=>setToast({msg,type});
+  const fetchStaff = useCallback(async () => {
+    try { const r = await api.get("/admin/roles"); setStaff(r.data.staff || []); }
+    catch(e) { console.error(e); }
+    finally { setLoading(false); }
+  }, []);
 
-  // Platform settings
-  const [platform, setPlatform] = useState({
-    siteName:        "Sanskriti The Antique",
-    siteEmail:       "info@sanskriti.vyrelle.in",
-    supportPhone:    "+91 98765 43210",
-    gstNumber:       "09ABCDE1234F1Z5",
-    address:         "456 Hazratganj, Lucknow, Uttar Pradesh 226001",
-    minOrderAmount:  "500",
-    maxOrderAmount:  "1000000",
-    currency:        "INR",
-    timezone:        "Asia/Kolkata",
-  });
+  useEffect(() => { fetchStaff(); }, [fetchStaff]);
 
-  // Commission settings
-  const [commission, setCommission] = useState({
-    platformFee:        "5",
-    payoutFee:          "2",
-    gstRate:            "18",
-    minPayoutAmount:    "100",
-    maxPayoutAmount:    "100000",
-    payoutCycleDays:    "3",
-    autoApproveBelow:   "1000",
-  });
-
-  // Notification toggles
-  const [notif, setNotif] = useState({
-    newSellerEmail:   true,
-    kycSubmitEmail:   true,
-    payoutRequestEmail: true,
-    orderAlertEmail:  true,
-    dailyReport:      false,
-    weeklyReport:     true,
-    smsAlerts:        false,
-    slackWebhook:     false,
-  });
-
-  // Security settings
-  const [security, setSecurity] = useState({
-    require2FA:          false,
-    sessionTimeout:      "60",
-    maxLoginAttempts:    "5",
-    allowedIPs:          "",
-    maintenanceMode:     false,
-    newRegistrations:    true,
-    autoApproveKYC:      false,
-  });
-
-  // Password change
-  const [pwForm, setPwForm] = useState({ current:"", newPw:"", confirm:"" });
-  const [pwError, setPwError] = useState("");
-
-  const save = async (section:string) => {
+  const addStaff = async () => {
+    if (!form.name || !form.email || !form.password) { setToast({ msg:"Name, email and password required", type:"error" }); return; }
     setSaving(true);
-    await new Promise(r=>setTimeout(r,800));
-    showToast(`${section} settings saved successfully!`);
+    try {
+      await api.post("/admin/roles", form);
+      setToast({ msg:`${form.role} account created`, type:"success" });
+      setShowAdd(false);
+      setForm({ name:"", email:"", phone:"", password:"", role:"manager" });
+      fetchStaff();
+    } catch(e: any) { setToast({ msg:e.response?.data?.message||"Failed", type:"error" }); }
     setSaving(false);
   };
 
-  const changePassword = async () => {
-    setPwError("");
-    if (!pwForm.current)        { setPwError("Current password required"); return; }
-    if (pwForm.newPw.length<8)  { setPwError("New password must be 8+ characters"); return; }
-    if (pwForm.newPw!==pwForm.confirm) { setPwError("Passwords do not match"); return; }
-    setSaving(true);
+  const deleteStaff = async (id: string, name: string) => {
+    if (!confirm(`Delete ${name}'s account?`)) return;
     try {
-      await api.patch("/seller/change-password", { currentPassword:pwForm.current, newPassword:pwForm.newPw });
-      showToast("Admin password changed successfully!");
-      setPwForm({current:"",newPw:"",confirm:""});
-    } catch(e:any) { setPwError(e.response?.data?.message||"Password change failed"); }
-    finally { setSaving(false); }
+      await api.delete(`/admin/roles/${id}`);
+      setToast({ msg:"Account deleted", type:"success" });
+      fetchStaff();
+    } catch(e: any) { setToast({ msg:e.response?.data?.message||"Failed", type:"error" }); }
   };
 
-  const tabs = [
-    {id:"platform",      label:"Platform",      icon:"🏛️"},
-    {id:"commission",    label:"Commission",    icon:"💰"},
-    {id:"notifications", label:"Notifications", icon:"🔔"},
-    {id:"security",      label:"Security",      icon:"🔒"},
-  ] as const;
+  const ROLE_COLORS: Record<string,string> = { admin:"#7c3aed", manager:"#0369a1", employee:"#15803d" };
 
   return (
-    <div style={{maxWidth:"800px"}}>
-      {toast&&<Toast msg={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
+    <div>
+      {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
-      <div style={{marginBottom:"24px"}}>
-        <p style={{fontSize:"12px",color:"#A08060",letterSpacing:".1em",textTransform:"uppercase",marginBottom:"4px"}}>Admin</p>
-        <h1 style={{fontSize:"26px",fontFamily:"Georgia,serif",color:"#2C1810",fontWeight:400}}>Admin Settings</h1>
-        <p style={{fontSize:"14px",color:"#A08060",marginTop:"3px"}}>Platform configuration and preferences</p>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"20px" }}>
+        <p style={{ fontSize:"13px", color:"#888" }}>Manage who can access the admin panel</p>
+        <button onClick={() => setShowAdd(!showAdd)} style={{ padding:"9px 20px", borderRadius:"8px", background:BURG, color:"#fff", border:"none", fontSize:"13px", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+          + Add Staff
+        </button>
       </div>
 
-      {/* Tabs */}
-      <div style={{display:"flex",gap:"4px",background:"#F0EBE3",padding:"4px",borderRadius:"10px",marginBottom:"22px"}}>
-        {tabs.map(t=>(
-          <button key={t.id} onClick={()=>setActiveTab(t.id)} style={{flex:1,padding:"9px 10px",borderRadius:"7px",border:"none",background:activeTab===t.id?"#FFFDF9":"transparent",color:activeTab===t.id?"#2C1810":"#A08060",fontSize:"12px",fontWeight:activeTab===t.id?600:400,cursor:"pointer",fontFamily:"inherit",boxShadow:activeTab===t.id?"0 1px 4px rgba(61,43,31,.1)":"none",transition:"all .18s",display:"flex",alignItems:"center",justifyContent:"center",gap:"5px"}}>
-            <span>{t.icon}</span><span>{t.label}</span>
+      {showAdd && (
+        <div style={{ padding:"20px", borderRadius:"12px", border:"1.5px solid #e5e7eb", marginBottom:"20px", background:"#fafafa" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px", marginBottom:"12px" }}>
+            {[["Name","name","text"],["Email","email","email"],["Phone","phone","text"],["Password","password","password"]].map(([label,key,type]) => (
+              <div key={key}>
+                <label style={{ fontSize:"11px", fontWeight:600, color:"#888", display:"block", marginBottom:"4px" }}>{label}</label>
+                <input type={type} value={(form as any)[key]} onChange={e => setForm(p => ({...p,[key]:e.target.value}))} style={{ width:"100%", padding:"8px 12px", borderRadius:"8px", border:"1.5px solid #e5e7eb", fontSize:"13px", fontFamily:"inherit" }} />
+              </div>
+            ))}
+          </div>
+          <div style={{ display:"flex", gap:"10px", alignItems:"center" }}>
+            <select value={form.role} onChange={e => setForm(p => ({...p,role:e.target.value}))} style={{ padding:"8px 12px", borderRadius:"8px", border:"1.5px solid #e5e7eb", fontSize:"13px", fontFamily:"inherit" }}>
+              <option value="manager">Manager</option>
+              <option value="employee">Employee</option>
+            </select>
+            <button onClick={addStaff} disabled={saving} style={{ padding:"9px 20px", borderRadius:"8px", background:BURG, color:"#fff", border:"none", fontSize:"13px", fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>
+              {saving ? "Creating..." : "Create Account"}
+            </button>
+            <button onClick={() => setShowAdd(false)} style={{ padding:"9px 16px", borderRadius:"8px", border:"1.5px solid #e5e7eb", background:"#fff", fontSize:"13px", cursor:"pointer", fontFamily:"inherit" }}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {loading ? <div style={{ color:"#aaa", fontSize:"13px" }}>Loading...</div> : (
+        <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
+          {staff.map(s => (
+            <div key={s._id} style={{ display:"flex", alignItems:"center", gap:"14px", padding:"14px 16px", borderRadius:"10px", border:"1px solid #e5e7eb", background:"#fff" }}>
+              <div style={{ width:"38px", height:"38px", borderRadius:"50%", background:`${ROLE_COLORS[s.role]}22`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"15px", fontWeight:700, color:ROLE_COLORS[s.role], flexShrink:0 }}>{s.name.charAt(0).toUpperCase()}</div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:"14px", fontWeight:600, color:"#111" }}>{s.name}</div>
+                <div style={{ fontSize:"12px", color:"#888" }}>{s.email}</div>
+              </div>
+              <span style={{ padding:"3px 10px", borderRadius:"99px", fontSize:"11px", fontWeight:700, background:`${ROLE_COLORS[s.role]}18`, color:ROLE_COLORS[s.role], textTransform:"uppercase" }}>{s.role}</span>
+              <span style={{ padding:"3px 10px", borderRadius:"99px", fontSize:"11px", fontWeight:600, background:s.status==="active"?"#f0fdf4":"#fef2f2", color:s.status==="active"?"#15803d":"#dc2626" }}>{s.status}</span>
+              {s.role !== "admin" && (
+                <button onClick={() => deleteStaff(s._id, s.name)} style={{ padding:"6px 12px", borderRadius:"7px", border:"1px solid #FECACA", background:"#FEF2F2", color:"#dc2626", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" }}>Remove</button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ marginTop:"20px", padding:"14px 16px", borderRadius:"10px", background:"#f8f8f8", border:"1px solid #e5e7eb" }}>
+        <div style={{ fontSize:"12px", fontWeight:700, color:"#111", marginBottom:"8px" }}>Role Permissions</div>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"8px", fontSize:"12px", color:"#666" }}>
+          <div><strong style={{ color:ROLE_COLORS.admin }}>Admin</strong><br/>Full access to everything</div>
+          <div><strong style={{ color:ROLE_COLORS.manager }}>Manager</strong><br/>Orders, clients, billing, reports, export</div>
+          <div><strong style={{ color:ROLE_COLORS.employee }}>Employee</strong><br/>Orders, clients, inventory, search</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Tab 3: Bulk Invoice ───────────────────────────────────────
+function BulkInvoiceTab() {
+  const [pending,    setPending]    = useState<any[]>([]);
+  const [loading,    setLoading]    = useState(true);
+  const [selected,   setSelected]   = useState<Set<string>>(new Set());
+  const [generating, setGenerating] = useState(false);
+  const [result,     setResult]     = useState<any>(null);
+  const [toast,      setToast]      = useState<any>(null);
+
+  useEffect(() => {
+    api.get("/admin/bulk-invoice/pending")
+      .then(r => setPending(r.data.orders || []))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const toggle = (id: string) => setSelected(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const selectAll = () => setSelected(prev => prev.size === pending.length ? new Set() : new Set(pending.map((o: any) => o._id)));
+
+  const generate = async () => {
+    if (selected.size === 0) { setToast({ msg:"Select at least one order", type:"error" }); return; }
+    setGenerating(true);
+    try {
+      const res = await api.post("/admin/bulk-invoice/generate", { orderIds: Array.from(selected) });
+      setResult(res.data.results);
+      setToast({ msg:`Generated ${res.data.results.generated} invoices`, type:"success" });
+      setPending(prev => prev.filter((o: any) => !selected.has(o._id)));
+      setSelected(new Set());
+    } catch(e: any) { setToast({ msg:e.response?.data?.message||"Failed", type:"error" }); }
+    setGenerating(false);
+  };
+
+  return (
+    <div>
+      {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
+
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px" }}>
+        <p style={{ fontSize:"13px", color:"#888" }}>{pending.length} orders without invoices</p>
+        <div style={{ display:"flex", gap:"10px" }}>
+          <button onClick={selectAll} style={{ padding:"8px 16px", borderRadius:"8px", border:"1.5px solid #e5e7eb", background:"#fff", fontSize:"13px", cursor:"pointer", fontFamily:"inherit" }}>
+            {selected.size === pending.length ? "Deselect All" : "Select All"}
+          </button>
+          <button onClick={generate} disabled={generating || selected.size === 0} style={{ padding:"9px 20px", borderRadius:"8px", background:generating||selected.size===0?"#e5e7eb":BURG, color:generating||selected.size===0?"#aaa":"#fff", border:"none", fontSize:"13px", fontWeight:600, cursor:generating||selected.size===0?"not-allowed":"pointer", fontFamily:"inherit" }}>
+            {generating ? "Generating..." : `Generate ${selected.size} Invoices`}
+          </button>
+        </div>
+      </div>
+
+      {result && (
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px", marginBottom:"16px" }}>
+          {[["Generated",result.generated,"#15803d"],["Skipped",result.skipped,"#d97706"],["Failed",result.failed,"#dc2626"]].map(([l,v,c]) => (
+            <div key={String(l)} style={{ padding:"12px 16px", borderRadius:"10px", background:`${c}11`, border:`1px solid ${c}33`, textAlign:"center" }}>
+              <div style={{ fontSize:"22px", fontWeight:700, color:String(c) }}>{String(v)}</div>
+              <div style={{ fontSize:"12px", color:"#888" }}>{String(l)}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {loading ? <div style={{ color:"#aaa", fontSize:"13px" }}>Loading...</div> : pending.length === 0 ? (
+        <div style={{ textAlign:"center", padding:"40px", color:"#aaa", fontSize:"13px" }}>All orders have invoices ✅</div>
+      ) : (
+        <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
+          {pending.map((o: any) => (
+            <div key={o._id} onClick={() => toggle(o._id)} style={{ display:"flex", alignItems:"center", gap:"12px", padding:"11px 14px", borderRadius:"10px", border:`1.5px solid ${selected.has(o._id)?"#C9A84C":"#e5e7eb"}`, background:selected.has(o._id)?"rgba(201,168,76,.05)":"#fff", cursor:"pointer" }}>
+              <div style={{ width:"18px", height:"18px", borderRadius:"4px", border:`2px solid ${selected.has(o._id)?"#C9A84C":"#e5e7eb"}`, background:selected.has(o._id)?"#C9A84C":"transparent", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                {selected.has(o._id) && <span style={{ color:"#fff", fontSize:"11px", fontWeight:700 }}>✓</span>}
+              </div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:"13px", fontWeight:600, color:"#111" }}>{o.orderNumber}</div>
+                <div style={{ fontSize:"11px", color:"#888" }}>{o.buyer?.name} · {o.buyer?.phone}</div>
+              </div>
+              <div style={{ fontSize:"13px", fontWeight:700, color:"#111" }}>₹{o.total?.toLocaleString("en-IN")}</div>
+              <div style={{ fontSize:"11px", color:"#888" }}>{new Date(o.createdAt).toLocaleDateString("en-IN")}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Tab 4: Reorder Suggestions ────────────────────────────────
+function ReorderTab() {
+  const [data,    setData]    = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.get("/admin/reorder/suggestions")
+      .then(r => setData(r.data))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const URGENCY: Record<string,{bg:string;color:string;label:string}> = {
+    critical: { bg:"#FEF2F2", color:"#dc2626", label:"CRITICAL" },
+    high:     { bg:"#FFF7ED", color:"#d97706", label:"HIGH"     },
+    medium:   { bg:"#FEFCE8", color:"#ca8a04", label:"MEDIUM"   },
+    low:      { bg:"#F0FDF4", color:"#15803d", label:"LOW"      },
+  };
+
+  return (
+    <div>
+      {loading ? <div style={{ color:"#aaa", fontSize:"13px" }}>Loading suggestions...</div> : !data?.count ? (
+        <div style={{ textAlign:"center", padding:"40px", color:"#aaa", fontSize:"13px" }}>No reorder suggestions — all stock is healthy ✅</div>
+      ) : (
+        <>
+          {/* Summary cards */}
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"10px", marginBottom:"20px" }}>
+            {[["critical","#dc2626"],["high","#d97706"],["medium","#ca8a04"],["low","#15803d"]].map(([k,c]) => (
+              <div key={k} style={{ padding:"12px 14px", borderRadius:"10px", background:`${c}11`, border:`1px solid ${c}33`, textAlign:"center" }}>
+                <div style={{ fontSize:"22px", fontWeight:700, color:c }}>{data.summary[k]}</div>
+                <div style={{ fontSize:"11px", color:"#888", textTransform:"uppercase", letterSpacing:".06em" }}>{k}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ padding:"10px 14px", borderRadius:"8px", background:"#f8f8f8", border:"1px solid #e5e7eb", marginBottom:"16px", fontSize:"13px", color:"#666" }}>
+            💰 Estimated restock cost: <strong style={{ color:"#111" }}>₹{data.summary.totalEstimatedCost?.toLocaleString("en-IN")}</strong>
+          </div>
+
+          <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
+            {data.suggestions.map((p: any) => {
+              const u = URGENCY[p.urgency];
+              return (
+                <div key={p._id} style={{ display:"grid", gridTemplateColumns:"1fr auto auto auto auto", gap:"12px", alignItems:"center", padding:"14px 16px", borderRadius:"10px", border:`1.5px solid ${u.bg}`, background:"#fff" }}>
+                  <div>
+                    <div style={{ fontSize:"13px", fontWeight:600, color:"#111" }}>{p.name}</div>
+                    <div style={{ fontSize:"11px", color:"#888" }}>{p.sku || "No SKU"} · {p.category || "No category"}</div>
+                  </div>
+                  <div style={{ textAlign:"center" }}>
+                    <div style={{ fontSize:"16px", fontWeight:700, color:p.currentStock===0?"#dc2626":"#111" }}>{p.currentStock}</div>
+                    <div style={{ fontSize:"10px", color:"#aaa" }}>In stock</div>
+                  </div>
+                  <div style={{ textAlign:"center" }}>
+                    <div style={{ fontSize:"14px", fontWeight:600, color:"#C9A84C" }}>{p.suggestedQty}</div>
+                    <div style={{ fontSize:"10px", color:"#aaa" }}>Reorder qty</div>
+                  </div>
+                  <div style={{ textAlign:"center" }}>
+                    <div style={{ fontSize:"13px", fontWeight:600, color:"#111" }}>{p.soldLast30}</div>
+                    <div style={{ fontSize:"10px", color:"#aaa" }}>Sold/30d</div>
+                  </div>
+                  <span style={{ padding:"4px 10px", borderRadius:"99px", fontSize:"10px", fontWeight:700, background:u.bg, color:u.color, whiteSpace:"nowrap" }}>{u.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ── Main Settings Page ────────────────────────────────────────
+const TABS = [
+  { key:"duplicates",  label:"Duplicate Orders", icon:"⚠️" },
+  { key:"roles",       label:"Roles & Staff",    icon:"👤" },
+  { key:"bulk-invoice",label:"Bulk Invoice",     icon:"🧾" },
+  { key:"reorder",     label:"Reorder Alerts",   icon:"📦" },
+];
+
+export default function AdminSettingsPage() {
+  const [activeTab, setActiveTab] = useState("duplicates");
+
+  return (
+    <div style={{ maxWidth:"1000px" }}>
+      <div style={{ marginBottom:"24px" }}>
+        <p style={{ fontSize:"12px", color:"#9ca3af", letterSpacing:".1em", textTransform:"uppercase", marginBottom:"4px" }}>Admin</p>
+        <h1 style={{ fontSize:"26px", fontFamily:"Georgia,serif", color:"#111827", fontWeight:400 }}>Settings & Tools</h1>
+      </div>
+
+      {/* Tab bar */}
+      <div style={{ display:"flex", gap:"6px", marginBottom:"24px", borderBottom:"1px solid #e5e7eb", paddingBottom:"0" }}>
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setActiveTab(t.key)} style={{ padding:"10px 18px", borderRadius:"8px 8px 0 0", border:"none", borderBottom:activeTab===t.key?`2px solid ${BURG}`:"2px solid transparent", background:activeTab===t.key?"#fff":"transparent", color:activeTab===t.key?BURG:"#6b7280", fontSize:"13px", fontWeight:activeTab===t.key?600:500, cursor:"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", gap:"6px" }}>
+            {t.icon} {t.label}
           </button>
         ))}
       </div>
 
-      {/* ── Platform Settings ── */}
-      {activeTab==="platform"&&(
-        <div style={{background:"#FFFDF9",border:"1px solid #E8D5A3",borderRadius:"16px",padding:"26px 28px"}}>
-          <h2 style={{fontSize:"17px",fontFamily:"Georgia,serif",color:"#2C1810",marginBottom:"5px"}}>Platform Information</h2>
-          <p style={{fontSize:"13px",color:"#A08060",marginBottom:"22px"}}>Core settings for Sanskriti The Antique</p>
-          <div style={{display:"flex",flexDirection:"column",gap:"15px"}}>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
-              <div><label style={lbl}>Site Name</label><input value={platform.siteName} onChange={e=>setPlatform({...platform,siteName:e.target.value})} style={inp}/></div>
-              <div><label style={lbl}>Support Email</label><input value={platform.siteEmail} onChange={e=>setPlatform({...platform,siteEmail:e.target.value})} style={inp}/></div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
-              <div><label style={lbl}>Support Phone</label><input value={platform.supportPhone} onChange={e=>setPlatform({...platform,supportPhone:e.target.value})} style={inp}/></div>
-              <div><label style={lbl}>GSTIN</label><input value={platform.gstNumber} onChange={e=>setPlatform({...platform,gstNumber:e.target.value})} style={inp}/></div>
-            </div>
-            <div><label style={lbl}>Registered Address</label><input value={platform.address} onChange={e=>setPlatform({...platform,address:e.target.value})} style={inp}/></div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
-              <div><label style={lbl}>Currency</label>
-                <select value={platform.currency} onChange={e=>setPlatform({...platform,currency:e.target.value})} style={{...inp,cursor:"pointer"}}>
-                  <option>INR</option><option>USD</option><option>EUR</option>
-                </select>
-              </div>
-              <div><label style={lbl}>Min Order (₹)</label><input type="number" value={platform.minOrderAmount} onChange={e=>setPlatform({...platform,minOrderAmount:e.target.value})} style={inp}/></div>
-              <div><label style={lbl}>Max Order (₹)</label><input type="number" value={platform.maxOrderAmount} onChange={e=>setPlatform({...platform,maxOrderAmount:e.target.value})} style={inp}/></div>
-            </div>
-          </div>
-          <button onClick={()=>save("Platform")} disabled={saving} style={{marginTop:"20px",padding:"11px 28px",borderRadius:"8px",background:saving?"#E8D5A3":"linear-gradient(135deg,#C9A84C,#8B6914)",color:saving?"#A08060":"#2C1810",border:"none",fontSize:"14px",fontWeight:700,cursor:saving?"not-allowed":"pointer",fontFamily:"inherit"}}>
-            {saving?"Saving...":"Save Platform Settings"}
-          </button>
-        </div>
-      )}
-
-      {/* ── Commission Settings ── */}
-      {activeTab==="commission"&&(
-        <div style={{background:"#FFFDF9",border:"1px solid #E8D5A3",borderRadius:"16px",padding:"26px 28px"}}>
-          <h2 style={{fontSize:"17px",fontFamily:"Georgia,serif",color:"#2C1810",marginBottom:"5px"}}>Commission & Payout Rules</h2>
-          <p style={{fontSize:"13px",color:"#A08060",marginBottom:"22px"}}>Fee structure and payout configuration</p>
-
-          {/* Fee preview card */}
-          <div style={{background:"linear-gradient(135deg,#2C1810,#3D2B1F)",borderRadius:"12px",padding:"16px 20px",marginBottom:"22px",position:"relative",overflow:"hidden"}}>
-            <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(201,168,76,.04) 1px,transparent 1px)",backgroundSize:"18px 18px",pointerEvents:"none"}}/>
-            <div style={{position:"relative"}}>
-              <div style={{fontSize:"12px",color:"rgba(201,168,76,.55)",letterSpacing:".08em",marginBottom:"12px",fontWeight:600}}>LIVE FEE PREVIEW — ₹10,000 ORDER</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"12px"}}>
-                {[
-                  {label:"Platform Fee",  value:`₹${Math.round(10000*Number(commission.platformFee)/100).toLocaleString("en-IN")} (${commission.platformFee}%)`},
-                  {label:"GST on Fee",    value:`₹${Math.round(10000*Number(commission.platformFee)/100*Number(commission.gstRate)/100).toLocaleString("en-IN")} (${commission.gstRate}%)`},
-                  {label:"Seller Gets",   value:`₹${Math.round(10000*(1-Number(commission.platformFee)/100*(1+Number(commission.gstRate)/100))).toLocaleString("en-IN")}`},
-                ].map(s=>(
-                  <div key={s.label}>
-                    <div style={{fontSize:"10px",color:"rgba(201,168,76,.5)",marginBottom:"3px"}}>{s.label}</div>
-                    <div style={{fontSize:"14px",fontWeight:700,color:"#C9A84C",fontFamily:"Georgia,serif"}}>{s.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div style={{display:"flex",flexDirection:"column",gap:"15px"}}>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
-              <div><label style={lbl}>Platform Fee (%)</label><input type="number" value={commission.platformFee} onChange={e=>setCommission({...commission,platformFee:e.target.value})} min="0" max="30" style={inp}/></div>
-              <div><label style={lbl}>Payout Processing Fee (%)</label><input type="number" value={commission.payoutFee} onChange={e=>setCommission({...commission,payoutFee:e.target.value})} style={inp}/></div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
-              <div><label style={lbl}>GST Rate (%)</label><input type="number" value={commission.gstRate} onChange={e=>setCommission({...commission,gstRate:e.target.value})} style={inp}/></div>
-              <div><label style={lbl}>Payout Cycle (days)</label><input type="number" value={commission.payoutCycleDays} onChange={e=>setCommission({...commission,payoutCycleDays:e.target.value})} style={inp}/></div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}>
-              <div><label style={lbl}>Min Payout (₹)</label><input type="number" value={commission.minPayoutAmount} onChange={e=>setCommission({...commission,minPayoutAmount:e.target.value})} style={inp}/></div>
-              <div><label style={lbl}>Max Payout (₹)</label><input type="number" value={commission.maxPayoutAmount} onChange={e=>setCommission({...commission,maxPayoutAmount:e.target.value})} style={inp}/></div>
-            </div>
-            <div>
-              <label style={lbl}>Auto-approve payouts below (₹)</label>
-              <input type="number" value={commission.autoApproveBelow} onChange={e=>setCommission({...commission,autoApproveBelow:e.target.value})} style={{...inp,maxWidth:"220px"}}/>
-              <p style={{fontSize:"11px",color:"#A08060",marginTop:"4px"}}>Payouts below this amount are approved automatically without manual review</p>
-            </div>
-          </div>
-          <button onClick={()=>save("Commission")} disabled={saving} style={{marginTop:"20px",padding:"11px 28px",borderRadius:"8px",background:saving?"#E8D5A3":"linear-gradient(135deg,#C9A84C,#8B6914)",color:saving?"#A08060":"#2C1810",border:"none",fontSize:"14px",fontWeight:700,cursor:saving?"not-allowed":"pointer",fontFamily:"inherit"}}>
-            {saving?"Saving...":"Save Commission Settings"}
-          </button>
-        </div>
-      )}
-
-      {/* ── Notification Settings ── */}
-      {activeTab==="notifications"&&(
-        <div style={{background:"#FFFDF9",border:"1px solid #E8D5A3",borderRadius:"16px",padding:"26px 28px"}}>
-          <h2 style={{fontSize:"17px",fontFamily:"Georgia,serif",color:"#2C1810",marginBottom:"5px"}}>Admin Notifications</h2>
-          <p style={{fontSize:"13px",color:"#A08060",marginBottom:"22px"}}>Control which alerts you receive as admin</p>
-          <div style={{marginBottom:"20px"}}>
-            <p style={{fontSize:"12px",fontWeight:700,color:"#6B4F12",textTransform:"uppercase",letterSpacing:".06em",marginBottom:"2px"}}>Email Alerts</p>
-          </div>
-          {[
-            {key:"newSellerEmail",    label:"New Seller Registration",   desc:"Email when a new seller registers"},
-            {key:"kycSubmitEmail",    label:"KYC Document Submitted",    desc:"Email when a seller submits KYC documents"},
-            {key:"payoutRequestEmail",label:"Payout Request Received",   desc:"Email when a seller requests a payout"},
-            {key:"orderAlertEmail",   label:"Large Order Alert",         desc:"Email for orders above ₹50,000"},
-            {key:"dailyReport",       label:"Daily Activity Report",     desc:"Morning summary of platform activity"},
-            {key:"weeklyReport",      label:"Weekly Business Report",    desc:"Sunday summary with revenue and growth metrics"},
-            {key:"smsAlerts",         label:"SMS Alerts (Critical)",     desc:"SMS for urgent issues requiring immediate action"},
-            {key:"slackWebhook",      label:"Slack Notifications",       desc:"Push alerts to your Slack workspace"},
-          ].map(item=>(
-            <Toggle key={item.key} checked={notif[item.key as keyof typeof notif]} onChange={v=>setNotif(p=>({...p,[item.key]:v}))} label={item.label} desc={item.desc}/>
-          ))}
-          <button onClick={()=>save("Notification")} disabled={saving} style={{marginTop:"20px",padding:"11px 28px",borderRadius:"8px",background:saving?"#E8D5A3":"linear-gradient(135deg,#C9A84C,#8B6914)",color:saving?"#A08060":"#2C1810",border:"none",fontSize:"14px",fontWeight:700,cursor:saving?"not-allowed":"pointer",fontFamily:"inherit"}}>
-            {saving?"Saving...":"Save Notification Preferences"}
-          </button>
-        </div>
-      )}
-
-      {/* ── Security Settings ── */}
-      {activeTab==="security"&&(
-        <div style={{display:"flex",flexDirection:"column",gap:"16px"}}>
-
-          {/* Access control */}
-          <div style={{background:"#FFFDF9",border:"1px solid #E8D5A3",borderRadius:"16px",padding:"26px 28px"}}>
-            <h2 style={{fontSize:"17px",fontFamily:"Georgia,serif",color:"#2C1810",marginBottom:"5px"}}>Access & Platform Control</h2>
-            <p style={{fontSize:"13px",color:"#A08060",marginBottom:"22px"}}>Control who can access the platform</p>
-            <Toggle checked={security.newRegistrations}  onChange={v=>setSecurity(p=>({...p,newRegistrations:v}))}  label="Allow New Registrations"    desc="Allow new sellers to register on the platform"/>
-            <Toggle checked={security.autoApproveKYC}    onChange={v=>setSecurity(p=>({...p,autoApproveKYC:v}))}    label="Auto-approve KYC"           desc="Automatically approve all KYC submissions without manual review"/>
-            <Toggle checked={security.require2FA}        onChange={v=>setSecurity(p=>({...p,require2FA:v}))}        label="Require 2FA for Admin"      desc="Enforce two-factor authentication for admin login"/>
-            <Toggle checked={security.maintenanceMode}   onChange={v=>setSecurity(p=>({...p,maintenanceMode:v}))}   label="Maintenance Mode"           desc="Show maintenance page to all visitors — admin still accessible"/>
-            {security.maintenanceMode&&(
-              <div style={{marginTop:"10px",padding:"10px 14px",borderRadius:"8px",background:"#FEF2F2",border:"1px solid #FECACA",fontSize:"12px",color:"#dc2626"}}>
-                ⚠️ Maintenance mode is ON — the public website is showing a maintenance page to visitors
-              </div>
-            )}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px",marginTop:"16px"}}>
-              <div>
-                <label style={lbl}>Session Timeout (minutes)</label>
-                <input type="number" value={security.sessionTimeout} onChange={e=>setSecurity({...security,sessionTimeout:e.target.value})} style={inp}/>
-              </div>
-              <div>
-                <label style={lbl}>Max Login Attempts</label>
-                <input type="number" value={security.maxLoginAttempts} onChange={e=>setSecurity({...security,maxLoginAttempts:e.target.value})} style={inp}/>
-              </div>
-            </div>
-            <div style={{marginTop:"14px"}}>
-              <label style={lbl}>Allowed Admin IPs (comma separated, blank = all)</label>
-              <input value={security.allowedIPs} onChange={e=>setSecurity({...security,allowedIPs:e.target.value})} placeholder="e.g. 192.168.1.1, 103.25.45.67" style={inp}/>
-              <p style={{fontSize:"11px",color:"#A08060",marginTop:"4px"}}>Leave blank to allow access from any IP address</p>
-            </div>
-            <button onClick={()=>save("Security")} disabled={saving} style={{marginTop:"20px",padding:"11px 28px",borderRadius:"8px",background:saving?"#E8D5A3":"linear-gradient(135deg,#C9A84C,#8B6914)",color:saving?"#A08060":"#2C1810",border:"none",fontSize:"14px",fontWeight:700,cursor:saving?"not-allowed":"pointer",fontFamily:"inherit"}}>
-              {saving?"Saving...":"Save Security Settings"}
-            </button>
-          </div>
-
-          {/* Change admin password */}
-          <div style={{background:"#FFFDF9",border:"1px solid #E8D5A3",borderRadius:"16px",padding:"26px 28px"}}>
-            <h2 style={{fontSize:"17px",fontFamily:"Georgia,serif",color:"#2C1810",marginBottom:"5px"}}>Change Admin Password</h2>
-            <p style={{fontSize:"13px",color:"#A08060",marginBottom:"22px"}}>Use a strong password of at least 8 characters</p>
-            <div style={{display:"flex",flexDirection:"column",gap:"14px",maxWidth:"400px"}}>
-              {[
-                {key:"current", label:"Current Password *",  placeholder:"Your current password"},
-                {key:"newPw",   label:"New Password *",      placeholder:"At least 8 characters"},
-                {key:"confirm", label:"Confirm Password *",  placeholder:"Repeat new password"},
-              ].map(f=>(
-                <div key={f.key}>
-                  <label style={lbl}>{f.label}</label>
-                  <input type="password" value={pwForm[f.key as keyof typeof pwForm]} onChange={e=>setPwForm({...pwForm,[f.key]:e.target.value})} placeholder={f.placeholder} style={inp}/>
-                </div>
-              ))}
-              {pwError&&<div style={{padding:"10px 14px",borderRadius:"8px",background:"#FEF2F2",border:"1px solid #FECACA",color:"#dc2626",fontSize:"13px"}}>⚠️ {pwError}</div>}
-              <button onClick={changePassword} disabled={saving} style={{padding:"11px 24px",borderRadius:"8px",background:saving?"#E8D5A3":"linear-gradient(135deg,#C9A84C,#8B6914)",color:saving?"#A08060":"#2C1810",border:"none",fontSize:"14px",fontWeight:700,cursor:saving?"not-allowed":"pointer",fontFamily:"inherit",alignSelf:"flex-start"}}>
-                {saving?"Changing...":"Change Password"}
-              </button>
-            </div>
-          </div>
-
-          {/* Danger zone */}
-          <div style={{background:"#FFFDF9",border:"1.5px solid #FECACA",borderRadius:"16px",padding:"22px 28px"}}>
-            <h3 style={{fontSize:"15px",fontWeight:600,color:"#dc2626",marginBottom:"6px"}}>⚠️ Danger Zone</h3>
-            <p style={{fontSize:"13px",color:"#A08060",marginBottom:"16px"}}>These actions are irreversible. Proceed with extreme caution.</p>
-            <div style={{display:"flex",gap:"10px",flexWrap:"wrap"}}>
-              <button style={{padding:"9px 18px",borderRadius:"8px",background:"transparent",border:"1.5px solid #FDE68A",color:"#854d0e",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>🗄 Export All Data</button>
-              <button style={{padding:"9px 18px",borderRadius:"8px",background:"transparent",border:"1.5px solid #FECACA",color:"#dc2626",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>🗑 Purge Test Data</button>
-              <button style={{padding:"9px 18px",borderRadius:"8px",background:"transparent",border:"1.5px solid #FECACA",color:"#dc2626",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>⛔ Suspend Platform</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style>{`
-        @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-        input::placeholder{color:#C4A882;}
-        input:focus,select:focus{border-color:#C9A84C !important;}
-      `}</style>
+      {/* Tab content */}
+      <div style={{ background:"#fff", borderRadius:"14px", border:"1px solid #e5e7eb", padding:"24px" }}>
+        {activeTab === "duplicates"   && <DuplicatesTab />}
+        {activeTab === "roles"        && <RolesTab />}
+        {activeTab === "bulk-invoice" && <BulkInvoiceTab />}
+        {activeTab === "reorder"      && <ReorderTab />}
+      </div>
     </div>
   );
 }
