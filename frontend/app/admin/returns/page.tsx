@@ -40,7 +40,7 @@ const statusCfg = (s: string) => ({
   REFUNDED: { bg:"#ecfdf5", color:"#065f46", border:"#a7f3d0", dot:"#10b981", label:"Refunded"  },
   REJECTED: { bg:"#fef2f2", color:"#dc2626", border:"#fecaca", dot:"#ef4444", label:"Rejected"  },
   DISPUTED: { bg:"#f5f3ff", color:"#6d28d9", border:"#ddd6fe", dot:"#8b5cf6", label:"Disputed"  },
-}[s] || { bg:"#f3f4f6", color:"#374151", border:"#e5e7eb", dot:"#9ca3af", label:s });
+}[s] || { bg:"#f9f9f9", color:"#333", border:"#f0f0f0", dot:"#aaa", label:s });
 
 // ── Toast ─────────────────────────────────────────────────────
 function Toast({ msg, type, onClose }: { msg:string; type:"success"|"error"|"info"; onClose:()=>void }) {
@@ -98,7 +98,7 @@ function ReturnDrawer({ req, onClose, onUpdate }: {
       <div style={{position:"absolute",right:0,top:0,bottom:0,width:"480px",background:"#fff",boxShadow:"-8px 0 48px rgba(0,0,0,.15)",overflowY:"auto",animation:"slideLeft .3s ease",display:"flex",flexDirection:"column"}}>
 
         {/* Header */}
-        <div style={{background:"#111827",padding:"20px 24px",flexShrink:0}}>
+        <div style={{background:"#111",padding:"20px 24px",flexShrink:0}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div>
               <div style={{fontSize:"18px",fontWeight:700,color:"#fff",marginBottom:"3px"}}>{req.orderNumber}</div>
@@ -115,43 +115,43 @@ function ReturnDrawer({ req, onClose, onUpdate }: {
 
           {/* Buyer + Seller */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
-            <div style={{background:"#f9fafb",borderRadius:"10px",padding:"12px",border:"1px solid #e5e7eb"}}>
-              <div style={{fontSize:"10px",fontWeight:700,color:"#9ca3af",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"7px"}}>BUYER</div>
-              <div style={{fontSize:"13px",fontWeight:600,color:"#111827"}}>{req.buyerName}</div>
-              <div style={{fontSize:"11px",color:"#6b7280",marginTop:"2px"}}>{req.buyerEmail}</div>
-              <div style={{fontSize:"11px",color:"#6b7280"}}>{req.buyerPhone}</div>
+            <div style={{background:"#fafafa",borderRadius:"10px",padding:"12px",border:"1px solid #e5e7eb"}}>
+              <div style={{fontSize:"10px",fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"7px"}}>BUYER</div>
+              <div style={{fontSize:"13px",fontWeight:600,color:"#111"}}>{req.buyerName}</div>
+              <div style={{fontSize:"11px",color:"#888",marginTop:"2px"}}>{req.buyerEmail}</div>
+              <div style={{fontSize:"11px",color:"#888"}}>{req.buyerPhone}</div>
             </div>
-            <div style={{background:"#f9fafb",borderRadius:"10px",padding:"12px",border:"1px solid #e5e7eb"}}>
-              <div style={{fontSize:"10px",fontWeight:700,color:"#9ca3af",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"7px"}}>SELLER</div>
-              <div style={{fontSize:"13px",fontWeight:600,color:"#111827"}}>{req.sellerName}</div>
-              <div style={{fontSize:"11px",color:"#6b7280",marginTop:"2px"}}>Order: {req.orderNumber}</div>
-              <div style={{fontSize:"11px",color:"#6b7280"}}>{req.images} photo{req.images>1?"s":""} attached</div>
+            <div style={{background:"#fafafa",borderRadius:"10px",padding:"12px",border:"1px solid #e5e7eb"}}>
+              <div style={{fontSize:"10px",fontWeight:700,color:"#aaa",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"7px"}}>SELLER</div>
+              <div style={{fontSize:"13px",fontWeight:600,color:"#111"}}>{req.sellerName}</div>
+              <div style={{fontSize:"11px",color:"#888",marginTop:"2px"}}>Order: {req.orderNumber}</div>
+              <div style={{fontSize:"11px",color:"#888"}}>{req.images} photo{req.images>1?"s":""} attached</div>
             </div>
           </div>
 
           {/* Return reason */}
           <div>
-            <div style={{fontSize:"11px",fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"7px"}}>Return Reason</div>
-            <div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:"9px",padding:"12px 14px",fontSize:"13px",color:"#374151",lineHeight:1.6}}>{req.reason}</div>
+            <div style={{fontSize:"11px",fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"7px"}}>Return Reason</div>
+            <div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:"9px",padding:"12px 14px",fontSize:"13px",color:"#333",lineHeight:1.6}}>{req.reason}</div>
           </div>
 
           {/* Amounts */}
-          <div style={{background:"#f9fafb",borderRadius:"10px",padding:"14px",border:"1px solid #e5e7eb"}}>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#6b7280",marginBottom:"8px"}}><span>Order Amount</span><strong style={{color:"#111827"}}>₹{req.orderAmount.toLocaleString("en-IN")}</strong></div>
+          <div style={{background:"#fafafa",borderRadius:"10px",padding:"14px",border:"1px solid #e5e7eb"}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#888",marginBottom:"8px"}}><span>Order Amount</span><strong style={{color:"#111"}}>₹{req.orderAmount.toLocaleString("en-IN")}</strong></div>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingTop:"8px",borderTop:"1px solid #e5e7eb"}}>
-              <span style={{fontSize:"13px",fontWeight:600,color:"#111827"}}>Refund Amount</span>
+              <span style={{fontSize:"13px",fontWeight:600,color:"#111"}}>Refund Amount</span>
               <div style={{position:"relative"}}>
                 <span style={{position:"absolute",left:"10px",top:"50%",transform:"translateY(-50%)",fontSize:"13px",fontWeight:700,color:"#7a001a"}}>₹</span>
-                <input type="number" value={refundAmt} onChange={e=>setRefundAmt(e.target.value)} style={{padding:"6px 10px 6px 24px",borderRadius:"7px",border:"1.5px solid #e5e7eb",fontSize:"14px",fontWeight:700,color:"#111827",background:"#fff",outline:"none",width:"120px",fontFamily:"inherit"}}/>
+                <input type="number" value={refundAmt} onChange={e=>setRefundAmt(e.target.value)} style={{padding:"6px 10px 6px 24px",borderRadius:"7px",border:"1.5px solid #e5e7eb",fontSize:"14px",fontWeight:700,color:"#111",background:"#fff",outline:"none",width:"120px",fontFamily:"inherit"}}/>
               </div>
             </div>
           </div>
 
           {/* Timeline */}
           <div>
-            <div style={{fontSize:"11px",fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"10px"}}>Timeline</div>
+            <div style={{fontSize:"11px",fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:".08em",marginBottom:"10px"}}>Timeline</div>
             <div style={{position:"relative",paddingLeft:"18px"}}>
-              <div style={{position:"absolute",left:"5px",top:0,bottom:0,width:"1px",background:"#e5e7eb"}}/>
+              <div style={{position:"absolute",left:"5px",top:0,bottom:0,width:"1px",background:"#f0f0f0"}}/>
               {[
                 {label:"Return Requested", date:req.requestedAt,  done:true},
                 {label:"Item Received",    date:req.receivedAt,   done:!!req.receivedAt},
@@ -159,10 +159,10 @@ function ReturnDrawer({ req, onClose, onUpdate }: {
                 {label:"Refund Processed", date:req.status==="REFUNDED"?req.resolvedAt:null, done:req.status==="REFUNDED"},
               ].map((t,i)=>(
                 <div key={i} style={{display:"flex",gap:"10px",marginBottom:"12px",position:"relative"}}>
-                  <div style={{width:"10px",height:"10px",borderRadius:"50%",background:t.done?"#22c55e":"#e5e7eb",position:"absolute",left:"-14px",top:"3px",border:"2px solid #fff",flexShrink:0}}/>
+                  <div style={{width:"10px",height:"10px",borderRadius:"50%",background:t.done?"#22c55e":"#f0f0f0",position:"absolute",left:"-14px",top:"3px",border:"2px solid #fff",flexShrink:0}}/>
                   <div>
-                    <div style={{fontSize:"12px",fontWeight:t.done?600:400,color:t.done?"#111827":"#9ca3af"}}>{t.label}</div>
-                    {t.date&&<div style={{fontSize:"11px",color:"#9ca3af"}}>{t.date}</div>}
+                    <div style={{fontSize:"12px",fontWeight:t.done?600:400,color:t.done?"#111":"#aaa"}}>{t.label}</div>
+                    {t.date&&<div style={{fontSize:"11px",color:"#aaa"}}>{t.date}</div>}
                   </div>
                 </div>
               ))}
@@ -171,37 +171,37 @@ function ReturnDrawer({ req, onClose, onUpdate }: {
 
           {/* Admin notes */}
           <div>
-            <label style={{fontSize:"11px",fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".08em",display:"block",marginBottom:"6px"}}>Admin Notes</label>
-            <textarea value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Add internal notes about this return..." rows={3} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #e5e7eb",fontSize:"13px",color:"#111827",background:"#f9fafb",outline:"none",fontFamily:"inherit",resize:"none"}}/>
+            <label style={{fontSize:"11px",fontWeight:700,color:"#888",textTransform:"uppercase",letterSpacing:".08em",display:"block",marginBottom:"6px"}}>Admin Notes</label>
+            <textarea value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Add internal notes about this return..." rows={3} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #e5e7eb",fontSize:"13px",color:"#111",background:"#fafafa",outline:"none",fontFamily:"inherit",resize:"none"}}/>
           </div>
 
           {/* Dispute note */}
           {(req.status==="DISPUTED"||req.disputeNote) && (
             <div>
               <label style={{fontSize:"11px",fontWeight:700,color:"#6d28d9",textTransform:"uppercase",letterSpacing:".08em",display:"block",marginBottom:"6px"}}>⚖ Dispute Resolution Notes</label>
-              <textarea value={disputeNote} onChange={e=>setDisputeNote(e.target.value)} placeholder="Document dispute details, buyer claims, seller response..." rows={3} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #ddd6fe",fontSize:"13px",color:"#111827",background:"#f5f3ff",outline:"none",fontFamily:"inherit",resize:"none"}}/>
+              <textarea value={disputeNote} onChange={e=>setDisputeNote(e.target.value)} placeholder="Document dispute details, buyer claims, seller response..." rows={3} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #ddd6fe",fontSize:"13px",color:"#111",background:"#f5f3ff",outline:"none",fontFamily:"inherit",resize:"none"}}/>
             </div>
           )}
 
           {/* Action buttons */}
           <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
             {req.status==="PENDING" && (
-              <button onClick={()=>handleAction("mark_received")} disabled={loading} style={{padding:"11px",borderRadius:"8px",background:loading?"#e5e7eb":"#eff6ff",color:loading?"#9ca3af":"#1d4ed8",border:"1.5px solid #bfdbfe",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit",transition:"all .2s"}}>
+              <button onClick={()=>handleAction("mark_received")} disabled={loading} style={{padding:"11px",borderRadius:"8px",background:loading?"#f0f0f0":"#eff6ff",color:loading?"#aaa":"#1d4ed8",border:"1.5px solid #bfdbfe",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit",transition:"all .2s"}}>
                 {loading?"Processing...":"📦 Mark as Received"}
               </button>
             )}
             {req.status==="RECEIVED" && (
               <div style={{display:"flex",gap:"8px"}}>
-                <button onClick={()=>handleAction("approve")} disabled={loading} style={{flex:1,padding:"11px",borderRadius:"8px",background:loading?"#e5e7eb":"#f0fdf4",color:loading?"#9ca3af":"#15803d",border:"1.5px solid #bbf7d0",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit"}}>
+                <button onClick={()=>handleAction("approve")} disabled={loading} style={{flex:1,padding:"11px",borderRadius:"8px",background:loading?"#f0f0f0":"#f0fdf4",color:loading?"#aaa":"#15803d",border:"1.5px solid #bbf7d0",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit"}}>
                   {loading?"...":"✓ Approve Refund"}
                 </button>
-                <button onClick={()=>handleAction("reject")} disabled={loading} style={{flex:1,padding:"11px",borderRadius:"8px",background:loading?"#e5e7eb":"#fef2f2",color:loading?"#9ca3af":"#dc2626",border:"1.5px solid #fecaca",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit"}}>
+                <button onClick={()=>handleAction("reject")} disabled={loading} style={{flex:1,padding:"11px",borderRadius:"8px",background:loading?"#f0f0f0":"#fef2f2",color:loading?"#aaa":"#dc2626",border:"1.5px solid #fecaca",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit"}}>
                   {loading?"...":"✕ Reject Return"}
                 </button>
               </div>
             )}
             {req.status==="APPROVED" && (
-              <button onClick={()=>handleAction("refund")} disabled={loading} style={{padding:"11px",borderRadius:"8px",background:loading?"#e5e7eb":"linear-gradient(135deg,#9B0020,#7a001a)",color:loading?"#9ca3af":"#111",border:"none",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit",boxShadow:loading?"none":"0 4px 14px rgba(155,0,32,.3)",transition:"all .2s"}}>
+              <button onClick={()=>handleAction("refund")} disabled={loading} style={{padding:"11px",borderRadius:"8px",background:loading?"#f0f0f0":"linear-gradient(135deg,#9B0020,#7a001a)",color:loading?"#aaa":"#111",border:"none",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit",boxShadow:loading?"none":"0 4px 14px rgba(155,0,32,.3)",transition:"all .2s"}}>
                 {loading?"Processing Refund...":"💸 Process Refund — Credit ₹"+Number(refundAmt).toLocaleString("en-IN")+" to Wallet"}
               </button>
             )}
@@ -284,10 +284,10 @@ export default function AdminReturnsPage() {
       {/* Header */}
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"24px",flexWrap:"wrap",gap:"12px"}}>
         <div>
-          <h1 style={{fontSize:"22px",fontWeight:700,color:"#111827",marginBottom:"4px"}}>Returns & Refunds</h1>
-          <p style={{fontSize:"14px",color:"#6b7280"}}>{returns.length} total return requests · {counts.PENDING} pending action</p>
+          <h1 style={{fontSize:"22px",fontWeight:700,color:"#111",marginBottom:"4px"}}>Returns & Refunds</h1>
+          <p style={{fontSize:"14px",color:"#888"}}>{returns.length} total return requests · {counts.PENDING} pending action</p>
         </div>
-        <button onClick={()=>exportCSV(filtered)} style={{padding:"9px 18px",borderRadius:"8px",background:"#111827",color:"#fff",border:"none",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:"8px",transition:"all .2s"}}>
+        <button onClick={()=>exportCSV(filtered)} style={{padding:"9px 18px",borderRadius:"8px",background:"#111",color:"#fff",border:"none",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:"8px",transition:"all .2s"}}>
           📥 Export CSV
         </button>
       </div>
@@ -304,8 +304,8 @@ export default function AdminReturnsPage() {
         ].map(s=>(
           <div key={s.label} style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:"10px",padding:"14px 16px"}}>
             <div style={{width:"32px",height:"32px",borderRadius:"8px",background:s.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"15px",marginBottom:"8px"}}>{s.icon}</div>
-            <div style={{fontSize:"20px",fontWeight:700,color:"#111827",lineHeight:1}}>{s.value}</div>
-            <div style={{fontSize:"11px",color:"#9ca3af",marginTop:"3px"}}>{s.label}</div>
+            <div style={{fontSize:"20px",fontWeight:700,color:"#111",lineHeight:1}}>{s.value}</div>
+            <div style={{fontSize:"11px",color:"#aaa",marginTop:"3px"}}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -328,19 +328,19 @@ export default function AdminReturnsPage() {
       <div style={{display:"flex",gap:"10px",marginBottom:"16px",flexWrap:"wrap"}}>
         <div style={{flex:1,minWidth:"200px",position:"relative"}}>
           <span style={{position:"absolute",left:"12px",top:"50%",transform:"translateY(-50%)",fontSize:"14px",pointerEvents:"none"}}>🔍</span>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by order no., buyer name, item..." style={{width:"100%",padding:"9px 14px 9px 34px",borderRadius:"8px",border:"1.5px solid #e5e7eb",fontSize:"13px",color:"#111827",background:"#fff",outline:"none",fontFamily:"inherit"}}/>
-          {search&&<button onClick={()=>setSearch("")} style={{position:"absolute",right:"12px",top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:"16px",color:"#9ca3af",padding:0}}>×</button>}
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by order no., buyer name, item..." style={{width:"100%",padding:"9px 14px 9px 34px",borderRadius:"8px",border:"1.5px solid #e5e7eb",fontSize:"13px",color:"#111",background:"#fff",outline:"none",fontFamily:"inherit"}}/>
+          {search&&<button onClick={()=>setSearch("")} style={{position:"absolute",right:"12px",top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:"16px",color:"#aaa",padding:0}}>×</button>}
         </div>
-        <select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)} style={{padding:"9px 14px",borderRadius:"8px",border:"1.5px solid #e5e7eb",fontSize:"13px",color:"#111827",background:"#fff",outline:"none",cursor:"pointer",fontFamily:"inherit"}}>
+        <select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)} style={{padding:"9px 14px",borderRadius:"8px",border:"1.5px solid #e5e7eb",fontSize:"13px",color:"#111",background:"#fff",outline:"none",cursor:"pointer",fontFamily:"inherit"}}>
           <option value="">All Status</option>
           {["PENDING","RECEIVED","APPROVED","REFUNDED","REJECTED","DISPUTED"].map(s=><option key={s}>{s}</option>)}
         </select>
-        {(search||statusFilter)&&<button onClick={()=>{setSearch("");setStatusFilter("");}} style={{padding:"9px 16px",borderRadius:"8px",border:"1px solid #e5e7eb",background:"transparent",color:"#9ca3af",fontSize:"13px",cursor:"pointer",fontFamily:"inherit"}}>Clear</button>}
+        {(search||statusFilter)&&<button onClick={()=>{setSearch("");setStatusFilter("");}} style={{padding:"9px 16px",borderRadius:"8px",border:"1px solid #e5e7eb",background:"transparent",color:"#aaa",fontSize:"13px",cursor:"pointer",fontFamily:"inherit"}}>Clear</button>}
       </div>
 
       {/* Returns table */}
       <div style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:"12px",overflow:"hidden"}}>
-        <div style={{display:"grid",gridTemplateColumns:"140px 1fr 120px 110px 110px 90px 80px",padding:"10px 20px",background:"#111827"}}>
+        <div style={{display:"grid",gridTemplateColumns:"140px 1fr 120px 110px 110px 90px 80px",padding:"10px 20px",background:"#111"}}>
           {["Order #","Item & Buyer","Refund Amt","Status","Requested","Images","Action"].map(h=>(
             <div key={h} style={{fontSize:"10px",fontWeight:700,color:"rgba(255,255,255,.4)",letterSpacing:".08em",textTransform:"uppercase"}}>{h}</div>
           ))}
@@ -349,8 +349,8 @@ export default function AdminReturnsPage() {
         {filtered.length===0?(
           <div style={{padding:"64px 20px",textAlign:"center"}}>
             <div style={{fontSize:"48px",marginBottom:"14px"}}>📋</div>
-            <p style={{fontSize:"16px",fontWeight:500,color:"#111827",marginBottom:"6px"}}>No returns found</p>
-            <p style={{fontSize:"13px",color:"#9ca3af"}}>{search||statusFilter?"Try different filters":"No return requests yet"}</p>
+            <p style={{fontSize:"16px",fontWeight:500,color:"#111",marginBottom:"6px"}}>No returns found</p>
+            <p style={{fontSize:"13px",color:"#aaa"}}>{search||statusFilter?"Try different filters":"No return requests yet"}</p>
           </div>
         ):(
           filtered.map((r,i)=>{
@@ -361,21 +361,21 @@ export default function AdminReturnsPage() {
                 onMouseLeave={e=>(e.currentTarget as HTMLElement).style.background=i%2===0?"#fff":"#fafafa"}
               >
                 <div>
-                  <div style={{fontSize:"13px",fontWeight:700,color:"#111827"}}>{r.orderNumber}</div>
-                  <div style={{fontSize:"11px",color:"#9ca3af"}}>{r.requestedAt}</div>
+                  <div style={{fontSize:"13px",fontWeight:700,color:"#111"}}>{r.orderNumber}</div>
+                  <div style={{fontSize:"11px",color:"#aaa"}}>{r.requestedAt}</div>
                 </div>
                 <div style={{minWidth:0}}>
-                  <div style={{fontSize:"13px",fontWeight:500,color:"#111827",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.itemName}</div>
-                  <div style={{fontSize:"11px",color:"#9ca3af"}}>{r.buyerName} · {r.buyerPhone}</div>
-                  <div style={{fontSize:"11px",color:"#6b7280",marginTop:"2px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",fontStyle:"italic"}}>{r.reason.substring(0,50)}...</div>
+                  <div style={{fontSize:"13px",fontWeight:500,color:"#111",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.itemName}</div>
+                  <div style={{fontSize:"11px",color:"#aaa"}}>{r.buyerName} · {r.buyerPhone}</div>
+                  <div style={{fontSize:"11px",color:"#888",marginTop:"2px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",fontStyle:"italic"}}>{r.reason.substring(0,50)}...</div>
                 </div>
-                <div style={{fontSize:"14px",fontWeight:700,color:"#111827"}}>₹{r.refundAmount.toLocaleString("en-IN")}</div>
+                <div style={{fontSize:"14px",fontWeight:700,color:"#111"}}>₹{r.refundAmount.toLocaleString("en-IN")}</div>
                 <span style={{display:"inline-flex",alignItems:"center",gap:"5px",padding:"4px 9px",borderRadius:"99px",fontSize:"10px",fontWeight:700,background:sc.bg,color:sc.color,border:`1px solid ${sc.border}`}}>
                   <span style={{width:"5px",height:"5px",borderRadius:"50%",background:sc.dot}}/>
                   {sc.label}
                 </span>
-                <div style={{fontSize:"12px",color:"#6b7280"}}>{r.requestedAt}</div>
-                <div style={{fontSize:"12px",color:"#6b7280",display:"flex",alignItems:"center",gap:"4px"}}>📷 {r.images}</div>
+                <div style={{fontSize:"12px",color:"#888"}}>{r.requestedAt}</div>
+                <div style={{fontSize:"12px",color:"#888",display:"flex",alignItems:"center",gap:"4px"}}>📷 {r.images}</div>
                 <button onClick={()=>setSelectedReturn(r)} style={{padding:"6px 12px",borderRadius:"7px",background:"linear-gradient(135deg,#9B0020,#7a001a)",color:"#111",border:"none",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
                   Review
                 </button>

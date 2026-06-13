@@ -345,7 +345,7 @@ export default function AdminSellersPage() {
       <div style={{ background:"#fff", border:"1px solid #f0f0f0", borderRadius:"16px", overflow:"hidden", opacity:tableLoading?.6:1, transition:"opacity .25s" }}>
 
         {/* Dark header */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 160px 120px 100px 110px 110px", padding:"10px 20px", background:"linear-gradient(135deg,#111,#111)" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 160px 120px 100px 110px 110px", padding:"10px 20px", background:"rgba(155,0,32,.08)" }}>
           {["Seller","Contact","KYC Status","Status","Orders","Actions"].map(h => (
             <div key={h} style={{ fontSize:"10px", fontWeight:700, color:"#9B0020", letterSpacing:".08em", textTransform:"uppercase" }}>{h}</div>
           ))}
