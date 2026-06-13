@@ -20,7 +20,7 @@ const statusStyle = (s: string) => ({
   APPROVED: { bg:"#F0FDF4", color:"#15803d",  border:"#BBF7D0",  dot:"#22c55e" },
   REJECTED: { bg:"#FEF2F2", color:"#dc2626",  border:"#FECACA",  dot:"#ef4444" },
   PAID:     { bg:"#EFF6FF", color:"#1d4ed8",  border:"#BFDBFE",  dot:"#3b82f6" },
-}[s] || { bg:"#F5E6C8", color:"#6B4F12", border:"#E8D5A3", dot:"#C9A84C" });
+}[s] || { bg:"#F5E6C8", color:"#7a001a", border:"#f0f0f0", dot:"#9B0020" });
 
 // ── Toast ─────────────────────────────────────────────────────
 function Toast({ msg, type, onClose }: { msg:string; type:"success"|"error"|"info"; onClose:()=>void }) {
@@ -73,8 +73,8 @@ function ActionModal({ payout, action, onClose, onConfirm }: {
 
   return (
     <div onClick={(e)=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,background:"rgba(44,24,16,.78)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2000,padding:"20px",backdropFilter:"blur(6px)"}}>
-      <div style={{background:"#FFFDF9",borderRadius:"20px",width:"100%",maxWidth:"440px",overflow:"hidden",boxShadow:"0 28px 72px rgba(44,24,16,.45)",animation:"scaleIn .3s ease"}}>
-        <div style={{background:"linear-gradient(135deg,#1A0F0A,#2C1810)",padding:"20px 28px 18px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <div style={{background:"#fff",borderRadius:"20px",width:"100%",maxWidth:"440px",overflow:"hidden",boxShadow:"0 28px 72px rgba(44,24,16,.45)",animation:"scaleIn .3s ease"}}>
+        <div style={{background:"linear-gradient(135deg,#1A0F0A,#111)",padding:"20px 28px 18px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <div style={{display:"flex",alignItems:"center",gap:"12px"}}>
             <span style={{fontSize:"22px"}}>{config.icon}</span>
             <div>
@@ -82,27 +82,27 @@ function ActionModal({ payout, action, onClose, onConfirm }: {
               <p style={{fontSize:"12px",color:"rgba(245,230,200,.5)",marginTop:"2px"}}>₹{payout.amount.toLocaleString("en-IN")} · {payout.bankDetails?.bankName}</p>
             </div>
           </div>
-          <button onClick={onClose} style={{width:"30px",height:"30px",borderRadius:"50%",background:"rgba(255,255,255,.08)",border:"none",color:"#C9A84C",fontSize:"17px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"inherit"}}>×</button>
+          <button onClick={onClose} style={{width:"30px",height:"30px",borderRadius:"50%",background:"rgba(255,255,255,.08)",border:"none",color:"#9B0020",fontSize:"17px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"inherit"}}>×</button>
         </div>
         <div style={{padding:"22px 28px",display:"flex",flexDirection:"column",gap:"14px"}}>
           {/* Payout summary */}
-          <div style={{background:"#FBF7F0",borderRadius:"10px",padding:"13px",border:"1px solid #E8D5A3"}}>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#6B4F12",marginBottom:"6px"}}><span>Amount</span><strong style={{color:"#2C1810",fontFamily:"Georgia,serif"}}>₹{payout.amount.toLocaleString("en-IN")}</strong></div>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#6B4F12",marginBottom:"6px"}}><span>Bank</span><span>{payout.bankDetails?.bankName}</span></div>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#6B4F12",marginBottom:"6px"}}><span>Account</span><span>****{payout.bankDetails?.accountNumber?.slice(-4)}</span></div>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#6B4F12"}}><span>IFSC</span><span>{payout.bankDetails?.ifsc}</span></div>
+          <div style={{background:"#f9f9f9",borderRadius:"10px",padding:"13px",border:"1px solid #f0f0f0"}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#7a001a",marginBottom:"6px"}}><span>Amount</span><strong style={{color:"#111",fontFamily:"Georgia,serif"}}>₹{payout.amount.toLocaleString("en-IN")}</strong></div>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#7a001a",marginBottom:"6px"}}><span>Bank</span><span>{payout.bankDetails?.bankName}</span></div>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#7a001a",marginBottom:"6px"}}><span>Account</span><span>****{payout.bankDetails?.accountNumber?.slice(-4)}</span></div>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#7a001a"}}><span>IFSC</span><span>{payout.bankDetails?.ifsc}</span></div>
           </div>
 
-          <p style={{fontSize:"13px",color:"#6B4F12",lineHeight:1.6}}>{config.desc}</p>
+          <p style={{fontSize:"13px",color:"#7a001a",lineHeight:1.6}}>{config.desc}</p>
 
           <div>
-            <label style={{fontSize:"11px",fontWeight:700,color:"#6B4F12",display:"block",marginBottom:"5px",letterSpacing:".04em",textTransform:"uppercase"}}>{action==="reject"?"Rejection Reason *":"Note (optional)"}</label>
-            <textarea value={note} onChange={e=>setNote(e.target.value)} placeholder={action==="reject"?"Explain why this payout is being rejected...":"Add a note for the seller..."} rows={3} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #E8D5A3",fontSize:"13px",color:"#2C1810",background:"#FBF7F0",outline:"none",fontFamily:"inherit",resize:"none"}}/>
+            <label style={{fontSize:"11px",fontWeight:700,color:"#7a001a",display:"block",marginBottom:"5px",letterSpacing:".04em",textTransform:"uppercase"}}>{action==="reject"?"Rejection Reason *":"Note (optional)"}</label>
+            <textarea value={note} onChange={e=>setNote(e.target.value)} placeholder={action==="reject"?"Explain why this payout is being rejected...":"Add a note for the seller..."} rows={3} style={{width:"100%",padding:"10px 12px",borderRadius:"8px",border:"1.5px solid #f0f0f0",fontSize:"13px",color:"#111",background:"#f9f9f9",outline:"none",fontFamily:"inherit",resize:"none"}}/>
           </div>
 
           <div style={{display:"flex",gap:"10px"}}>
-            <button onClick={onClose} style={{flex:1,padding:"11px",borderRadius:"8px",border:"1.5px solid #E8D5A3",background:"transparent",color:"#6B4F12",fontSize:"14px",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Cancel</button>
-            <button onClick={handleConfirm} disabled={loading||(action==="reject"&&!note.trim())} style={{flex:2,padding:"11px",borderRadius:"8px",background:loading?"#E8D5A3":config.bg,color:loading?"#A08060":(action==="reject"?"#dc2626":"#fff"),border:(config as any).border||"none",fontSize:"14px",fontWeight:700,cursor:loading||(action==="reject"&&!note.trim())?"not-allowed":"pointer",fontFamily:"inherit",letterSpacing:".02em"}}>
+            <button onClick={onClose} style={{flex:1,padding:"11px",borderRadius:"8px",border:"1.5px solid #f0f0f0",background:"transparent",color:"#7a001a",fontSize:"14px",fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Cancel</button>
+            <button onClick={handleConfirm} disabled={loading||(action==="reject"&&!note.trim())} style={{flex:2,padding:"11px",borderRadius:"8px",background:loading?"#f0f0f0":config.bg,color:loading?"#888":(action==="reject"?"#dc2626":"#fff"),border:(config as any).border||"none",fontSize:"14px",fontWeight:700,cursor:loading||(action==="reject"&&!note.trim())?"not-allowed":"pointer",fontFamily:"inherit",letterSpacing:".02em"}}>
               {loading?"Processing...":config.btnLabel}
             </button>
           </div>
@@ -192,9 +192,9 @@ export default function AdminPayoutsPage() {
 
       {/* Header */}
       <div style={{marginBottom:"24px"}}>
-        <p style={{fontSize:"12px",color:"#A08060",letterSpacing:".1em",textTransform:"uppercase",marginBottom:"4px"}}>Admin</p>
-        <h1 style={{fontSize:"26px",fontFamily:"Georgia,serif",color:"#2C1810",fontWeight:400}}>Payout Management</h1>
-        <p style={{fontSize:"14px",color:"#A08060",marginTop:"3px"}}>{totalPending} requests awaiting approval</p>
+        <p style={{fontSize:"12px",color:"#888",letterSpacing:".1em",textTransform:"uppercase",marginBottom:"4px"}}>Admin</p>
+        <h1 style={{fontSize:"26px",fontFamily:"Georgia,serif",color:"#111",fontWeight:400}}>Payout Management</h1>
+        <p style={{fontSize:"14px",color:"#888",marginTop:"3px"}}>{totalPending} requests awaiting approval</p>
       </div>
 
       {/* Stats */}
@@ -203,24 +203,24 @@ export default function AdminPayoutsPage() {
           {icon:"💸",label:"Pending Approval", value:String(totalPending),                          sub:`₹${pendingAmount.toLocaleString("en-IN")}`,     color:"rgba(245,158,11,.1)", border:"#FDE68A",  click:"PENDING"},
           {icon:"✅",label:"Approved",          value:String(totalApproved),                         sub:"Awaiting transfer",                              color:"rgba(16,185,129,.1)", border:"#BBF7D0",  click:"APPROVED"},
           {icon:"🏦",label:"Paid Out",          value:String(totalPaid),                             sub:`₹${paidAmount.toLocaleString("en-IN")} sent`,   color:"rgba(59,130,246,.1)", border:"#BFDBFE",  click:"PAID"},
-          {icon:"📊",label:"Total Requests",    value:String(total),                                 sub:"All time",                                       color:"rgba(201,168,76,.1)", border:"#E8D5A3",  click:""},
+          {icon:"📊",label:"Total Requests",    value:String(total),                                 sub:"All time",                                       color:"rgba(155,0,32,.1)", border:"#f0f0f0",  click:""},
         ].map(s=>(
-          <div key={s.label} onClick={()=>setStatusFilter(statusFilter===s.click?"":s.click)} style={{background:statusFilter===s.click?"#2C1810":"#FFFDF9",border:`1px solid ${statusFilter===s.click?"#C9A84C":s.border}`,borderRadius:"14px",padding:"16px 18px",cursor:"pointer",transition:"all .2s"}}>
+          <div key={s.label} onClick={()=>setStatusFilter(statusFilter===s.click?"":s.click)} style={{background:statusFilter===s.click?"#111":"#fff",border:`1px solid ${statusFilter===s.click?"#9B0020":s.border}`,borderRadius:"14px",padding:"16px 18px",cursor:"pointer",transition:"all .2s"}}>
             <div style={{fontSize:"20px",marginBottom:"8px"}}>{s.icon}</div>
-            <div style={{fontSize:"22px",fontWeight:700,color:statusFilter===s.click?"#C9A84C":"#2C1810",fontFamily:"Georgia,serif",lineHeight:1}}>{s.value}</div>
-            <div style={{fontSize:"12px",fontWeight:600,color:statusFilter===s.click?"rgba(201,168,76,.6)":"#6B4F12",marginTop:"4px"}}>{s.label}</div>
-            <div style={{fontSize:"11px",color:statusFilter===s.click?"rgba(201,168,76,.4)":"#A08060",marginTop:"2px"}}>{s.sub}</div>
+            <div style={{fontSize:"22px",fontWeight:700,color:statusFilter===s.click?"#9B0020":"#111",fontFamily:"Georgia,serif",lineHeight:1}}>{s.value}</div>
+            <div style={{fontSize:"12px",fontWeight:600,color:statusFilter===s.click?"rgba(155,0,32,.6)":"#7a001a",marginTop:"4px"}}>{s.label}</div>
+            <div style={{fontSize:"11px",color:statusFilter===s.click?"rgba(155,0,32,.4)":"#888",marginTop:"2px"}}>{s.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Table */}
-      <div style={{background:"#FFFDF9",border:"1px solid #E8D5A3",borderRadius:"16px",overflow:"hidden",opacity:tableLoading?.6:1,transition:"opacity .25s"}}>
+      <div style={{background:"#fff",border:"1px solid #f0f0f0",borderRadius:"16px",overflow:"hidden",opacity:tableLoading?.6:1,transition:"opacity .25s"}}>
 
         {/* Dark header */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 140px 160px 110px 130px 120px",padding:"10px 20px",background:"linear-gradient(135deg,#2C1810,#3D2B1F)"}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 140px 160px 110px 130px 120px",padding:"10px 20px",background:"linear-gradient(135deg,#111,#111)"}}>
           {["Seller","Amount","Bank Details","Status","Date","Actions"].map(h=>(
-            <div key={h} style={{fontSize:"10px",fontWeight:700,color:"#C9A84C",letterSpacing:".08em",textTransform:"uppercase"}}>{h}</div>
+            <div key={h} style={{fontSize:"10px",fontWeight:700,color:"#9B0020",letterSpacing:".08em",textTransform:"uppercase"}}>{h}</div>
           ))}
         </div>
 
@@ -229,33 +229,33 @@ export default function AdminPayoutsPage() {
         ) : payouts.length===0 ? (
           <div style={{padding:"64px 20px",textAlign:"center"}}>
             <div style={{fontSize:"48px",marginBottom:"14px"}}>💸</div>
-            <p style={{fontSize:"17px",fontWeight:500,color:"#2C1810",marginBottom:"6px"}}>No payout requests</p>
-            <p style={{fontSize:"13px",color:"#A08060"}}>{statusFilter?`No ${statusFilter.toLowerCase()} payouts found`:"All payouts have been processed"}</p>
+            <p style={{fontSize:"17px",fontWeight:500,color:"#111",marginBottom:"6px"}}>No payout requests</p>
+            <p style={{fontSize:"13px",color:"#888"}}>{statusFilter?`No ${statusFilter.toLowerCase()} payouts found`:"All payouts have been processed"}</p>
           </div>
         ) : (
           <>
             {payouts.map((p,i)=>{
               const ss2=statusStyle(p.status);
               return (
-                <div key={p._id} style={{display:"grid",gridTemplateColumns:"1fr 140px 160px 110px 130px 120px",padding:"14px 20px",borderBottom:i<payouts.length-1?"1px solid #F5EDE0":"none",background:i%2===0?"#FFFDF9":"#FDFAF4",alignItems:"center",transition:"background .15s"}}
+                <div key={p._id} style={{display:"grid",gridTemplateColumns:"1fr 140px 160px 110px 130px 120px",padding:"14px 20px",borderBottom:i<payouts.length-1?"1px solid #F5EDE0":"none",background:i%2===0?"#fff":"#FDFAF4",alignItems:"center",transition:"background .15s"}}
                   onMouseEnter={e=>(e.currentTarget as HTMLElement).style.background="#F5E6C8"}
-                  onMouseLeave={e=>(e.currentTarget as HTMLElement).style.background=i%2===0?"#FFFDF9":"#FDFAF4"}
+                  onMouseLeave={e=>(e.currentTarget as HTMLElement).style.background=i%2===0?"#fff":"#FDFAF4"}
                 >
                   {/* Seller */}
                   <div>
-                    <div style={{fontSize:"13px",fontWeight:600,color:"#2C1810"}}>{p.sellerId?.name||"Seller"}</div>
-                    <div style={{fontSize:"11px",color:"#A08060"}}>{p.sellerId?.email||p.bankDetails?.accountHolder||"—"}</div>
+                    <div style={{fontSize:"13px",fontWeight:600,color:"#111"}}>{p.sellerId?.name||"Seller"}</div>
+                    <div style={{fontSize:"11px",color:"#888"}}>{p.sellerId?.email||p.bankDetails?.accountHolder||"—"}</div>
                     {p.adminNote&&<div style={{fontSize:"11px",color:p.status==="REJECTED"?"#dc2626":"#15803d",marginTop:"2px",fontStyle:"italic"}}>Note: {p.adminNote}</div>}
                   </div>
 
                   {/* Amount */}
-                  <div style={{fontSize:"16px",fontWeight:700,color:"#2C1810",fontFamily:"Georgia,serif"}}>₹{p.amount.toLocaleString("en-IN")}</div>
+                  <div style={{fontSize:"16px",fontWeight:700,color:"#111",fontFamily:"Georgia,serif"}}>₹{p.amount.toLocaleString("en-IN")}</div>
 
                   {/* Bank */}
                   <div>
-                    <div style={{fontSize:"12px",fontWeight:500,color:"#2C1810"}}>{p.bankDetails?.bankName}</div>
-                    <div style={{fontSize:"11px",color:"#A08060"}}>****{p.bankDetails?.accountNumber?.slice(-4)} · {p.bankDetails?.ifsc}</div>
-                    {p.bankDetails?.accountHolder&&<div style={{fontSize:"11px",color:"#A08060"}}>{p.bankDetails.accountHolder}</div>}
+                    <div style={{fontSize:"12px",fontWeight:500,color:"#111"}}>{p.bankDetails?.bankName}</div>
+                    <div style={{fontSize:"11px",color:"#888"}}>****{p.bankDetails?.accountNumber?.slice(-4)} · {p.bankDetails?.ifsc}</div>
+                    {p.bankDetails?.accountHolder&&<div style={{fontSize:"11px",color:"#888"}}>{p.bankDetails.accountHolder}</div>}
                   </div>
 
                   {/* Status */}
@@ -265,7 +265,7 @@ export default function AdminPayoutsPage() {
                   </span>
 
                   {/* Date */}
-                  <div style={{fontSize:"12px",color:"#6B4F12"}}>{new Date(p.createdAt).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})}</div>
+                  <div style={{fontSize:"12px",color:"#7a001a"}}>{new Date(p.createdAt).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})}</div>
 
                   {/* Actions */}
                   <div style={{display:"flex",gap:"5px",flexWrap:"wrap"}}>
@@ -289,9 +289,9 @@ export default function AdminPayoutsPage() {
             {/* Pagination */}
             {totalPages>1&&(
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"6px",padding:"14px",borderTop:"1px solid #F0E4C0"}}>
-                <button onClick={()=>fetchPayouts(page-1,true)} disabled={page===1} style={{padding:"5px 13px",borderRadius:"6px",border:"1px solid #E8D5A3",background:"transparent",color:page===1?"#C4A882":"#2C1810",cursor:page===1?"not-allowed":"pointer",fontSize:"13px",fontFamily:"inherit"}}>← Prev</button>
-                <span style={{fontSize:"13px",color:"#A08060",padding:"0 8px"}}>Page {page} of {totalPages}</span>
-                <button onClick={()=>fetchPayouts(page+1,true)} disabled={page===totalPages} style={{padding:"5px 13px",borderRadius:"6px",border:"1px solid #E8D5A3",background:"transparent",color:page===totalPages?"#C4A882":"#2C1810",cursor:page===totalPages?"not-allowed":"pointer",fontSize:"13px",fontFamily:"inherit"}}>Next →</button>
+                <button onClick={()=>fetchPayouts(page-1,true)} disabled={page===1} style={{padding:"5px 13px",borderRadius:"6px",border:"1px solid #f0f0f0",background:"transparent",color:page===1?"#C4A882":"#111",cursor:page===1?"not-allowed":"pointer",fontSize:"13px",fontFamily:"inherit"}}>← Prev</button>
+                <span style={{fontSize:"13px",color:"#888",padding:"0 8px"}}>Page {page} of {totalPages}</span>
+                <button onClick={()=>fetchPayouts(page+1,true)} disabled={page===totalPages} style={{padding:"5px 13px",borderRadius:"6px",border:"1px solid #f0f0f0",background:"transparent",color:page===totalPages?"#C4A882":"#111",cursor:page===totalPages?"not-allowed":"pointer",fontSize:"13px",fontFamily:"inherit"}}>Next →</button>
               </div>
             )}
           </>
@@ -308,7 +308,7 @@ export default function AdminPayoutsPage() {
               <div style={{fontSize:"12px",color:"#B45309"}}>Total: ₹{pendingAmount.toLocaleString("en-IN")} pending transfer</div>
             </div>
           </div>
-          <button onClick={()=>setStatusFilter("PENDING")} style={{padding:"8px 18px",borderRadius:"8px",background:"#F59E0B",color:"#2C1810",border:"none",fontSize:"13px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+          <button onClick={()=>setStatusFilter("PENDING")} style={{padding:"8px 18px",borderRadius:"8px",background:"#F59E0B",color:"#111",border:"none",fontSize:"13px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
             Review Pending →
           </button>
         </div>
@@ -318,7 +318,7 @@ export default function AdminPayoutsPage() {
         @keyframes scaleIn  {from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
         @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
         textarea::placeholder{color:#C4A882;}
-        textarea:focus{border-color:#C9A84C !important;}
+        textarea:focus{border-color:#9B0020 !important;}
       `}</style>
     </div>
   );

@@ -26,13 +26,13 @@ const kycStyle = (s: string) => ({
   pending:       { bg:"#EFF6FF", color:"#1d4ed8", border:"#BFDBFE", label:"Under Review" },
   rejected:      { bg:"#FEF2F2", color:"#dc2626", border:"#FECACA", label:"Rejected"     },
   not_submitted: { bg:"#FFFBEB", color:"#854d0e", border:"#FDE68A", label:"Pending"      },
-}[s] || { bg:"#F5E6C8", color:"#6B4F12", border:"#E8D5A3", label:"Unknown" });
+}[s] || { bg:"#F5E6C8", color:"#7a001a", border:"#f0f0f0", label:"Unknown" });
 
 const statusStyle = (s: string) => ({
   active:    { bg:"#F0FDF4", color:"#15803d", border:"#BBF7D0" },
   suspended: { bg:"#FEF2F2", color:"#dc2626", border:"#FECACA" },
   inactive:  { bg:"#F5F3FF", color:"#6d28d9", border:"#DDD6FE" },
-}[s] || { bg:"#F5E6C8", color:"#6B4F12", border:"#E8D5A3" });
+}[s] || { bg:"#F5E6C8", color:"#7a001a", border:"#f0f0f0" });
 
 // ── Toast ─────────────────────────────────────────────────────
 function Toast({ msg, type, onClose }: { msg:string; type:"success"|"error"|"info"; onClose:()=>void }) {
@@ -90,13 +90,13 @@ function SellerDrawer({ seller, onClose, onKycUpdate, onStatusToggle }: {
   return (
     <div style={{ position:"fixed", inset:0, zIndex:1000 }}>
       <div style={{ position:"absolute", inset:0, background:"rgba(44,24,16,.5)", backdropFilter:"blur(3px)" }} onClick={onClose}/>
-      <div style={{ position:"absolute", right:0, top:0, bottom:0, width:"460px", background:"#FFFDF9", boxShadow:"-8px 0 48px rgba(44,24,16,.2)", overflowY:"auto", animation:"slideLeft .3s ease", display:"flex", flexDirection:"column" }}>
+      <div style={{ position:"absolute", right:0, top:0, bottom:0, width:"460px", background:"#fff", boxShadow:"-8px 0 48px rgba(44,24,16,.2)", overflowY:"auto", animation:"slideLeft .3s ease", display:"flex", flexDirection:"column" }}>
 
         {/* Header */}
-        <div style={{ background:"linear-gradient(135deg,#1A0F0A,#2C1810,#3D2B1F)", padding:"22px 24px", flexShrink:0 }}>
+        <div style={{ background:"linear-gradient(135deg,#1A0F0A,#111,#111)", padding:"22px 24px", flexShrink:0 }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
             <div style={{ display:"flex", alignItems:"center", gap:"14px" }}>
-              <div style={{ width:"48px", height:"48px", borderRadius:"50%", background:"linear-gradient(135deg,#C9A84C,#8B6914)", display:"flex", alignItems:"center", justifyContent:"center", color:"#2C1810", fontSize:"20px", fontWeight:700, flexShrink:0 }}>
+              <div style={{ width:"48px", height:"48px", borderRadius:"50%", background:"linear-gradient(135deg,#9B0020,#7a001a)", display:"flex", alignItems:"center", justifyContent:"center", color:"#111", fontSize:"20px", fontWeight:700, flexShrink:0 }}>
                 {seller.name.charAt(0).toUpperCase()}
               </div>
               <div>
@@ -104,12 +104,12 @@ function SellerDrawer({ seller, onClose, onKycUpdate, onStatusToggle }: {
                 <div style={{ fontSize:"12px", color:"rgba(245,230,200,.5)", marginTop:"2px" }}>{seller.email}</div>
               </div>
             </div>
-            <button onClick={onClose} style={{ width:"30px", height:"30px", borderRadius:"50%", background:"rgba(255,255,255,.08)", border:"none", color:"#C9A84C", fontSize:"17px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"inherit" }}>×</button>
+            <button onClick={onClose} style={{ width:"30px", height:"30px", borderRadius:"50%", background:"rgba(255,255,255,.08)", border:"none", color:"#9B0020", fontSize:"17px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"inherit" }}>×</button>
           </div>
           <div style={{ display:"flex", gap:"8px", marginTop:"14px", flexWrap:"wrap" }}>
             <span style={{ padding:"3px 9px", borderRadius:"99px", fontSize:"11px", fontWeight:700, background:ks.bg, color:ks.color, border:`1px solid ${ks.border}` }}>KYC: {ks.label}</span>
             <span style={{ padding:"3px 9px", borderRadius:"99px", fontSize:"11px", fontWeight:700, background:ss.bg, color:ss.color, border:`1px solid ${ss.border}` }}>{seller.status.toUpperCase()}</span>
-            {seller.role === "admin" && <span style={{ padding:"3px 9px", borderRadius:"99px", fontSize:"11px", fontWeight:700, background:"rgba(201,168,76,.15)", color:"#C9A84C", border:"1px solid rgba(201,168,76,.3)" }}>ADMIN</span>}
+            {seller.role === "admin" && <span style={{ padding:"3px 9px", borderRadius:"99px", fontSize:"11px", fontWeight:700, background:"rgba(155,0,32,.15)", color:"#9B0020", border:"1px solid rgba(155,0,32,.3)" }}>ADMIN</span>}
           </div>
         </div>
 
@@ -117,8 +117,8 @@ function SellerDrawer({ seller, onClose, onKycUpdate, onStatusToggle }: {
 
           {/* Contact info */}
           <div>
-            <p style={{ fontSize:"10px", fontWeight:700, color:"#A08060", textTransform:"uppercase", letterSpacing:".08em", marginBottom:"8px" }}>Contact & Business</p>
-            <div style={{ background:"#FBF7F0", borderRadius:"10px", padding:"14px", border:"1px solid #E8D5A3", display:"flex", flexDirection:"column", gap:"8px" }}>
+            <p style={{ fontSize:"10px", fontWeight:700, color:"#888", textTransform:"uppercase", letterSpacing:".08em", marginBottom:"8px" }}>Contact & Business</p>
+            <div style={{ background:"#f9f9f9", borderRadius:"10px", padding:"14px", border:"1px solid #f0f0f0", display:"flex", flexDirection:"column", gap:"8px" }}>
               {[
                 { icon:"📱", label:"Phone",    val:seller.phone             },
                 { icon:"🏢", label:"Business", val:seller.businessName||"—" },
@@ -128,8 +128,8 @@ function SellerDrawer({ seller, onClose, onKycUpdate, onStatusToggle }: {
               ].map(f=>(
                 <div key={f.label} style={{ display:"flex", gap:"10px", alignItems:"center" }}>
                   <span style={{ fontSize:"14px", width:"20px", flexShrink:0 }}>{f.icon}</span>
-                  <span style={{ fontSize:"11px", color:"#A08060", minWidth:"60px" }}>{f.label}</span>
-                  <span style={{ fontSize:"13px", color:"#2C1810", fontWeight:500 }}>{f.val}</span>
+                  <span style={{ fontSize:"11px", color:"#888", minWidth:"60px" }}>{f.label}</span>
+                  <span style={{ fontSize:"13px", color:"#111", fontWeight:500 }}>{f.val}</span>
                 </div>
               ))}
             </div>
@@ -137,36 +137,36 @@ function SellerDrawer({ seller, onClose, onKycUpdate, onStatusToggle }: {
 
           {/* KYC Management */}
           <div>
-            <p style={{ fontSize:"10px", fontWeight:700, color:"#A08060", textTransform:"uppercase", letterSpacing:".08em", marginBottom:"8px" }}>KYC Verification</p>
+            <p style={{ fontSize:"10px", fontWeight:700, color:"#888", textTransform:"uppercase", letterSpacing:".08em", marginBottom:"8px" }}>KYC Verification</p>
 
             {seller.kycStatus === "approved" ? (
               <div style={{ background:"#F0FDF4", border:"1px solid #BBF7D0", borderRadius:"10px", padding:"14px", display:"flex", alignItems:"center", gap:"12px" }}>
                 <span style={{ fontSize:"22px" }}>✅</span>
                 <div>
                   <div style={{ fontSize:"14px", fontWeight:600, color:"#15803d" }}>KYC Approved</div>
-                  <div style={{ fontSize:"12px", color:"#6B4F12", marginTop:"2px" }}>Seller is fully verified and can access all features</div>
+                  <div style={{ fontSize:"12px", color:"#7a001a", marginTop:"2px" }}>Seller is fully verified and can access all features</div>
                 </div>
               </div>
             ) : (
-              <div style={{ background:"#FBF7F0", border:"1px solid #E8D5A3", borderRadius:"10px", padding:"14px", display:"flex", flexDirection:"column", gap:"12px" }}>
-                <div style={{ fontSize:"13px", color:"#6B4F12" }}>
+              <div style={{ background:"#f9f9f9", border:"1px solid #f0f0f0", borderRadius:"10px", padding:"14px", display:"flex", flexDirection:"column", gap:"12px" }}>
+                <div style={{ fontSize:"13px", color:"#7a001a" }}>
                   Current status: <strong style={{ color:ks.color }}>{ks.label}</strong>
                 </div>
                 <div>
-                  <label style={{ fontSize:"11px", fontWeight:700, color:"#6B4F12", display:"block", marginBottom:"5px", letterSpacing:".04em", textTransform:"uppercase" }}>Admin Note (optional)</label>
+                  <label style={{ fontSize:"11px", fontWeight:700, color:"#7a001a", display:"block", marginBottom:"5px", letterSpacing:".04em", textTransform:"uppercase" }}>Admin Note (optional)</label>
                   <textarea
                     value={kycNote}
                     onChange={e => setKycNote(e.target.value)}
                     placeholder="Reason for approval or rejection..."
                     rows={2}
-                    style={{ width:"100%", padding:"9px 12px", borderRadius:"8px", border:"1.5px solid #E8D5A3", fontSize:"13px", color:"#2C1810", background:"#FFFDF9", outline:"none", fontFamily:"inherit", resize:"none" }}
+                    style={{ width:"100%", padding:"9px 12px", borderRadius:"8px", border:"1.5px solid #f0f0f0", fontSize:"13px", color:"#111", background:"#fff", outline:"none", fontFamily:"inherit", resize:"none" }}
                   />
                 </div>
                 <div style={{ display:"flex", gap:"8px" }}>
-                  <button onClick={() => handleKyc("approved")} disabled={updating} style={{ flex:1, padding:"10px", borderRadius:"8px", background:updating?"#E8D5A3":"linear-gradient(135deg,#22c55e,#15803d)", color:updating?"#A08060":"#fff", border:"none", fontSize:"13px", fontWeight:700, cursor:updating?"not-allowed":"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", justifyContent:"center", gap:"6px" }}>
+                  <button onClick={() => handleKyc("approved")} disabled={updating} style={{ flex:1, padding:"10px", borderRadius:"8px", background:updating?"#f0f0f0":"linear-gradient(135deg,#22c55e,#15803d)", color:updating?"#888":"#fff", border:"none", fontSize:"13px", fontWeight:700, cursor:updating?"not-allowed":"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", justifyContent:"center", gap:"6px" }}>
                     {updating ? "..." : "✓ Approve KYC"}
                   </button>
-                  <button onClick={() => handleKyc("rejected")} disabled={updating} style={{ flex:1, padding:"10px", borderRadius:"8px", background:updating?"#E8D5A3":"rgba(239,68,68,.1)", color:updating?"#A08060":"#dc2626", border:"1.5px solid rgba(239,68,68,.25)", fontSize:"13px", fontWeight:700, cursor:updating?"not-allowed":"pointer", fontFamily:"inherit" }}>
+                  <button onClick={() => handleKyc("rejected")} disabled={updating} style={{ flex:1, padding:"10px", borderRadius:"8px", background:updating?"#f0f0f0":"rgba(239,68,68,.1)", color:updating?"#888":"#dc2626", border:"1.5px solid rgba(239,68,68,.25)", fontSize:"13px", fontWeight:700, cursor:updating?"not-allowed":"pointer", fontFamily:"inherit" }}>
                     ✕ Reject
                   </button>
                 </div>
@@ -176,12 +176,12 @@ function SellerDrawer({ seller, onClose, onKycUpdate, onStatusToggle }: {
 
           {/* Account status */}
           <div>
-            <p style={{ fontSize:"10px", fontWeight:700, color:"#A08060", textTransform:"uppercase", letterSpacing:".08em", marginBottom:"8px" }}>Account Status</p>
-            <div style={{ background:"#FBF7F0", border:"1px solid #E8D5A3", borderRadius:"10px", padding:"14px" }}>
+            <p style={{ fontSize:"10px", fontWeight:700, color:"#888", textTransform:"uppercase", letterSpacing:".08em", marginBottom:"8px" }}>Account Status</p>
+            <div style={{ background:"#f9f9f9", border:"1px solid #f0f0f0", borderRadius:"10px", padding:"14px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"10px" }}>
                 <div>
-                  <div style={{ fontSize:"13px", fontWeight:600, color:"#2C1810" }}>Account is <span style={{ color:seller.status==="active"?"#15803d":"#dc2626" }}>{seller.status.toUpperCase()}</span></div>
-                  <div style={{ fontSize:"12px", color:"#A08060", marginTop:"2px" }}>{seller.status==="active"?"Seller can log in and use all features":"Seller is blocked from logging in"}</div>
+                  <div style={{ fontSize:"13px", fontWeight:600, color:"#111" }}>Account is <span style={{ color:seller.status==="active"?"#15803d":"#dc2626" }}>{seller.status.toUpperCase()}</span></div>
+                  <div style={{ fontSize:"12px", color:"#888", marginTop:"2px" }}>{seller.status==="active"?"Seller can log in and use all features":"Seller is blocked from logging in"}</div>
                 </div>
               </div>
               {seller.role !== "admin" && (
@@ -190,7 +190,7 @@ function SellerDrawer({ seller, onClose, onKycUpdate, onStatusToggle }: {
                 </button>
               )}
               {seller.role === "admin" && (
-                <div style={{ padding:"8px 12px", borderRadius:"8px", background:"rgba(201,168,76,.08)", border:"1px solid rgba(201,168,76,.2)", fontSize:"12px", color:"#8B6914" }}>
+                <div style={{ padding:"8px 12px", borderRadius:"8px", background:"rgba(155,0,32,.08)", border:"1px solid rgba(155,0,32,.2)", fontSize:"12px", color:"#7a001a" }}>
                   🔒 Admin accounts cannot be suspended
                 </div>
               )}
@@ -306,25 +306,25 @@ export default function AdminSellersPage() {
       {/* Header */}
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"24px", flexWrap:"wrap", gap:"12px" }}>
         <div>
-          <p style={{ fontSize:"12px", color:"#A08060", letterSpacing:".1em", textTransform:"uppercase", marginBottom:"4px" }}>Admin</p>
-          <h1 style={{ fontSize:"26px", fontFamily:"Georgia,serif", color:"#2C1810", fontWeight:400 }}>Sellers</h1>
-          <p style={{ fontSize:"14px", color:"#A08060", marginTop:"3px" }}>{total} registered sellers</p>
+          <p style={{ fontSize:"12px", color:"#888", letterSpacing:".1em", textTransform:"uppercase", marginBottom:"4px" }}>Admin</p>
+          <h1 style={{ fontSize:"26px", fontFamily:"Georgia,serif", color:"#111", fontWeight:400 }}>Sellers</h1>
+          <p style={{ fontSize:"14px", color:"#888", marginTop:"3px" }}>{total} registered sellers</p>
         </div>
       </div>
 
       {/* KYC filter cards */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))", gap:"12px", marginBottom:"20px" }}>
         {[
-          { label:"All Sellers",   key:"",             value:kycCounts.all,           color:"rgba(201,168,76,.1)",  icon:"👥" },
+          { label:"All Sellers",   key:"",             value:kycCounts.all,           color:"rgba(155,0,32,.1)",  icon:"👥" },
           { label:"KYC Verified",  key:"approved",     value:kycCounts.approved,      color:"rgba(16,185,129,.1)", icon:"✅" },
           { label:"Under Review",  key:"pending",      value:kycCounts.pending,        color:"rgba(59,130,246,.1)", icon:"⏳" },
           { label:"Not Submitted", key:"not_submitted",value:kycCounts.not_submitted,  color:"rgba(245,158,11,.1)", icon:"⚠️" },
           { label:"Rejected",      key:"rejected",     value:kycCounts.rejected,       color:"rgba(239,68,68,.08)", icon:"❌" },
         ].map(f => (
-          <div key={f.key} onClick={() => setKycFilter(kycFilter===f.key?"":f.key)} style={{ background:kycFilter===f.key?"#2C1810":"#FFFDF9", border:`1px solid ${kycFilter===f.key?"#C9A84C":"#E8D5A3"}`, borderRadius:"12px", padding:"14px 16px", cursor:"pointer", transition:"all .2s" }}>
+          <div key={f.key} onClick={() => setKycFilter(kycFilter===f.key?"":f.key)} style={{ background:kycFilter===f.key?"#111":"#fff", border:`1px solid ${kycFilter===f.key?"#9B0020":"#f0f0f0"}`, borderRadius:"12px", padding:"14px 16px", cursor:"pointer", transition:"all .2s" }}>
             <div style={{ fontSize:"18px", marginBottom:"6px" }}>{f.icon}</div>
-            <div style={{ fontSize:"20px", fontWeight:700, color:kycFilter===f.key?"#C9A84C":"#2C1810", fontFamily:"Georgia,serif" }}>{f.value}</div>
-            <div style={{ fontSize:"11px", color:kycFilter===f.key?"rgba(201,168,76,.6)":"#A08060", marginTop:"2px" }}>{f.label}</div>
+            <div style={{ fontSize:"20px", fontWeight:700, color:kycFilter===f.key?"#9B0020":"#111", fontFamily:"Georgia,serif" }}>{f.value}</div>
+            <div style={{ fontSize:"11px", color:kycFilter===f.key?"rgba(155,0,32,.6)":"#888", marginTop:"2px" }}>{f.label}</div>
           </div>
         ))}
       </div>
@@ -336,18 +336,18 @@ export default function AdminSellersPage() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by name, email, phone..."
-          style={{ width:"100%", padding:"10px 14px 10px 36px", borderRadius:"9px", border:"1.5px solid #E8D5A3", fontSize:"13px", color:"#2C1810", background:"#FFFDF9", outline:"none", fontFamily:"inherit" }}
+          style={{ width:"100%", padding:"10px 14px 10px 36px", borderRadius:"9px", border:"1.5px solid #f0f0f0", fontSize:"13px", color:"#111", background:"#fff", outline:"none", fontFamily:"inherit" }}
         />
-        {search && <button onClick={() => setSearch("")} style={{ position:"absolute", right:"13px", top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", fontSize:"17px", color:"#A08060", padding:0, lineHeight:1 }}>×</button>}
+        {search && <button onClick={() => setSearch("")} style={{ position:"absolute", right:"13px", top:"50%", transform:"translateY(-50%)", background:"none", border:"none", cursor:"pointer", fontSize:"17px", color:"#888", padding:0, lineHeight:1 }}>×</button>}
       </div>
 
       {/* Table */}
-      <div style={{ background:"#FFFDF9", border:"1px solid #E8D5A3", borderRadius:"16px", overflow:"hidden", opacity:tableLoading?.6:1, transition:"opacity .25s" }}>
+      <div style={{ background:"#fff", border:"1px solid #f0f0f0", borderRadius:"16px", overflow:"hidden", opacity:tableLoading?.6:1, transition:"opacity .25s" }}>
 
         {/* Dark header */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 160px 120px 100px 110px 110px", padding:"10px 20px", background:"linear-gradient(135deg,#2C1810,#3D2B1F)" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 160px 120px 100px 110px 110px", padding:"10px 20px", background:"linear-gradient(135deg,#111,#111)" }}>
           {["Seller","Contact","KYC Status","Status","Orders","Actions"].map(h => (
-            <div key={h} style={{ fontSize:"10px", fontWeight:700, color:"#C9A84C", letterSpacing:".08em", textTransform:"uppercase" }}>{h}</div>
+            <div key={h} style={{ fontSize:"10px", fontWeight:700, color:"#9B0020", letterSpacing:".08em", textTransform:"uppercase" }}>{h}</div>
           ))}
         </div>
 
@@ -356,31 +356,31 @@ export default function AdminSellersPage() {
         ) : filtered.length === 0 ? (
           <div style={{ padding:"60px 20px", textAlign:"center" }}>
             <div style={{ fontSize:"44px", marginBottom:"14px" }}>👥</div>
-            <p style={{ fontSize:"16px", fontWeight:500, color:"#2C1810", marginBottom:"6px" }}>No sellers found</p>
-            <p style={{ fontSize:"13px", color:"#A08060" }}>{search||kycFilter?"Try different filters":"No sellers registered yet"}</p>
+            <p style={{ fontSize:"16px", fontWeight:500, color:"#111", marginBottom:"6px" }}>No sellers found</p>
+            <p style={{ fontSize:"13px", color:"#888" }}>{search||kycFilter?"Try different filters":"No sellers registered yet"}</p>
           </div>
         ) : (
           filtered.map((s, i) => {
             const ks2 = kycStyle(s.kycStatus);
             const ss2 = statusStyle(s.status);
             return (
-              <div key={s._id} style={{ display:"grid", gridTemplateColumns:"1fr 160px 120px 100px 110px 110px", padding:"14px 20px", borderBottom:i<filtered.length-1?"1px solid #F5EDE0":"none", background:i%2===0?"#FFFDF9":"#FDFAF4", alignItems:"center", transition:"background .15s", cursor:"pointer" }}
+              <div key={s._id} style={{ display:"grid", gridTemplateColumns:"1fr 160px 120px 100px 110px 110px", padding:"14px 20px", borderBottom:i<filtered.length-1?"1px solid #F5EDE0":"none", background:i%2===0?"#fff":"#FDFAF4", alignItems:"center", transition:"background .15s", cursor:"pointer" }}
                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.background="#F5E6C8"}
-                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background=i%2===0?"#FFFDF9":"#FDFAF4"}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background=i%2===0?"#fff":"#FDFAF4"}
               >
                 {/* Seller info */}
                 <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-                  <div style={{ width:"36px", height:"36px", borderRadius:"50%", background:"linear-gradient(135deg,#C9A84C,#8B6914)", display:"flex", alignItems:"center", justifyContent:"center", color:"#2C1810", fontSize:"14px", fontWeight:700, flexShrink:0 }}>{s.name.charAt(0).toUpperCase()}</div>
+                  <div style={{ width:"36px", height:"36px", borderRadius:"50%", background:"linear-gradient(135deg,#9B0020,#7a001a)", display:"flex", alignItems:"center", justifyContent:"center", color:"#111", fontSize:"14px", fontWeight:700, flexShrink:0 }}>{s.name.charAt(0).toUpperCase()}</div>
                   <div style={{ minWidth:0 }}>
-                    <div style={{ fontSize:"13px", fontWeight:600, color:"#2C1810", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{s.name}</div>
-                    <div style={{ fontSize:"11px", color:"#A08060", marginTop:"1px", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{s.businessName||"No business name"}</div>
+                    <div style={{ fontSize:"13px", fontWeight:600, color:"#111", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{s.name}</div>
+                    <div style={{ fontSize:"11px", color:"#888", marginTop:"1px", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{s.businessName||"No business name"}</div>
                   </div>
                 </div>
 
                 {/* Contact */}
                 <div>
-                  <div style={{ fontSize:"12px", color:"#2C1810", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{s.email}</div>
-                  <div style={{ fontSize:"11px", color:"#A08060" }}>{s.phone}</div>
+                  <div style={{ fontSize:"12px", color:"#111", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{s.email}</div>
+                  <div style={{ fontSize:"11px", color:"#888" }}>{s.phone}</div>
                 </div>
 
                 {/* KYC */}
@@ -391,13 +391,13 @@ export default function AdminSellersPage() {
 
                 {/* Orders */}
                 <div>
-                  <div style={{ fontSize:"13px", fontWeight:700, color:"#2C1810" }}>{s.totalOrders||0}</div>
-                  <div style={{ fontSize:"11px", color:"#A08060" }}>₹{(s.totalRevenue||0).toLocaleString("en-IN")}</div>
+                  <div style={{ fontSize:"13px", fontWeight:700, color:"#111" }}>{s.totalOrders||0}</div>
+                  <div style={{ fontSize:"11px", color:"#888" }}>₹{(s.totalRevenue||0).toLocaleString("en-IN")}</div>
                 </div>
 
                 {/* Actions */}
                 <div style={{ display:"flex", gap:"6px" }}>
-                  <button onClick={() => setSelectedSeller(s)} style={{ padding:"6px 12px", borderRadius:"7px", background:"linear-gradient(135deg,#C9A84C,#8B6914)", color:"#2C1810", border:"none", fontSize:"11px", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Manage</button>
+                  <button onClick={() => setSelectedSeller(s)} style={{ padding:"6px 12px", borderRadius:"7px", background:"linear-gradient(135deg,#9B0020,#7a001a)", color:"#111", border:"none", fontSize:"11px", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Manage</button>
                 </div>
               </div>
             );
@@ -407,9 +407,9 @@ export default function AdminSellersPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:"6px", padding:"14px", borderTop:"1px solid #F0E4C0" }}>
-            <button onClick={() => fetchSellers(page-1,true)} disabled={page===1} style={{ padding:"6px 14px", borderRadius:"7px", border:"1px solid #E8D5A3", background:"transparent", color:page===1?"#C4A882":"#2C1810", cursor:page===1?"not-allowed":"pointer", fontSize:"13px", fontFamily:"inherit" }}>← Prev</button>
-            <span style={{ fontSize:"13px", color:"#A08060", padding:"0 8px" }}>Page {page} of {totalPages}</span>
-            <button onClick={() => fetchSellers(page+1,true)} disabled={page===totalPages} style={{ padding:"6px 14px", borderRadius:"7px", border:"1px solid #E8D5A3", background:"transparent", color:page===totalPages?"#C4A882":"#2C1810", cursor:page===totalPages?"not-allowed":"pointer", fontSize:"13px", fontFamily:"inherit" }}>Next →</button>
+            <button onClick={() => fetchSellers(page-1,true)} disabled={page===1} style={{ padding:"6px 14px", borderRadius:"7px", border:"1px solid #f0f0f0", background:"transparent", color:page===1?"#C4A882":"#111", cursor:page===1?"not-allowed":"pointer", fontSize:"13px", fontFamily:"inherit" }}>← Prev</button>
+            <span style={{ fontSize:"13px", color:"#888", padding:"0 8px" }}>Page {page} of {totalPages}</span>
+            <button onClick={() => fetchSellers(page+1,true)} disabled={page===totalPages} style={{ padding:"6px 14px", borderRadius:"7px", border:"1px solid #f0f0f0", background:"transparent", color:page===totalPages?"#C4A882":"#111", cursor:page===totalPages?"not-allowed":"pointer", fontSize:"13px", fontFamily:"inherit" }}>Next →</button>
           </div>
         )}
       </div>
@@ -418,9 +418,9 @@ export default function AdminSellersPage() {
         @keyframes slideLeft{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
         @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
         input::placeholder{color:#C4A882;}
-        input:focus{border-color:#C9A84C !important;}
+        input:focus{border-color:#9B0020 !important;}
         textarea::placeholder{color:#C4A882;}
-        textarea:focus{border-color:#C9A84C !important;}
+        textarea:focus{border-color:#9B0020 !important;}
       `}</style>
     </div>
   );

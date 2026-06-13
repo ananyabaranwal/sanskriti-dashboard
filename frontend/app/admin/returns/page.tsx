@@ -141,7 +141,7 @@ function ReturnDrawer({ req, onClose, onUpdate }: {
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingTop:"8px",borderTop:"1px solid #e5e7eb"}}>
               <span style={{fontSize:"13px",fontWeight:600,color:"#111827"}}>Refund Amount</span>
               <div style={{position:"relative"}}>
-                <span style={{position:"absolute",left:"10px",top:"50%",transform:"translateY(-50%)",fontSize:"13px",fontWeight:700,color:"#8B6914"}}>₹</span>
+                <span style={{position:"absolute",left:"10px",top:"50%",transform:"translateY(-50%)",fontSize:"13px",fontWeight:700,color:"#7a001a"}}>₹</span>
                 <input type="number" value={refundAmt} onChange={e=>setRefundAmt(e.target.value)} style={{padding:"6px 10px 6px 24px",borderRadius:"7px",border:"1.5px solid #e5e7eb",fontSize:"14px",fontWeight:700,color:"#111827",background:"#fff",outline:"none",width:"120px",fontFamily:"inherit"}}/>
               </div>
             </div>
@@ -201,7 +201,7 @@ function ReturnDrawer({ req, onClose, onUpdate }: {
               </div>
             )}
             {req.status==="APPROVED" && (
-              <button onClick={()=>handleAction("refund")} disabled={loading} style={{padding:"11px",borderRadius:"8px",background:loading?"#e5e7eb":"linear-gradient(135deg,#C9A84C,#8B6914)",color:loading?"#9ca3af":"#2C1810",border:"none",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit",boxShadow:loading?"none":"0 4px 14px rgba(201,168,76,.3)",transition:"all .2s"}}>
+              <button onClick={()=>handleAction("refund")} disabled={loading} style={{padding:"11px",borderRadius:"8px",background:loading?"#e5e7eb":"linear-gradient(135deg,#9B0020,#7a001a)",color:loading?"#9ca3af":"#111",border:"none",fontSize:"13px",fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit",boxShadow:loading?"none":"0 4px 14px rgba(155,0,32,.3)",transition:"all .2s"}}>
                 {loading?"Processing Refund...":"💸 Process Refund — Credit ₹"+Number(refundAmt).toLocaleString("en-IN")+" to Wallet"}
               </button>
             )}
@@ -320,7 +320,7 @@ export default function AdminReturnsPage() {
               <div style={{fontSize:"12px",color:"#b45309"}}>{counts.APPROVED} return{counts.APPROVED>1?"s":""} approved — process payment to sellers</div>
             </div>
           </div>
-          <button onClick={()=>setStatusFilter("APPROVED")} style={{padding:"7px 16px",borderRadius:"7px",background:"#f59e0b",color:"#2C1810",border:"none",fontSize:"12px",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Process Now →</button>
+          <button onClick={()=>setStatusFilter("APPROVED")} style={{padding:"7px 16px",borderRadius:"7px",background:"#f59e0b",color:"#111",border:"none",fontSize:"12px",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Process Now →</button>
         </div>
       )}
 
@@ -376,7 +376,7 @@ export default function AdminReturnsPage() {
                 </span>
                 <div style={{fontSize:"12px",color:"#6b7280"}}>{r.requestedAt}</div>
                 <div style={{fontSize:"12px",color:"#6b7280",display:"flex",alignItems:"center",gap:"4px"}}>📷 {r.images}</div>
-                <button onClick={()=>setSelectedReturn(r)} style={{padding:"6px 12px",borderRadius:"7px",background:"linear-gradient(135deg,#C9A84C,#8B6914)",color:"#2C1810",border:"none",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                <button onClick={()=>setSelectedReturn(r)} style={{padding:"6px 12px",borderRadius:"7px",background:"linear-gradient(135deg,#9B0020,#7a001a)",color:"#111",border:"none",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
                   Review
                 </button>
               </div>
@@ -389,7 +389,7 @@ export default function AdminReturnsPage() {
         @keyframes slideLeft{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
         @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
         input::placeholder,textarea::placeholder{color:#9ca3af;}
-        input:focus,select:focus,textarea:focus{border-color:#C9A84C !important;}
+        input:focus,select:focus,textarea:focus{border-color:#9B0020 !important;}
         input[type=number]::-webkit-outer-spin-button,
         input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
       `}</style>
