@@ -1,235 +1,252 @@
 "use client";
-
 import { useState } from "react";
 import Link from "next/link";
-import { SERVICES } from "@/lib/constants";
 
-const detailedServices = [
+const BURG = "#9B0020";
+const GF = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');`;
+
+const SERVICES = [
   {
-    icon: "📢",
-    title: "Marketing & Promotion",
-    shortDesc: "Digital and offline marketing strategies to grow your antique business.",
-    fullDesc: "We design and execute comprehensive marketing campaigns tailored specifically for antique businesses. From social media management and SEO to print media and exhibition participation, we help you reach serious collectors, interior designers, and heritage enthusiasts across India and internationally.",
+    icon: "📢", title: "Marketing & Promotion",
+    shortDesc: "Digital and offline marketing to grow your antique business.",
+    fullDesc: "We design comprehensive marketing campaigns tailored for antique businesses — from social media and SEO to exhibitions and influencer collaborations.",
     features: ["Social media management", "SEO & Google Ads", "Exhibition participation", "Email marketing", "Influencer collaborations", "Print & offline media"],
     ideal: "Sellers wanting to expand their customer base",
-    color: "#C9A84C",
   },
   {
-    icon: "🏷️",
-    title: "Brand Building",
+    icon: "🏷️", title: "Brand Building",
     shortDesc: "Complete branding solutions for your antique dealership.",
-    fullDesc: "A strong brand identity sets you apart in the crowded antique market. We create complete visual identities including logo design, brand guidelines, packaging, and your unique brand story. We help position your business as a trusted, premium antique source that buyers return to.",
+    fullDesc: "A strong brand sets you apart. We create complete visual identities including logo, brand guidelines, packaging, and your unique brand story.",
     features: ["Logo & visual identity", "Brand guidelines", "Packaging design", "Business cards & stationery", "Brand story writing", "Website branding"],
     ideal: "New sellers and rebranding businesses",
-    color: "#8B6914",
   },
   {
-    icon: "💼",
-    title: "Business Consultancy",
+    icon: "💼", title: "Business Consultancy",
     shortDesc: "Expert guidance on launching and scaling your antique business.",
-    fullDesc: "Our experienced consultants have decades of combined experience in the Indian antique trade. We guide you through business structure, pricing strategies, supplier relationships, legal compliance, and growth planning. Get personalised advice that transforms your passion into a profitable business.",
-    features: ["Business structure advice", "Pricing strategy", "Supplier sourcing", "Legal compliance (GST, etc.)", "Growth planning", "P&L optimisation"],
+    fullDesc: "Our consultants have decades of experience in the Indian antique trade — guiding you through pricing, supplier relations, legal compliance and growth.",
+    features: ["Business structure advice", "Pricing strategy", "Supplier sourcing", "GST & legal compliance", "Growth planning", "P&L optimisation"],
     ideal: "New entrants and scaling businesses",
-    color: "#6B4F0A",
   },
   {
-    icon: "🏭",
-    title: "Manufacturing Setup",
+    icon: "🏭", title: "Manufacturing Setup",
     shortDesc: "End-to-end support for setting up manufacturing units.",
-    fullDesc: "Whether you want to produce high-quality reproductions, restoration workshops, or craft complementary products, we help you set up the right manufacturing infrastructure. From location selection and machinery procurement to workforce training and quality control systems.",
-    features: ["Location & infrastructure planning", "Machinery & equipment sourcing", "Workforce recruitment & training", "Quality control systems", "Compliance & licensing", "Production cost optimisation"],
+    fullDesc: "From location selection and machinery procurement to workforce training and quality control — we set up your complete manufacturing infrastructure.",
+    features: ["Infrastructure planning", "Machinery sourcing", "Workforce training", "Quality control systems", "Compliance & licensing", "Cost optimisation"],
     ideal: "Sellers looking to add manufacturing",
-    color: "#5C3A1E",
   },
   {
-    icon: "🎓",
-    title: "Training & Education",
+    icon: "🎓", title: "Training & Education",
     shortDesc: "Professional training on antique identification and trading.",
-    fullDesc: "Knowledge is your most valuable asset in the antique business. We provide structured training programmes covering authentication techniques, market dynamics, negotiation skills, and digital selling. Our training videos library and live workshops are designed for both beginners and experienced dealers.",
-    features: ["Video training library access", "Live online workshops", "Authentication techniques", "Market valuation training", "Digital selling skills", "Certification on completion"],
+    fullDesc: "Structured training covering authentication, market dynamics, negotiation, and digital selling — for beginners and experienced dealers alike.",
+    features: ["Video training library", "Live online workshops", "Authentication techniques", "Market valuation", "Digital selling skills", "Completion certificate"],
     ideal: "All sellers at every experience level",
-    color: "#3D2B1F",
   },
   {
-    icon: "🔗",
-    title: "Network & Distribution",
+    icon: "🔗", title: "Network & Distribution",
     shortDesc: "Connect with verified buyers, sellers, and exporters.",
-    fullDesc: "Access our curated network of serious antique collectors, export buyers, interior decorators, auction houses, and museum procurement departments. We facilitate introductions, manage negotiations, and help you build lasting business relationships that generate consistent revenue.",
-    features: ["Buyer introductions", "Export connections", "Auction house tie-ups", "Interior designer network", "Museum procurement links", "Regular buyer-seller meetups"],
-    ideal: "Sellers seeking reliable distribution",
-    color: "#2C1810",
+    fullDesc: "Join our curated network of antique dealers, collectors, and exporters. Get introductions to serious buyers and distribution partnerships across India.",
+    features: ["Verified buyer introductions", "Exporter connections", "Collector database access", "Trade fair invitations", "Partnership facilitation", "International network"],
+    ideal: "Sellers ready to scale distribution",
   },
 ];
 
-function ServiceCard({ s, onSelect }: { s: typeof detailedServices[0]; onSelect: () => void }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={onSelect}
-      style={{
-        background: "#FFFDF9",
-        border: `1px solid ${hovered ? "rgba(201,168,76,.5)" : "#E8D5A3"}`,
-        borderRadius: "16px",
-        padding: "32px 28px",
-        cursor: "pointer",
-        transition: "all .25s ease",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        boxShadow: hovered ? "0 12px 32px rgba(61,43,31,.12)" : "0 2px 8px rgba(61,43,31,.04)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div style={{ position: "absolute", top: "0", right: "0", width: "80px", height: "80px", background: "linear-gradient(225deg, rgba(201,168,76,.06), transparent)", borderRadius: "0 16px 0 80px" }} />
-      <div style={{ fontSize: "36px", marginBottom: "16px" }}>{s.icon}</div>
-      <h3 style={{ fontSize: "18px", fontWeight: "600", color: "#2C1810", marginBottom: "10px", fontFamily: "Georgia, serif" }}>{s.title}</h3>
-      <p style={{ fontSize: "14px", color: "#A08060", lineHeight: "1.7", marginBottom: "16px" }}>{s.shortDesc}</p>
-      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "#8B6914", fontSize: "13px", fontWeight: "600" }}>
-        Learn more <span style={{ transition: "transform .2s", transform: hovered ? "translateX(4px)" : "none", display: "inline-block" }}>→</span>
-      </div>
-    </div>
-  );
-}
-
-function ServiceModal({ s, onClose }: { s: typeof detailedServices[0]; onClose: () => void }) {
-  return (
-    <div
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-      style={{ position: "fixed", inset: 0, background: "rgba(44,24,16,.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "20px", backdropFilter: "blur(6px)" }}
-    >
-      <div style={{ background: "#FFFDF9", borderRadius: "20px", width: "100%", maxWidth: "600px", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 24px 64px rgba(44,24,16,.4)", animation: "scaleIn .3s ease" }}>
-        <div style={{ padding: "32px 32px 0" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-            <div style={{ fontSize: "48px" }}>{s.icon}</div>
-            <button onClick={onClose} style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#F5E6C8", border: "none", color: "#6B4F12", fontSize: "18px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>×</button>
-          </div>
-          <h2 style={{ fontSize: "26px", fontFamily: "Georgia, serif", color: "#2C1810", marginBottom: "12px", fontWeight: "400" }}>{s.title}</h2>
-          <p style={{ fontSize: "15px", color: "#A08060", lineHeight: "1.75", marginBottom: "24px" }}>{s.fullDesc}</p>
-          <div style={{ borderTop: "1px solid #E8D5A3", paddingTop: "20px", marginBottom: "20px" }}>
-            <div style={{ fontSize: "13px", fontWeight: "600", color: "#6B4F12", marginBottom: "12px", letterSpacing: ".04em", textTransform: "uppercase" }}>What's included</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-              {s.features.map((f) => (
-                <div key={f} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#2C1810" }}>
-                  <span style={{ width: "16px", height: "16px", borderRadius: "50%", background: "linear-gradient(135deg, #C9A84C, #8B6914)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "9px", color: "#3D2B1F", fontWeight: "700" }}>✓</span>
-                  {f}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ background: "#FBF7F0", borderRadius: "10px", padding: "14px 16px", marginBottom: "24px", display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ fontSize: "16px" }}>🎯</span>
-            <div><span style={{ fontSize: "12px", color: "#A08060" }}>Ideal for: </span><span style={{ fontSize: "13px", fontWeight: "600", color: "#6B4F12" }}>{s.ideal}</span></div>
-          </div>
-        </div>
-        <div style={{ padding: "0 32px 32px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
-          <Link href="/contact" style={{ flex: 1, padding: "13px", borderRadius: "8px", background: "linear-gradient(135deg, #C9A84C, #8B6914)", color: "#3D2B1F", fontSize: "14px", fontWeight: "700", textDecoration: "none", textAlign: "center", letterSpacing: ".02em" }}>
-            Get Started →
-          </Link>
-          <button onClick={onClose} style={{ flex: 1, padding: "13px", borderRadius: "8px", border: "1.5px solid #E8D5A3", color: "#6B4F12", fontSize: "14px", fontWeight: "600", cursor: "pointer", background: "transparent", fontFamily: "inherit" }}>
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+// Flow diagram steps
+const FLOW_STEPS = [
+  { step: 1, title: "Enroll", desc: "Register on Sanskriti platform", position: "top-left" },
+  { step: 2, title: "Account Setup", desc: "Our team sets up your seller profile", position: "top-center" },
+  { step: 3, title: "Product Listing", desc: "We list your products across channels", position: "top-right" },
+  { step: 4, title: "Order Received", desc: "You receive orders — keep the margin", position: "bottom-right" },
+  { step: 5, title: "We Fulfill", desc: "Sanskriti handles packaging & dispatch", position: "bottom-center" },
+  { step: 6, title: "You Earn", desc: "Profit credited to your wallet", position: "bottom-left" },
+];
 
 export default function ServicesPage() {
-  const [selectedService, setSelectedService] = useState<typeof detailedServices[0] | null>(null);
+  const [activeService, setActiveService] = useState<number | null>(null);
 
   return (
-    <div style={{ background: "#FBF7F0", minHeight: "100vh", paddingTop: "72px" }}>
-      {selectedService && <ServiceModal s={selectedService} onClose={() => setSelectedService(null)} />}
+    <div style={{ fontFamily:"'DM Sans',sans-serif", background:"#fff", paddingTop:"68px" }}>
+      <style>{`
+        ${GF}
+        *{box-sizing:border-box;margin:0;padding:0}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .srv-card:hover{border-color:${BURG}!important;transform:translateY(-3px)!important;box-shadow:0 12px 32px rgba(155,0,32,.1)!important}
+      `}</style>
 
-      {/* ── HERO ── */}
-      <div style={{ background: "linear-gradient(160deg, #1A0F0A 0%, #2C1810 50%, #3D2B1F 100%)", padding: "72px 0 64px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(201,168,76,.04) 1px, transparent 1px)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
-            <Link href="/" style={{ fontSize: "13px", color: "rgba(201,168,76,.6)", textDecoration: "none" }}>Home</Link>
-            <span style={{ color: "rgba(201,168,76,.3)" }}>›</span>
-            <span style={{ fontSize: "13px", color: "rgba(201,168,76,.9)" }}>Services</span>
-          </div>
-          <div style={{ maxWidth: "640px" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 16px", borderRadius: "99px", background: "rgba(201,168,76,.1)", border: "1px solid rgba(201,168,76,.22)", marginBottom: "24px" }}>
-              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#C9A84C", display: "block" }} />
-              <span style={{ fontSize: "11px", color: "#C9A84C", letterSpacing: ".12em", fontWeight: "600" }}>PREMIUM SERVICES</span>
+      {/* ── FLOW DIAGRAM HERO ─────────────────────────────────── */}
+      <section style={{ background:"#fff", padding:"60px 48px 72px", borderBottom:"1px solid #f0f0f0" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto" }}>
+
+          {/* Heading */}
+          <div style={{ textAlign:"center", marginBottom:"52px" }}>
+            <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", padding:"5px 16px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.2)`, background:`rgba(155,0,32,.04)`, marginBottom:"16px" }}>
+              <span style={{ width:"6px", height:"6px", borderRadius:"50%", background:BURG, animation:"pulse 2s infinite", display:"inline-block" }} />
+              <span style={{ fontSize:"11px", fontWeight:600, color:BURG, letterSpacing:".14em", textTransform:"uppercase" }}>How It Works</span>
             </div>
-            <h1 style={{ fontSize: "clamp(32px, 5vw, 56px)", fontFamily: "Georgia, serif", color: "#F5E6C8", lineHeight: "1.1", marginBottom: "20px", fontWeight: "400" }}>
-              Grow Your Antique<br />
-              <span style={{ background: "linear-gradient(135deg, #C9A84C, #E8C86A)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Business With Us</span>
+            <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(32px,5vw,56px)", fontWeight:700, color:"#111", lineHeight:1.05, marginBottom:"14px" }}>
+              Grow Your Business
+              <span style={{ display:"block", fontStyle:"italic", fontWeight:400, color:BURG }}>With Sanskriti</span>
             </h1>
-            <p style={{ fontSize: "17px", color: "rgba(245,230,200,.62)", lineHeight: "1.75", marginBottom: "36px" }}>
-              From marketing and branding to manufacturing setup — comprehensive services designed specifically for the Indian antique trade.
+            <p style={{ fontSize:"15px", color:"#666", maxWidth:"520px", margin:"0 auto", lineHeight:1.8 }}>
+              A simple 6-step journey from enrollment to earning — fully managed by our team. No manpower, no warehouse, no inventory needed.
             </p>
-            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <Link href="/contact" className="btn btn-gold btn-lg">Get Started Today →</Link>
-              <Link href="/register" className="btn btn-outline-gold btn-lg">Become a Seller</Link>
+          </div>
+
+          {/* Flow diagram */}
+          <div style={{ position:"relative" }}>
+            {/* Top row — steps 1, 2, 3 */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr auto 1fr", alignItems:"center", marginBottom:"0" }}>
+              {[FLOW_STEPS[0], FLOW_STEPS[1], FLOW_STEPS[2]].map((s, i) => (
+                <>
+                  <div key={s.step} style={{ display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center" }}>
+                    <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:BURG, color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", fontWeight:700, fontFamily:"'Playfair Display',serif", marginBottom:"10px", boxShadow:`0 4px 16px rgba(155,0,32,.3)` }}>{s.step}</div>
+                    <div style={{ fontSize:"14px", fontWeight:700, color:"#111", marginBottom:"4px" }}>{s.title}</div>
+                    <div style={{ fontSize:"12px", color:"#888", lineHeight:1.5, maxWidth:"120px" }}>{s.desc}</div>
+                  </div>
+                  {i < 2 && (
+                    <div key={`arrow-${i}`} style={{ display:"flex", alignItems:"center", justifyContent:"center", padding:"0 8px" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:"4px" }}>
+                        <div style={{ width:"40px", height:"2px", background:`rgba(155,0,32,.3)`, borderRadius:"1px" }} />
+                        <div style={{ width:"0", height:"0", borderTop:"6px solid transparent", borderBottom:"6px solid transparent", borderLeft:`8px solid rgba(155,0,32,.5)` }} />
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))}
+            </div>
+
+            {/* Vertical connectors */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr auto 1fr", padding:"16px 0" }}>
+              <div />
+              <div />
+              <div />
+              <div />
+              {/* Right side down arrow */}
+              <div style={{ display:"flex", justifyContent:"center" }}>
+                <div style={{ width:"2px", height:"48px", background:`rgba(155,0,32,.3)`, position:"relative" }}>
+                  <div style={{ position:"absolute", bottom:0, left:"50%", transform:"translateX(-50%)", width:"0", height:"0", borderLeft:"6px solid transparent", borderRight:"6px solid transparent", borderTop:`8px solid rgba(155,0,32,.5)` }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom row — steps 6, 5, 4 (reversed direction) */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr auto 1fr", alignItems:"center" }}>
+              {[FLOW_STEPS[5], FLOW_STEPS[4], FLOW_STEPS[3]].map((s, i) => (
+                <>
+                  <div key={s.step} style={{ display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center" }}>
+                    <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:i===0?"#fff":BURG, color:i===0?BURG:"#fff", border:i===0?`2px solid ${BURG}`:"none", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", fontWeight:700, fontFamily:"'Playfair Display',serif", marginBottom:"10px", boxShadow:i===0?`0 4px 16px rgba(155,0,32,.15)`:`0 4px 16px rgba(155,0,32,.3)` }}>{s.step}</div>
+                    <div style={{ fontSize:"14px", fontWeight:700, color:"#111", marginBottom:"4px" }}>{s.title}</div>
+                    <div style={{ fontSize:"12px", color:"#888", lineHeight:1.5, maxWidth:"120px" }}>{s.desc}</div>
+                  </div>
+                  {i < 2 && (
+                    <div key={`arrow-b-${i}`} style={{ display:"flex", alignItems:"center", justifyContent:"center", padding:"0 8px" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:"4px" }}>
+                        <div style={{ width:"0", height:"0", borderTop:"6px solid transparent", borderBottom:"6px solid transparent", borderRight:`8px solid rgba(155,0,32,.5)` }} />
+                        <div style={{ width:"40px", height:"2px", background:`rgba(155,0,32,.3)`, borderRadius:"1px" }} />
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))}
+            </div>
+
+            {/* Left side up arrow */}
+            <div style={{ display:"grid", gridTemplateColumns:"1fr auto 1fr auto 1fr", padding:"16px 0 0" }}>
+              <div style={{ display:"flex", justifyContent:"center" }}>
+                <div style={{ width:"2px", height:"0px" }} />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* ── SERVICES GRID ── */}
-      <section style={{ padding: "80px 0" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <span style={{ fontSize: "11px", fontWeight: "600", letterSpacing: ".18em", textTransform: "uppercase", color: "#A08060", display: "block", marginBottom: "10px" }}>What we offer</span>
-            <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontFamily: "Georgia, serif", color: "#2C1810" }}>Our Services</h2>
-            <div style={{ width: "52px", height: "2px", background: "linear-gradient(90deg, #C9A84C, #8B6914)", borderRadius: "1px", margin: "16px auto 0" }} />
-            <p style={{ fontSize: "15px", color: "#A08060", marginTop: "16px", maxWidth: "520px", margin: "16px auto 0", lineHeight: "1.7" }}>
-              Click any service to learn more and get started
-            </p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
-            {detailedServices.map((s) => (
-              <ServiceCard key={s.title} s={s} onSelect={() => setSelectedService(s)} />
+          {/* No inventory needed chips */}
+          <div style={{ display:"flex", justifyContent:"center", gap:"12px", marginTop:"40px", flexWrap:"wrap" }}>
+            {["❌ No Manpower Needed", "❌ No Warehouse Needed", "❌ No Inventory Needed", "✅ Just Enroll & Earn"].map(label => (
+              <div key={label} style={{ padding:"7px 16px", borderRadius:"99px", background: label.startsWith("✅") ? `rgba(155,0,32,.08)` : "#f9f9f9", border:`1px solid ${label.startsWith("✅") ? `rgba(155,0,32,.2)` : "#f0f0f0"}`, fontSize:"13px", fontWeight:500, color: label.startsWith("✅") ? BURG : "#666" }}>
+                {label}
+              </div>
             ))}
+          </div>
+
+          {/* CTA */}
+          <div style={{ textAlign:"center", marginTop:"36px" }}>
+            <Link href="/register" style={{ display:"inline-block", padding:"14px 40px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", boxShadow:`0 6px 20px rgba(155,0,32,.3)` }}>
+              Start Your Journey →
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ── WHY CHOOSE US ── */}
-      <section style={{ padding: "80px 0", background: "#FFFDF9" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <span style={{ fontSize: "11px", fontWeight: "600", letterSpacing: ".18em", textTransform: "uppercase", color: "#A08060", display: "block", marginBottom: "10px" }}>Why Sanskriti</span>
-            <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontFamily: "Georgia, serif", color: "#2C1810" }}>Why Choose Us</h2>
-            <div style={{ width: "52px", height: "2px", background: "linear-gradient(90deg, #C9A84C, #8B6914)", borderRadius: "1px", margin: "16px auto 0" }} />
+      {/* ── SERVICES GRID ─────────────────────────────────────── */}
+      <section style={{ padding:"80px 48px", background:"#f9f9f9" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto" }}>
+          <div style={{ textAlign:"center", marginBottom:"48px" }}>
+            <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", padding:"5px 16px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.2)`, background:`rgba(155,0,32,.04)`, marginBottom:"14px" }}>
+              <span style={{ fontSize:"11px", fontWeight:600, color:BURG, letterSpacing:".14em", textTransform:"uppercase" }}>What We Offer</span>
+            </div>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(28px,4vw,44px)", fontWeight:700, color:"#111", marginBottom:"12px" }}>
+              Our Services
+            </h2>
+            <p style={{ fontSize:"15px", color:"#666", maxWidth:"480px", margin:"0 auto", lineHeight:1.8 }}>
+              Everything a seller needs to build, grow, and scale an antique business — under one roof.
+            </p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "24px" }}>
-            {[
-              { icon: "🏆", title: "15+ Years Experience", desc: "Deep expertise in the Indian antique market with a proven track record of growing businesses." },
-              { icon: "🤝", title: "Dedicated Support",    desc: "Personal account manager for every client. We're with you at every step of your journey." },
-              { icon: "📊", title: "Measurable Results",  desc: "We set clear KPIs and report regularly. Your growth is our success metric." },
-              { icon: "🇮🇳", title: "India-Focused",      desc: "Specialists in Indian antiques — not a generic consultancy. We know this market deeply." },
-            ].map((w) => (
-              <div key={w.title} style={{ textAlign: "center", padding: "28px 20px", background: "#FFFDF9", borderRadius: "16px", border: "1px solid #E8D5A3" }}>
-                <div style={{ fontSize: "36px", marginBottom: "14px" }}>{w.icon}</div>
-                <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#2C1810", marginBottom: "8px", fontFamily: "Georgia, serif" }}>{w.title}</h3>
-                <p style={{ fontSize: "13px", color: "#A08060", lineHeight: "1.65" }}>{w.desc}</p>
+
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:"16px" }}>
+            {SERVICES.map((s, i) => (
+              <div key={s.title} className="srv-card"
+                onClick={() => setActiveService(activeService === i ? null : i)}
+                style={{ padding:"28px 24px", borderRadius:"16px", border:"1.5px solid #f0f0f0", background:"#fff", cursor:"pointer", transition:"all .25s" }}
+              >
+                <div style={{ width:"48px", height:"48px", borderRadius:"14px", background:`rgba(155,0,32,.07)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"22px", marginBottom:"16px" }}>{s.icon}</div>
+                <h3 style={{ fontFamily:"'Playfair Display',serif", fontSize:"18px", fontWeight:600, color:"#111", marginBottom:"8px" }}>{s.title}</h3>
+                <p style={{ fontSize:"13px", color:"#888", lineHeight:1.7, marginBottom:"14px" }}>{s.shortDesc}</p>
+
+                {activeService === i && (
+                  <div style={{ animation:"fadeIn .2s ease" }}>
+                    <p style={{ fontSize:"13px", color:"#555", lineHeight:1.75, marginBottom:"14px", paddingTop:"10px", borderTop:"1px solid #f0f0f0" }}>{s.fullDesc}</p>
+                    <div style={{ display:"flex", flexDirection:"column", gap:"6px", marginBottom:"14px" }}>
+                      {s.features.map(f => (
+                        <div key={f} style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={BURG} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                          <span style={{ fontSize:"12px", color:"#444" }}>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ fontSize:"11px", color:BURG, fontWeight:600, padding:"6px 12px", borderRadius:"8px", background:`rgba(155,0,32,.06)` }}>
+                      Ideal for: {s.ideal}
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ marginTop:"12px", fontSize:"12px", fontWeight:600, color:activeService===i?BURG:"#aaa" }}>
+                  {activeService === i ? "Show less ▲" : "Learn more ▼"}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section style={{ padding: "80px 24px", background: "linear-gradient(135deg, #C9A84C 0%, #E8C86A 40%, #8B6914 100%)", textAlign: "center" }}>
-        <div style={{ maxWidth: "560px", margin: "0 auto" }}>
-          <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontFamily: "Georgia, serif", color: "#2C1810", marginBottom: "14px", fontWeight: "400" }}>Ready to Transform Your Business?</h2>
-          <p style={{ fontSize: "16px", color: "rgba(44,24,16,.65)", marginBottom: "32px", lineHeight: "1.7" }}>Let's have a conversation about how we can help you grow.</p>
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/contact" style={{ padding: "14px 32px", borderRadius: "8px", background: "#2C1810", color: "#F5E6C8", fontSize: "15px", fontWeight: "700", textDecoration: "none", letterSpacing: ".02em", display: "inline-flex", alignItems: "center" }}>Contact Us →</Link>
-            <Link href="/register" style={{ padding: "14px 32px", borderRadius: "8px", border: "2px solid rgba(44,24,16,.3)", color: "#2C1810", fontSize: "15px", fontWeight: "600", textDecoration: "none", display: "inline-flex", alignItems: "center" }}>Register as Seller</Link>
+      {/* ── BOTTOM CTA ────────────────────────────────────────── */}
+      <section style={{ padding:"80px 48px", background:"#fff" }}>
+        <div style={{ maxWidth:"700px", margin:"0 auto", textAlign:"center" }}>
+          <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(28px,4vw,44px)", fontWeight:700, color:"#111", marginBottom:"14px" }}>
+            Ready to grow your
+            <span style={{ display:"block", fontStyle:"italic", color:BURG, fontWeight:400 }}>antique business?</span>
+          </h2>
+          <p style={{ fontSize:"15px", color:"#666", lineHeight:1.85, marginBottom:"32px" }}>
+            Join 5,000+ sellers who have built real businesses with Sanskriti. Start for free — no inventory, no warehouse, no manpower required.
+          </p>
+          <div style={{ display:"flex", gap:"14px", justifyContent:"center", flexWrap:"wrap" }}>
+            <Link href="/register" style={{ padding:"14px 36px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", boxShadow:`0 6px 20px rgba(155,0,32,.28)` }}>
+              Register as Seller →
+            </Link>
+            <Link href="/login" style={{ padding:"14px 36px", borderRadius:"8px", border:"1.5px solid #e5e5e5", color:"#333", fontSize:"14px", fontWeight:500, textDecoration:"none" }}>
+              Already a Seller? Sign In
+            </Link>
           </div>
         </div>
       </section>
-
-      <style>{`
-        @keyframes scaleIn { from { opacity:0; transform:scale(.93); } to { opacity:1; transform:scale(1); } }
-      `}</style>
     </div>
   );
 }
