@@ -274,7 +274,7 @@ export default function HomePage() {
       </div>
 
       {/* ══ SERVICES ══════════════════════════════════════════ */}
-      <section ref={ref("srv")} style={{ padding:"60px 48px", background:"#fff", opacity:vis("srv")?1:0, transform:vis("srv")?"none":"translateY(24px)", transition:"all .7s ease" }}>
+      <section ref={ref("srv")} style={{ padding:"60px 48px", background:"#fff" }}>
         <div style={{ maxWidth:"1280px", margin:"0 auto" }}>
           <div className="srv-grid" style={{ display:"grid", gridTemplateColumns:"repeat(8,1fr)", gap:"0" }}>
             {SERVICES.map((s, i) => (
@@ -289,7 +289,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ 3-COL: HOW WE WORK | GALLERY | VIDEOS ════════════ */}
-      <section ref={ref("mid")} style={{ padding:"48px 48px", background:"#fafafa", opacity:vis("mid")?1:0, transform:vis("mid")?"none":"translateY(24px)", transition:"all .7s .1s ease" }}>
+      <section ref={ref("mid")} style={{ padding:"48px 48px", background:"#fafafa" }}>
         <div className="three-col" style={{ maxWidth:"1280px", margin:"0 auto", display:"grid", gridTemplateColumns:"1fr 1.4fr 1.4fr", gap:"20px" }}>
 
           {/* How We Work */}
@@ -358,7 +358,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ 4-COL: DASHBOARD | TRAINING | WHY | TESTIMONIALS ═ */}
-      <section ref={ref("bot")} style={{ padding:"48px 48px", background:"#fff", opacity:vis("bot")?1:0, transform:vis("bot")?"none":"translateY(24px)", transition:"all .7s .1s ease" }}>
+      <section ref={ref("bot")} style={{ padding:"48px 48px", background:"#fff" }}>
         <div className="four-col" style={{ maxWidth:"1280px", margin:"0 auto", display:"grid", gridTemplateColumns:"1.4fr 1fr 1fr 1fr", gap:"20px", alignItems:"start" }}>
 
           {/* Seller Dashboard Preview */}
@@ -448,7 +448,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ BOTTOM CTA ════════════════════════════════════════ */}
-      <section ref={ref("cta")} style={{ background:"#fff", padding:"0 48px 60px", opacity:vis("cta")?1:0, transform:vis("cta")?"none":"translateY(20px)", transition:"all .6s ease" }}>
+      <section ref={ref("cta")} style={{ background:"#fff", padding:"0 48px 60px" }}>
         <div style={{ maxWidth:"1280px", margin:"0 auto", borderRadius:"20px", background:BURG, padding:"56px 48px", textAlign:"center", position:"relative", overflow:"hidden" }}>
           <div style={{ position:"absolute", inset:0, backgroundImage:`radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px)`, backgroundSize:"28px 28px", pointerEvents:"none" }} />
           <div style={{ position:"absolute", left:"-40px", bottom:"-20px", fontSize:"120px", opacity:.06, transform:"rotate(-15deg)" }}>🏺</div>
