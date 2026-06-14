@@ -61,108 +61,6 @@ const WHY = [
   { icon:"🏷️", title:"Grow Your Brand",       desc:"We help you build a brand that lasts."        },
 ];
 
-
-// ══════════════════════════════════════════════════════════════
-// HERO CAROUSEL MEDIA — add your images & videos here
-// Place files in frontend/public/hero/ and reference below
-// ══════════════════════════════════════════════════════════════
-const HERO_MEDIA = [
-  // { type:"image", src:"/hero/product1.jpg",  caption:"Brass Ganesh Collection"       },
-  // { type:"image", src:"/hero/product2.jpg",  caption:"Madhubani Paintings"           },
-  // { type:"image", src:"/hero/artisans.jpg",  caption:"Artisans at Work"              },
-  // { type:"image", src:"/hero/workshop.jpg",  caption:"Our Lucknow Workshop"          },
-  // { type:"video", src:"/hero/reel.mp4",      caption:"Product Reel"                  },
-  // { type:"image", src:"/hero/store.jpg",     caption:"Hazratganj Flagship Store"     },
-];
-// ══════════════════════════════════════════════════════════════
-
-function HeroCarousel() {
-  const [idx, setIdx] = useState(0);
-  const [fade, setFade] = useState(true);
-
-  useEffect(() => {
-    if (HERO_MEDIA.length <= 1) return;
-    const t = setInterval(() => {
-      setFade(false);
-      setTimeout(() => { setIdx(i => (i + 1) % HERO_MEDIA.length); setFade(true); }, 300);
-    }, 4000);
-    return () => clearInterval(t);
-  }, []);
-
-  const go = (i) => { setFade(false); setTimeout(() => { setIdx(i); setFade(true); }, 200); };
-  const cur = HERO_MEDIA[idx];
-  const isVid = cur?.type === "video" || cur?.src?.endsWith(".mp4") || cur?.src?.endsWith(".webm");
-
-  if (HERO_MEDIA.length === 0) {
-    return (
-      <div style={{ borderRadius:"20px", background:"linear-gradient(135deg,#f9f9f9,#f0f0f0)", aspectRatio:"4/3", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", border:"2px dashed #e5e5e5" }}>
-        <div style={{ fontSize:"64px", marginBottom:"16px", opacity:.15 }}>🏺</div>
-        <div style={{ fontSize:"14px", color:"#ccc", fontWeight:600, marginBottom:"6px" }}>Add your photos & videos</div>
-        <div style={{ fontSize:"12px", color:"#ddd", textAlign:"center", lineHeight:1.6, maxWidth:"200px" }}>
-          Uncomment items in<br />
-          <code style={{ background:"#f0f0f0", padding:"2px 6px", borderRadius:"4px", fontSize:"11px", color:"#aaa" }}>HERO_MEDIA</code><br />
-          at top of this file
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ position:"relative", borderRadius:"20px", overflow:"hidden", aspectRatio:"4/3", background:"#111", boxShadow:"0 24px 60px rgba(0,0,0,.15)" }}>
-      {/* Media */}
-      <div style={{ position:"absolute", inset:0, opacity:fade?1:0, transition:"opacity .3s ease" }}>
-        {isVid ? (
-          <video key={cur.src} src={cur.src} autoPlay muted loop playsInline
-            style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-        ) : (
-          <img key={cur.src} src={cur.src} alt={cur.caption}
-            style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
-        )}
-      </div>
-
-      {/* Gradient overlay */}
-      <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 50%)" }} />
-
-      {/* Caption */}
-      <div style={{ position:"absolute", bottom:"52px", left:"20px", right:"20px" }}>
-        <div style={{ fontSize:"15px", fontWeight:700, color:"#fff", marginBottom:"3px" }}>{cur.caption}</div>
-        <div style={{ fontSize:"12px", color:"rgba(255,255,255,.6)" }}>{idx+1} / {HERO_MEDIA.length}</div>
-      </div>
-
-      {/* Prev / Next */}
-      {HERO_MEDIA.length > 1 && (<>
-        <button onClick={() => go((idx - 1 + HERO_MEDIA.length) % HERO_MEDIA.length)}
-          style={{ position:"absolute", left:"14px", top:"50%", transform:"translateY(-50%)", width:"36px", height:"36px", borderRadius:"50%", background:"rgba(255,255,255,.18)", border:"1px solid rgba(255,255,255,.3)", color:"#fff", fontSize:"20px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(4px)", zIndex:2 }}>‹</button>
-        <button onClick={() => go((idx + 1) % HERO_MEDIA.length)}
-          style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", width:"36px", height:"36px", borderRadius:"50%", background:"rgba(255,255,255,.18)", border:"1px solid rgba(255,255,255,.3)", color:"#fff", fontSize:"20px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", backdropFilter:"blur(4px)", zIndex:2 }}>›</button>
-      </>)}
-
-      {/* Dot indicators */}
-      <div style={{ position:"absolute", bottom:"20px", left:"50%", transform:"translateX(-50%)", display:"flex", gap:"6px", zIndex:2 }}>
-        {HERO_MEDIA.map((_, i) => (
-          <button key={i} onClick={() => go(i)}
-            style={{ width:i===idx?"20px":"7px", height:"7px", borderRadius:"99px", background:i===idx?"#fff":"rgba(255,255,255,.4)", border:"none", cursor:"pointer", transition:"all .25s", padding:0 }} />
-        ))}
-      </div>
-
-      {/* Thumbnail strip — right side */}
-      {HERO_MEDIA.length > 2 && (
-        <div style={{ position:"absolute", right:"12px", top:"50%", transform:"translateY(-50%)", display:"flex", flexDirection:"column", gap:"6px", zIndex:2 }}>
-          {HERO_MEDIA.map((it, i) => (
-            <div key={i} onClick={() => go(i)}
-              style={{ width:"52px", height:"40px", borderRadius:"7px", overflow:"hidden", border:`2px solid ${i===idx?"#fff":"transparent"}`, cursor:"pointer", opacity:i===idx?1:.6, transition:"all .2s", background:"#333", display:"flex", alignItems:"center", justifyContent:"center" }}>
-              {it.type==="video"
-                ? <div style={{ fontSize:"14px", color:"rgba(255,255,255,.7)" }}>▶</div>
-                : <img src={it.src} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-              }
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const [visibleSecs, setVisibleSecs] = useState(new Set());
@@ -255,8 +153,61 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right — Hero Carousel */}
-          <HeroCarousel />
+          {/* Right — platform mockup */}
+          <div className="mock-right" style={{ position:"relative", animation:"fadeIn .8s .2s ease both" }}>
+            {/* Laptop frame */}
+            <div style={{ background:"#1a1a1a", borderRadius:"14px", padding:"10px 10px 0", boxShadow:"0 32px 80px rgba(0,0,0,.2)", position:"relative", zIndex:1 }}>
+              <div style={{ background:"#333", borderRadius:"2px", height:"6px", width:"40px", margin:"0 auto 6px" }} />
+              <div style={{ background:"#f9f9f9", borderRadius:"8px", overflow:"hidden", aspectRatio:"16/10" }}>
+                {/* Dashboard preview inside laptop */}
+                <div style={{ background:"#fff", height:"100%", display:"grid", gridTemplateColumns:"160px 1fr" }}>
+                  <div style={{ background:`linear-gradient(180deg,${BURG} 0%,#7a0018 100%)`, padding:"12px 0" }}>
+                    {["Dashboard","Orders","Products","Inventory","Customers","Reports","Settings"].map(item => (
+                      <div key={item} style={{ padding:"6px 12px", fontSize:"10px", color:item==="Dashboard"?"#fff":"rgba(255,255,255,.5)", fontWeight:item==="Dashboard"?600:400, background:item==="Dashboard"?`rgba(255,255,255,.15)`:"transparent" }}>{item}</div>
+                    ))}
+                  </div>
+                  <div style={{ padding:"12px", background:"#f8f8f8" }}>
+                    <div style={{ fontSize:"11px", fontWeight:700, color:"#111", marginBottom:"8px" }}>Sales Overview</div>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:"6px", marginBottom:"8px" }}>
+                      {[["₹12,45,000","Total Sales"],["598","Orders"],["23","Pending"],["98%","Rating"]].map(([v,l]) => (
+                        <div key={l} style={{ background:"#fff", borderRadius:"6px", padding:"6px 8px", border:"1px solid #eee" }}>
+                          <div style={{ fontFamily:"'Playfair Display',serif", fontSize:"12px", fontWeight:700, color:BURG }}>{v}</div>
+                          <div style={{ fontSize:"8px", color:"#aaa" }}>{l}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Mini chart bars */}
+                    <div style={{ display:"flex", alignItems:"flex-end", gap:"4px", height:"40px" }}>
+                      {[30,50,40,70,55,80,65,90,75,85].map((h,i) => (
+                        <div key={i} style={{ flex:1, height:`${h}%`, background:i===9?BURG:`rgba(155,0,32,.${Math.floor(h/15)})`, borderRadius:"2px 2px 0 0" }} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style={{ background:"#1a1a1a", height:"8px", borderRadius:"0 0 14px 14px" }} />
+            </div>
+
+            {/* Phone floating */}
+            <div style={{ position:"absolute", right:"-30px", bottom:"-20px", width:"110px", background:"#1a1a1a", borderRadius:"16px", padding:"6px", boxShadow:"0 16px 40px rgba(0,0,0,.25)", animation:"float 3s ease-in-out infinite", zIndex:2 }}>
+              <div style={{ background:"#fff", borderRadius:"10px", overflow:"hidden", aspectRatio:"9/16" }}>
+                <div style={{ background:BURG, padding:"8px 6px 4px" }}>
+                  <div style={{ fontSize:"6px", fontWeight:700, color:"#fff", marginBottom:"2px" }}>Sanskriti</div>
+                  <div style={{ fontSize:"5px", color:"rgba(255,255,255,.7)" }}>Brass Antique Diya Stand</div>
+                </div>
+                <div style={{ padding:"6px", background:"#f9f9f9", height:"60%" }}>
+                  <div style={{ background:"#e5e5e5", borderRadius:"4px", height:"50%", marginBottom:"4px", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"14px" }}>🏺</div>
+                  <div style={{ fontSize:"7px", fontWeight:700, color:"#111" }}>₹1,399</div>
+                  <div style={{ marginTop:"4px", padding:"3px 6px", background:BURG, borderRadius:"4px", textAlign:"center" }}>
+                    <div style={{ fontSize:"6px", color:"#fff", fontWeight:600 }}>Add to Cart</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Floating antique emoji */}
+            <div style={{ position:"absolute", left:"-20px", top:"20%", fontSize:"48px", animation:"float 4s .5s ease-in-out infinite", filter:"drop-shadow(0 8px 16px rgba(0,0,0,.2))", zIndex:2 }}>🏺</div>
+          </div>
         </div>
       </section>
 
