@@ -159,32 +159,32 @@ export default function HomePage() {
       `}</style>
 
       {/* ══ HERO ══════════════════════════════════════════════ */}
-      <section style={{ padding:"60px 64px 52px", background:"#fff", position:"relative", overflow:"hidden" }}>
+      <section style={{ padding:"32px 64px 22px", background:"#fff", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`linear-gradient(rgba(155,0,32,.01) 1px,transparent 1px),linear-gradient(90deg,rgba(155,0,32,.01) 1px,transparent 1px)`, backgroundSize:"48px 48px", pointerEvents:"none" }} />
         <div style={{ maxWidth:"1280px", margin:"0 auto", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"60px", alignItems:"center" }}>
 
           {/* Left */}
           <div style={{ animation:"fadeUp .7s ease both" }}>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", padding:"5px 14px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.2)`, background:`rgba(155,0,32,.04)`, marginBottom:"20px" }}>
+            <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", padding:"5px 14px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.2)`, background:`rgba(155,0,32,.04)`, marginBottom:"14px" }}>
               <span style={{ color:"#f59e0b" }}>★</span>
               <span style={{ fontSize:"11px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase" }}>India's Premier Seller Platform</span>
             </div>
-            <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(30px,4vw,54px)", fontWeight:700, color:"#111", lineHeight:1.08, marginBottom:"16px" }}>
+            <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(22px,2.8vw,36px)", fontWeight:700, color:"#111", lineHeight:1.12, marginBottom:"14px" }}>
               We Build, Manage &amp; Scale<br />
               <span style={{ color:BURG, fontStyle:"italic", fontWeight:400 }}>Your Online Business</span><br />
               End-to-End.
             </h1>
-            <p style={{ fontSize:"15px", color:"#555", lineHeight:1.85, marginBottom:"26px", maxWidth:"480px" }}>
+            <p style={{ fontSize:"15px", color:"#555", lineHeight:1.75, marginBottom:"20px", maxWidth:"480px" }}>
               From e-commerce setup to photoshoots, videos, inventory, orders and marketing — we handle everything. You focus on your products. We handle the rest.
             </p>
-            <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", marginBottom:"32px" }}>
+            <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", marginBottom:"22px" }}>
               <Link href="/register" style={{ padding:"13px 30px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", boxShadow:GRADS }}>Join as Seller →</Link>
               <Link href="/services" style={{ display:"flex", alignItems:"center", gap:"8px", padding:"13px 24px", borderRadius:"8px", border:"1.5px solid #e5e5e5", color:"#333", fontSize:"14px", fontWeight:500, textDecoration:"none" }}>
                 <span style={{ width:"24px", height:"24px", borderRadius:"50%", border:`1.5px solid ${BURG}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"9px", color:BURG }}>▶</span>
                 Watch How It Works
               </Link>
             </div>
-            <div style={{ display:"flex", borderTop:"1px solid #f0f0f0", paddingTop:"20px" }}>
+            <div style={{ display:"flex", borderTop:"1px solid #f0f0f0", paddingTop:"16px" }}>
               {[["25+","Categories"],["1,00,000+","Products"],["500+","Seller Assets"],["1000+","Photoshoots"],["24×7","Support"]].map(([v,l],i) => (
                 <div key={l} style={{ flex:1, padding:"0 10px", borderRight:i<4?"1px solid #f0f0f0":"none", textAlign:"center" }}>
                   <div style={{ fontFamily:"'Playfair Display',serif", fontSize:"18px", fontWeight:700, color:BURG }}>{v}</div>
