@@ -98,7 +98,7 @@ function FlowStep({ s }) {
 }
 
 const ArrowR = () => (
-  <div style={{ display:"flex", alignItems:"center", justifyContent:"center", width:"60px", flexShrink:0, paddingBottom:"40px" }}>
+  <div style={{ display:"flex", alignItems:"center", justifyContent:"center", width:"60px", height:"80px", flexShrink:0 }}>
     <svg width="54" height="16" viewBox="0 0 54 16">
       <line x1="0" y1="8" x2="44" y2="8" stroke={BURG} strokeWidth="2.5" strokeDasharray="5 4"/>
       <polygon points="44,2 54,8 44,14" fill={BURG}/>
@@ -106,7 +106,7 @@ const ArrowR = () => (
   </div>
 );
 const ArrowL = () => (
-  <div style={{ display:"flex", alignItems:"center", justifyContent:"center", width:"60px", flexShrink:0, paddingBottom:"40px" }}>
+  <div style={{ display:"flex", alignItems:"center", justifyContent:"center", width:"60px", height:"80px", flexShrink:0 }}>
     <svg width="54" height="16" viewBox="0 0 54 16">
       <line x1="54" y1="8" x2="10" y2="8" stroke={BURG} strokeWidth="2.5" strokeDasharray="5 4"/>
       <polygon points="10,2 0,8 10,14" fill={BURG}/>
@@ -159,7 +159,7 @@ export default function HomePage() {
       `}</style>
 
       {/* ══ HERO ══════════════════════════════════════════════ */}
-      <section style={{ padding:"32px 64px 22px", background:"#fff", position:"relative", overflow:"hidden" }}>
+      <section style={{ padding:"48px 64px 26px", background:"#fff", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`linear-gradient(rgba(155,0,32,.01) 1px,transparent 1px),linear-gradient(90deg,rgba(155,0,32,.01) 1px,transparent 1px)`, backgroundSize:"48px 48px", pointerEvents:"none" }} />
         <div style={{ maxWidth:"1280px", margin:"0 auto", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"60px", alignItems:"center" }}>
 
@@ -250,21 +250,6 @@ export default function HomePage() {
           {/* Up arrow on left */}
           <ArrowUp />
 
-          {/* Chips */}
-          <div style={{ display:"flex", justifyContent:"center", gap:"10px", marginTop:"20px", flexWrap:"wrap" }}>
-            {[
-              { label:"No Manpower Needed",  yes:false },
-              { label:"No Warehouse Needed", yes:false },
-              { label:"No Inventory Needed", yes:false },
-              { label:"Just Enroll & Earn",  yes:true  },
-            ].map(c => (
-              <div key={c.label} style={{ display:"flex", alignItems:"center", gap:"7px", padding:"8px 18px", borderRadius:"99px", background:c.yes?BURG:"#fff", border:c.yes?"none":`1.5px solid #f0f0f0`, boxShadow:c.yes?GRADS:"0 1px 4px rgba(0,0,0,.04)" }}>
-                <span style={{ fontSize:"14px" }}>{c.yes?"✅":"❌"}</span>
-                <span style={{ fontSize:"13px", fontWeight:600, color:c.yes?"#fff":"#555" }}>{c.label}</span>
-              </div>
-            ))}
-          </div>
-
           {/* CTA */}
           <div style={{ textAlign:"center", marginTop:"28px" }}>
             <Link href="/register" style={{ display:"inline-block", padding:"13px 36px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", boxShadow:GRADS }}>
@@ -274,12 +259,29 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ══ TRUST STRIP — Muchhad-style full-width band ═══════ */}
+      <div style={{ borderTop:"1px solid #f0f0f0", borderBottom:"1px solid #f0f0f0", background:"#fafafa", padding:"16px 24px" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"space-around", flexWrap:"wrap", rowGap:"10px" }}>
+          {[
+            { icon:"❌", label:"No Manpower Needed",  hi:false },
+            { icon:"❌", label:"No Warehouse Needed", hi:false },
+            { icon:"❌", label:"No Inventory Needed", hi:false },
+            { icon:"✅", label:"Just Enroll & Earn",  hi:true  },
+          ].map(c => (
+            <div key={c.label} style={{ display:"inline-flex", alignItems:"center", gap:"9px", padding:"0 8px" }}>
+              <span style={{ fontSize:"15px" }}>{c.icon}</span>
+              <span style={{ fontSize:"12px", fontWeight:700, letterSpacing:".08em", textTransform:"uppercase", color:c.hi?BURG:"#666", whiteSpace:"nowrap" }}>{c.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ══ DASHBOARD SECTION — 50/50 split ═════════════════ */}
       <section style={{ padding:"0", background:"#f9f9f9" }}>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", minHeight:"100vh", alignItems:"stretch" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"38% 62%", minHeight:"100vh", alignItems:"stretch" }}>
 
           {/* LEFT — text + features */}
-          <div style={{ padding:"72px 56px", display:"flex", flexDirection:"column", justifyContent:"center", borderRight:"1px solid #eeeeee" }}>
+          <div style={{ padding:"44px 52px", display:"flex", flexDirection:"column", justifyContent:"center", borderRight:"1px solid #eeeeee" }}>
             <div style={{ display:"inline-flex", alignItems:"center", gap:"7px", padding:"4px 14px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.2)`, background:`rgba(155,0,32,.04)`, marginBottom:"18px", width:"fit-content" }}>
               <span style={{ fontSize:"10px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase" }}>Seller Dashboard</span>
             </div>
@@ -287,15 +289,15 @@ export default function HomePage() {
               Everything you need,
               <span style={{ display:"block", fontStyle:"italic", color:BURG, fontWeight:400 }}>in one place.</span>
             </h2>
-            <p style={{ fontSize:"14px", color:"#555", lineHeight:1.85, marginBottom:"8px" }}>
+            <p style={{ fontSize:"14px", color:"#555", lineHeight:1.7, marginBottom:"6px" }}>
               Track your orders, manage your wallet, download GST invoices, and access training videos — all from a single powerful seller dashboard.
             </p>
-            <p style={{ fontSize:"14px", color:"#555", lineHeight:1.85, marginBottom:"24px" }}>
+            <p style={{ fontSize:"14px", color:"#555", lineHeight:1.7, marginBottom:"18px" }}>
               Built for Indian sellers. Compliant, simple, and always up to date.
             </p>
 
             {/* Feature list */}
-            <div style={{ display:"flex", flexDirection:"column", gap:"8px", marginBottom:"28px" }}>
+            <div style={{ display:"flex", flexDirection:"column", gap:"6px", marginBottom:"20px" }}>
               {[
                 { icon:"💰", title:"Wallet & Payouts",  desc:"Add funds, track balance, request payouts — all in real time."          },
                 { icon:"📦", title:"Order Management",  desc:"View, track, and manage every order with full status history."           },
@@ -304,7 +306,7 @@ export default function HomePage() {
                 { icon:"🏺", title:"Product Gallery",   desc:"Browse and order from 1L+ products across 25+ categories."              },
                 { icon:"👤", title:"KYC & Profile",     desc:"Complete your KYC verification and manage your business details."       },
               ].map((f,i) => (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px", padding:"12px 14px", borderRadius:"10px", background:"#fff", border:"1px solid #f0f0f0", transition:"all .2s", cursor:"default" }}
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px", padding:"9px 12px", borderRadius:"10px", background:"#fff", border:"1px solid #f0f0f0", transition:"all .2s", cursor:"default" }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor=BURG; e.currentTarget.style.transform="translateX(4px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor="#f0f0f0"; e.currentTarget.style.transform="translateX(0)"; }}>
                   <div style={{ width:"36px", height:"36px", borderRadius:"9px", background:`rgba(155,0,32,.07)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"16px", flexShrink:0 }}>{f.icon}</div>
@@ -323,8 +325,8 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT — dashboard mockup */}
-          <div style={{ padding:"40px 48px 40px 40px", display:"flex", alignItems:"center", justifyContent:"center", background:"#f9f9f9" }}>
-            <div style={{ width:"100%", maxWidth:"600px", borderRadius:"16px", overflow:"hidden", border:"1px solid #e5e5e5", boxShadow:"0 20px 60px rgba(0,0,0,.12)", background:"#fff" }}>
+          <div style={{ padding:"32px 44px", display:"flex", alignItems:"center", justifyContent:"center", background:"#f9f9f9" }}>
+            <div style={{ width:"100%", maxWidth:"none", borderRadius:"16px", overflow:"hidden", border:"1px solid #e5e5e5", boxShadow:"0 20px 60px rgba(0,0,0,.12)", background:"#fff" }}>
               {/* Browser chrome */}
               <div style={{ background:"#f5f5f5", borderBottom:"1px solid #e5e5e5", padding:"9px 14px", display:"flex", alignItems:"center", gap:"8px" }}>
                 <div style={{ display:"flex", gap:"5px" }}>
@@ -340,7 +342,7 @@ export default function HomePage() {
               </div>
 
               {/* Dashboard UI */}
-              <div style={{ display:"grid", gridTemplateColumns:"160px 1fr" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"190px 1fr" }}>
                 {/* Sidebar */}
                 <div style={{ background:`linear-gradient(180deg,${BURG} 0%,#7a0018 100%)`, padding:"16px 0", minHeight:"420px" }}>
                   <div style={{ padding:"0 14px 12px", borderBottom:"1px solid rgba(255,255,255,.1)", marginBottom:"6px" }}>
@@ -373,7 +375,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Stat cards */}
-                  <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:"8px", marginBottom:"14px" }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"10px", marginBottom:"14px" }}>
                     {[
                       { icon:"🪙", value:"₹12,450",  label:"Wallet Balance", sub:"+₹2,000 today", subC:"#22c55e" },
                       { icon:"📦", value:"48",        label:"Total Orders",   sub:"3 pending",      subC:"#f59e0b" },
@@ -411,9 +413,9 @@ export default function HomePage() {
                         <span style={{ fontSize:"8px", fontWeight:700, color:o.sc, padding:"2px 6px", borderRadius:"99px", background:`${o.sc}18`, flexShrink:0 }}>{o.status}</span>
                       </div>
                     ))}
-                    {/* CTA bar */}
-                    <Link href="/register" style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:"7px", padding:"11px 14px", background:BURG, textDecoration:"none" }}>
-                      <span style={{ fontSize:"12px" }}>🚀</span>
+                    {/* CTA button */}
+                    <Link href="/register" style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:"7px", padding:"12px 26px", background:BURG, textDecoration:"none", borderRadius:"10px", width:"fit-content", margin:"14px auto 16px", boxShadow:GRADS }}>
+                      <span style={{ fontSize:"12px" }}>🔓</span>
                       <span style={{ fontSize:"11px", fontWeight:700, color:"#fff" }}>Unlock Your Dashboard — Register Free →</span>
                     </Link>
                   </div>
