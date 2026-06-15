@@ -114,25 +114,17 @@ const ArrowL = () => (
   </div>
 );
 const ArrowDown = () => (
-  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", marginBottom:"8px" }}>
-    <div/><div/>
-    <div style={{ display:"flex", justifyContent:"center", paddingRight:"10px" }}>
+  <div style={{ display:"flex", alignItems:"center", marginBottom:"8px" }}>
+    <div style={{ flex:1 }} />
+    <div style={{ width:"60px", flexShrink:0 }} />
+    <div style={{ flex:1 }} />
+    <div style={{ width:"60px", flexShrink:0 }} />
+    <div style={{ flex:1, display:"flex", justifyContent:"center" }}>
       <svg width="16" height="36" viewBox="0 0 16 36">
         <line x1="8" y1="0" x2="8" y2="26" stroke={BURG} strokeWidth="2.5" strokeDasharray="5 4"/>
         <polygon points="2,26 8,36 14,26" fill={BURG}/>
       </svg>
     </div>
-  </div>
-);
-const ArrowUp = () => (
-  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", marginTop:"8px" }}>
-    <div style={{ display:"flex", justifyContent:"center", paddingLeft:"10px" }}>
-      <svg width="16" height="36" viewBox="0 0 16 36">
-        <line x1="8" y1="36" x2="8" y2="10" stroke={BURG} strokeWidth="2.5" strokeDasharray="5 4"/>
-        <polygon points="2,10 8,0 14,10" fill={BURG}/>
-      </svg>
-    </div>
-    <div/><div/>
   </div>
 );
 
@@ -159,7 +151,7 @@ export default function HomePage() {
       `}</style>
 
       {/* ══ HERO ══════════════════════════════════════════════ */}
-      <section style={{ padding:"48px 64px 26px", background:"#fff", position:"relative", overflow:"hidden" }}>
+      <section style={{ padding:"66px 64px 26px", background:"#fff", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`linear-gradient(rgba(155,0,32,.01) 1px,transparent 1px),linear-gradient(90deg,rgba(155,0,32,.01) 1px,transparent 1px)`, backgroundSize:"48px 48px", pointerEvents:"none" }} />
         <div style={{ maxWidth:"1280px", margin:"0 auto", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"60px", alignItems:"center" }}>
 
@@ -247,9 +239,6 @@ export default function HomePage() {
             <FlowStep s={FLOW[3]} />
           </div>
 
-          {/* Up arrow on left */}
-          <ArrowUp />
-
           {/* CTA */}
           <div style={{ textAlign:"center", marginTop:"28px" }}>
             <Link href="/register" style={{ display:"inline-block", padding:"13px 36px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", boxShadow:GRADS }}>
@@ -260,24 +249,24 @@ export default function HomePage() {
       </section>
 
       {/* ══ TRUST STRIP — Muchhad-style full-width band ═══════ */}
-      <div style={{ borderTop:"1px solid #f0f0f0", borderBottom:"1px solid #f0f0f0", background:"#fafafa", padding:"16px 24px" }}>
-        <div style={{ maxWidth:"1100px", margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"space-around", flexWrap:"wrap", rowGap:"10px" }}>
+      <div style={{ background:"linear-gradient(90deg,rgba(155,0,32,.06),rgba(155,0,32,.015) 50%,rgba(155,0,32,.06))", borderTop:"1px solid rgba(155,0,32,.12)", borderBottom:"1px solid rgba(155,0,32,.12)", padding:"18px 24px" }}>
+        <div style={{ maxWidth:"1100px", margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"space-around", flexWrap:"wrap", rowGap:"12px" }}>
           {[
             { icon:"❌", label:"No Manpower Needed",  hi:false },
             { icon:"❌", label:"No Warehouse Needed", hi:false },
             { icon:"❌", label:"No Inventory Needed", hi:false },
             { icon:"✅", label:"Just Enroll & Earn",  hi:true  },
           ].map(c => (
-            <div key={c.label} style={{ display:"inline-flex", alignItems:"center", gap:"9px", padding:"0 8px" }}>
-              <span style={{ fontSize:"15px" }}>{c.icon}</span>
-              <span style={{ fontSize:"12px", fontWeight:700, letterSpacing:".08em", textTransform:"uppercase", color:c.hi?BURG:"#666", whiteSpace:"nowrap" }}>{c.label}</span>
+            <div key={c.label} style={{ display:"inline-flex", alignItems:"center", gap:"10px", padding:"0 12px" }}>
+              <span style={{ width:"28px", height:"28px", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"12px", background:c.hi?"rgba(34,197,94,.12)":"rgba(155,0,32,.07)", border:c.hi?"1px solid rgba(34,197,94,.35)":"1px solid rgba(155,0,32,.18)", flexShrink:0 }}>{c.icon}</span>
+              <span style={{ fontSize:"12px", fontWeight:700, letterSpacing:".08em", textTransform:"uppercase", color:c.hi?BURG:"#555", whiteSpace:"nowrap" }}>{c.label}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* ══ DASHBOARD SECTION — 50/50 split ═════════════════ */}
-      <section style={{ padding:"0", background:"#f9f9f9" }}>
+      <section style={{ padding:"0", background:"#fff" }}>
         <div style={{ display:"grid", gridTemplateColumns:"38% 62%", minHeight:"100vh", alignItems:"stretch" }}>
 
           {/* LEFT — text + features */}
@@ -306,9 +295,9 @@ export default function HomePage() {
                 { icon:"🏺", title:"Product Gallery",   desc:"Browse and order from 1L+ products across 25+ categories."              },
                 { icon:"👤", title:"KYC & Profile",     desc:"Complete your KYC verification and manage your business details."       },
               ].map((f,i) => (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px", padding:"9px 12px", borderRadius:"10px", background:"#fff", border:"1px solid #f0f0f0", transition:"all .2s", cursor:"default" }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor=BURG; e.currentTarget.style.transform="translateX(4px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor="#f0f0f0"; e.currentTarget.style.transform="translateX(0)"; }}>
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px", padding:"9px 12px", borderRadius:"12px", background:"rgba(255,255,255,.55)", backdropFilter:"blur(10px)", WebkitBackdropFilter:"blur(10px)", border:`1.5px solid rgba(155,0,32,.35)`, boxShadow:"0 4px 18px rgba(155,0,32,.06)", transition:"all .2s", cursor:"default" }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor=BURG; e.currentTarget.style.transform="translateX(4px)"; e.currentTarget.style.boxShadow="0 8px 24px rgba(155,0,32,.14)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(155,0,32,.35)"; e.currentTarget.style.transform="translateX(0)"; e.currentTarget.style.boxShadow="0 4px 18px rgba(155,0,32,.06)"; }}>
                   <div style={{ width:"36px", height:"36px", borderRadius:"9px", background:`rgba(155,0,32,.07)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"16px", flexShrink:0 }}>{f.icon}</div>
                   <div>
                     <div style={{ fontSize:"13px", fontWeight:600, color:"#111", marginBottom:"1px" }}>{f.title}</div>
@@ -325,7 +314,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT — dashboard mockup */}
-          <div style={{ padding:"32px 44px", display:"flex", alignItems:"center", justifyContent:"center", background:"#f9f9f9" }}>
+          <div style={{ padding:"32px 44px", display:"flex", alignItems:"center", justifyContent:"center", background:"#fff" }}>
             <div style={{ width:"100%", maxWidth:"none", borderRadius:"16px", overflow:"hidden", border:"1px solid #e5e5e5", boxShadow:"0 20px 60px rgba(0,0,0,.12)", background:"#fff" }}>
               {/* Browser chrome */}
               <div style={{ background:"#f5f5f5", borderBottom:"1px solid #e5e5e5", padding:"9px 14px", display:"flex", alignItems:"center", gap:"8px" }}>
@@ -413,11 +402,14 @@ export default function HomePage() {
                         <span style={{ fontSize:"8px", fontWeight:700, color:o.sc, padding:"2px 6px", borderRadius:"99px", background:`${o.sc}18`, flexShrink:0 }}>{o.status}</span>
                       </div>
                     ))}
-                    {/* CTA button */}
-                    <Link href="/register" style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:"7px", padding:"12px 26px", background:BURG, textDecoration:"none", borderRadius:"10px", width:"fit-content", margin:"14px auto 16px", boxShadow:GRADS }}>
-                      <span style={{ fontSize:"12px" }}>🔓</span>
-                      <span style={{ fontSize:"11px", fontWeight:700, color:"#fff" }}>Unlock Your Dashboard — Register Free →</span>
-                    </Link>
+                    {/* CTA button with gradient-blur glow */}
+                    <div style={{ position:"relative", display:"flex", justifyContent:"center", margin:"14px 0 16px" }}>
+                      <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:"72%", height:"150%", background:"radial-gradient(ellipse,rgba(155,0,32,.45),transparent 70%)", filter:"blur(22px)", pointerEvents:"none" }} />
+                      <Link href="/register" style={{ position:"relative", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:"7px", padding:"12px 26px", background:BURG, textDecoration:"none", borderRadius:"10px", boxShadow:GRADS }}>
+                        <span style={{ fontSize:"12px" }}>🔓</span>
+                        <span style={{ fontSize:"11px", fontWeight:700, color:"#fff" }}>Unlock Your Dashboard — Register Free →</span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
