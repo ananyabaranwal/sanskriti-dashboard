@@ -49,7 +49,7 @@ function HeroCarousel() {
   const isVid = cur?.src?.endsWith(".mp4") || cur?.src?.endsWith(".webm");
 
   if (!HERO_MEDIA.length) return (
-    <div style={{ borderRadius:"20px", background:"linear-gradient(135deg,#f5f5f5,#ebebeb)", aspectRatio:"16/9", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", border:"2px dashed #e0e0e0" }}>
+    <div style={{ borderRadius:"20px", background:"linear-gradient(135deg,#f5f5f5,#ebebeb)", aspectRatio:"4/3", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", border:"2px dashed #e0e0e0" }}>
       <div style={{ fontSize:"56px", opacity:.1, marginBottom:"12px" }}>🏺</div>
       <div style={{ fontSize:"13px", color:"#ccc", fontWeight:600 }}>Add your photos & videos</div>
       <div style={{ fontSize:"11px", color:"#ddd", marginTop:"5px", textAlign:"center" }}>Uncomment items in <code style={{ background:"#f0f0f0", padding:"1px 5px", borderRadius:"3px", color:"#bbb" }}>HERO_MEDIA</code></div>
@@ -57,7 +57,7 @@ function HeroCarousel() {
   );
 
   return (
-    <div style={{ position:"relative", borderRadius:"20px", overflow:"hidden", aspectRatio:"16/9", background:"#111", boxShadow:"0 24px 60px rgba(0,0,0,.15)" }}>
+    <div style={{ position:"relative", borderRadius:"20px", overflow:"hidden", aspectRatio:"4/3", background:"#111", boxShadow:"0 24px 60px rgba(0,0,0,.15)" }}>
       <div style={{ position:"absolute", inset:0, opacity:fade?1:0, transition:"opacity .3s" }}>
         {isVid
           ? <video key={cur.src} src={cur.src} autoPlay muted loop playsInline style={{ width:"100%", height:"100%", objectFit:"cover" }} />
@@ -159,48 +159,56 @@ export default function HomePage() {
       `}</style>
 
       {/* ══ HERO ══════════════════════════════════════════════ */}
-      <section style={{ padding:"60px 64px 48px", background:"#fff", position:"relative", overflow:"hidden" }}>
+      <section style={{ padding:"58px 64px 52px", background:"#fff", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`linear-gradient(rgba(155,0,32,.01) 1px,transparent 1px),linear-gradient(90deg,rgba(155,0,32,.01) 1px,transparent 1px)`, backgroundSize:"48px 48px", pointerEvents:"none" }} />
-        <div style={{ maxWidth:"860px", margin:"0 auto", textAlign:"center", display:"flex", flexDirection:"column", alignItems:"center", animation:"fadeUp .7s ease both", position:"relative" }}>
-          <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", padding:"5px 14px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.2)`, background:`rgba(155,0,32,.04)`, marginBottom:"16px" }}>
-            <span style={{ color:"#f59e0b" }}>★</span>
-            <span style={{ fontSize:"11px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase" }}>India's Premier Seller Platform</span>
-          </div>
-          <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(24px,3vw,40px)", fontWeight:700, color:"#111", lineHeight:1.15, marginBottom:"14px" }}>
-            We Build, Manage &amp; Scale <span style={{ color:BURG, fontStyle:"italic", fontWeight:400 }}>Your Online Business</span> End-to-End.
-          </h1>
-          <p style={{ fontSize:"15px", color:"#555", lineHeight:1.75, marginBottom:"24px", maxWidth:"560px" }}>
-            From e-commerce setup to photoshoots, videos, inventory, orders and marketing — we handle everything. You focus on your products. We handle the rest.
-          </p>
-          <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", justifyContent:"center", marginBottom:"26px" }}>
-            <Link href="/register" style={{ padding:"13px 30px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", boxShadow:GRADS }}>Join as Seller →</Link>
-            <Link href="/services" style={{ display:"flex", alignItems:"center", gap:"8px", padding:"13px 24px", borderRadius:"8px", border:"1.5px solid #e5e5e5", color:"#333", fontSize:"14px", fontWeight:500, textDecoration:"none" }}>
-              <span style={{ width:"24px", height:"24px", borderRadius:"50%", border:`1.5px solid ${BURG}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"9px", color:BURG }}>▶</span>
-              Watch How It Works
-            </Link>
-          </div>
-          <div style={{ display:"flex", borderTop:"1px solid #f0f0f0", paddingTop:"16px", width:"100%", maxWidth:"680px" }}>
-            {[["25+","Categories"],["1,00,000+","Products"],["500+","Seller Assets"],["1000+","Photoshoots"],["24×7","Support"]].map(([v,l],i) => (
-              <div key={l} style={{ flex:1, padding:"0 10px", borderRight:i<4?"1px solid #f0f0f0":"none", textAlign:"center" }}>
-                <div style={{ fontFamily:"'Playfair Display',serif", fontSize:"18px", fontWeight:700, color:BURG }}>{v}</div>
-                <div style={{ fontSize:"10px", color:"#888", marginTop:"2px" }}>{l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <div style={{ maxWidth:"1280px", margin:"0 auto", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"56px", alignItems:"center", position:"relative" }}>
 
-        {/* Hero media — centered below, with glass sneak-peek cards */}
-        <div style={{ maxWidth:"900px", margin:"36px auto 0", position:"relative" }}>
-          <HeroCarousel />
+          {/* Left — text */}
+          <div style={{ animation:"fadeUp .7s ease both" }}>
+            <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", padding:"5px 14px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.2)`, background:`rgba(155,0,32,.04)`, marginBottom:"14px" }}>
+              <span style={{ color:"#f59e0b" }}>★</span>
+              <span style={{ fontSize:"11px", fontWeight:700, color:BURG, letterSpacing:".14em", textTransform:"uppercase" }}>India's Premier Seller Platform</span>
+            </div>
+            <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(22px,2.6vw,38px)", fontWeight:700, color:"#111", lineHeight:1.12, marginBottom:"14px" }}>
+              We Build, Manage &amp; Scale<br />
+              <span style={{ color:BURG, fontStyle:"italic", fontWeight:400 }}>Your Online Business</span><br />
+              End-to-End.
+            </h1>
+            <p style={{ fontSize:"15px", color:"#555", lineHeight:1.75, marginBottom:"22px", maxWidth:"480px" }}>
+              From e-commerce setup to photoshoots, videos, inventory, orders and marketing — we handle everything. You focus on your products. We handle the rest.
+            </p>
+            <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", marginBottom:"26px" }}>
+              <Link href="/register" style={{ padding:"13px 30px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"14px", fontWeight:700, textDecoration:"none", boxShadow:GRADS }}>Join as Seller →</Link>
+              <Link href="/services" style={{ display:"flex", alignItems:"center", gap:"8px", padding:"13px 24px", borderRadius:"8px", border:"1.5px solid #e5e5e5", color:"#333", fontSize:"14px", fontWeight:500, textDecoration:"none" }}>
+                <span style={{ width:"24px", height:"24px", borderRadius:"50%", border:`1.5px solid ${BURG}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"9px", color:BURG }}>▶</span>
+                Watch How It Works
+              </Link>
+            </div>
+            <div style={{ display:"flex", borderTop:"1px solid #f0f0f0", paddingTop:"16px" }}>
+              {[["25+","Categories"],["1,00,000+","Products"],["500+","Seller Assets"],["1000+","Photoshoots"],["24×7","Support"]].map(([v,l],i) => (
+                <div key={l} style={{ flex:1, padding:"0 8px", borderRight:i<4?"1px solid #f0f0f0":"none", textAlign:"center" }}>
+                  <div style={{ fontFamily:"'Playfair Display',serif", fontSize:"17px", fontWeight:700, color:BURG }}>{v}</div>
+                  <div style={{ fontSize:"10px", color:"#888", marginTop:"2px" }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* white gradient blur frost — bottom, up to the glass cards */}
-          <div style={{ position:"absolute", left:0, right:0, bottom:0, height:"54%", borderRadius:"0 0 20px 20px", background:"linear-gradient(to top,rgba(255,255,255,.92),rgba(255,255,255,.5) 55%,transparent)", backdropFilter:"blur(5px)", WebkitBackdropFilter:"blur(5px)", pointerEvents:"none" }} />
+          {/* Right — carousel with glass sneak-peek cards */}
+          <div style={{ position:"relative" }}>
+            <HeroCarousel />
 
-          {/* Gallery sneak peek — bottom left */}
+          {/* white gradient blur — left edge fade (Muchhad-style) */}
+          <div style={{ position:"absolute", left:0, top:0, bottom:0, width:"64%", borderRadius:"20px 0 0 20px", background:"linear-gradient(to right,rgba(255,255,255,.95),rgba(255,255,255,.6) 50%,transparent)", backdropFilter:"blur(5px)", WebkitBackdropFilter:"blur(5px)", pointerEvents:"none" }} />
+
+          {/* two glass sneak-peek cards stacked on the left blur */}
+          <div style={{ position:"absolute", left:"18px", top:0, bottom:0, width:"56%", display:"flex", flexDirection:"column", justifyContent:"center", gap:"12px" }}>
+
+          {/* Gallery sneak peek */}
           <Link href="/gallery"
-            onMouseEnter={e => { e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 16px 36px rgba(155,0,32,.18)"; }}
+            onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 16px 36px rgba(155,0,32,.18)"; }}
             onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,.14)"; }}
-            style={{ position:"absolute", left:"16px", bottom:"16px", width:"45%", textDecoration:"none", background:"rgba(255,255,255,.62)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"16px", boxShadow:"0 12px 30px rgba(0,0,0,.14)", padding:"12px 13px", transition:"transform .2s, box-shadow .2s" }}>
+            style={{ display:"block", width:"100%", textDecoration:"none", background:"rgba(255,255,255,.62)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"16px", boxShadow:"0 12px 30px rgba(0,0,0,.14)", padding:"12px 13px", transition:"transform .2s, box-shadow .2s" }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"10px" }}>
               <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
                 <span style={{ width:"26px", height:"26px", borderRadius:"8px", background:"rgba(155,0,32,.10)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"14px" }}>🏺</span>
@@ -219,11 +227,11 @@ export default function HomePage() {
             <div style={{ display:"flex", alignItems:"center", gap:"6px", fontSize:"12px", fontWeight:600, color:BURG }}>Explore the gallery →</div>
           </Link>
 
-          {/* Training videos sneak peek — bottom right */}
+          {/* Training videos sneak peek */}
           <Link href="/training"
-            onMouseEnter={e => { e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 16px 36px rgba(155,0,32,.18)"; }}
+            onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 16px 36px rgba(155,0,32,.18)"; }}
             onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,.14)"; }}
-            style={{ position:"absolute", right:"16px", bottom:"16px", width:"45%", textDecoration:"none", background:"rgba(255,255,255,.62)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"16px", boxShadow:"0 12px 30px rgba(0,0,0,.14)", padding:"12px 13px", transition:"transform .2s, box-shadow .2s" }}>
+            style={{ display:"block", width:"100%", textDecoration:"none", background:"rgba(255,255,255,.62)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"16px", boxShadow:"0 12px 30px rgba(0,0,0,.14)", padding:"12px 13px", transition:"transform .2s, box-shadow .2s" }}>
             <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"10px" }}>
               <span style={{ width:"26px", height:"26px", borderRadius:"8px", background:"rgba(155,0,32,.10)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"13px" }}>🎬</span>
               <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"16px", fontWeight:700, color:"#1d1d1d" }}>Training Videos</span>
@@ -237,6 +245,9 @@ export default function HomePage() {
             <div style={{ fontSize:"11px", color:"#6b6258", marginBottom:"8px", lineHeight:1.5 }}>Expert courses on Amazon, branding &amp; operations.</div>
             <div style={{ display:"flex", alignItems:"center", gap:"6px", fontSize:"12px", fontWeight:600, color:BURG }}>Watch &amp; learn →</div>
           </Link>
+
+          </div>
+          </div>
         </div>
       </section>
 
