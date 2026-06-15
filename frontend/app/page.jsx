@@ -4,44 +4,12 @@ import Link from "next/link";
 
 const GF = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');`;
 const BURG  = "#9B0020";
-const GRADS = "0 8px 24px rgba(155,0,32,.3)";
-
-// ── GALLERY IMAGES — add your product image URLs here ─────────
-const GALLERY_IMGS = [
-  "", "", "", "", "", "",  // 6 slots — replace "" with /images/product1.jpg etc
-];
-
-// ── VIDEO PREVIEWS — add your video URLs here ────────────────
-const VIDEO_ITEMS = [
-  { src:"", thumb:"", title:"Photoshoot Behind the Scenes", dur:"01:25" },
-  { src:"", thumb:"", title:"Marketing Reel Sample",        dur:"00:45" },
-  { src:"", thumb:"", title:"Seller Training Demo",         dur:"02:10" },
-];
-
-// ── TRAINING VIDEOS ───────────────────────────────────────────
-const TRAINING = [
-  { title:"How to Manage Your Store",       desc:"Basic store management tutorial",          dur:"15:30" },
-  { title:"Product Listing Best Practices", desc:"Increase visibility & better sales",       dur:"12:45" },
-  { title:"Marketing Strategies",           desc:"How to grow with ads & social media",      dur:"18:20" },
-  { title:"Order & Inventory Management",   desc:"Complete guide for smooth operations",     dur:"10:15" },
-];
-
+const GRADS = "0 8px 24px rgba(155,0,32,.3)"
 // ── TESTIMONIALS ──────────────────────────────────────────────
 const TESTIMONIALS = [
   { name:"Neha Sharma",  text:"Sanskriti made it so easy to start my online business. They handle everything and I just focus on growing my brand.", stars:5 },
   { name:"Ramesh Gupta", text:"The photoshoots and marketing videos they create are top-notch. My sales increased 5x in 2 months!", stars:5 },
   { name:"Pooja Verma",  text:"Inventory and order management saved me so much time and effort. Highly recommended.", stars:5 },
-];
-
-const SERVICES = [
-  { icon:"📸", title:"Photoshoots",           desc:"Professional product photos for every platform."          },
-  { icon:"🎬", title:"Marketing Videos",      desc:"Reels, ads & product videos that sell your brand."        },
-  { icon:"🛍️", title:"E-commerce Setup",      desc:"Store creation, branding, and product listing."           },
-  { icon:"📦", title:"Inventory Management",  desc:"We store, manage & monitor your stock."                   },
-  { icon:"🚚", title:"Order Management",       desc:"Packing, shipping & order tracking handled by us."        },
-  { icon:"📊", title:"Dashboard",             desc:"Real-time analytics of sales, orders & inventory."        },
-  { icon:"🎓", title:"Training & Support",    desc:"Step-by-step training and expert seller support."         },
-  { icon:"📢", title:"Marketing & Ads",       desc:"Meta Ads, Google Ads & social media growth strategies."   },
 ];
 
 const HOW_STEPS = [
@@ -53,14 +21,6 @@ const HOW_STEPS = [
   { n:6, icon:"🛒", title:"Orders Grow",      desc:"You get orders, we handle the rest"        },
   { n:7, icon:"📈", title:"Track & Scale",    desc:"Monitor everything from dashboard"         },
 ];
-
-const WHY = [
-  { icon:"🤝", title:"End-to-End Support",    desc:"We handle everything from start to scale."    },
-  { icon:"😌", title:"Zero Hassle Operations",desc:"No worry about inventory, packing or shipping."},
-  { icon:"👨‍💼", title:"Expert Team",           desc:"Professionals in photography, marketing, ops." },
-  { icon:"🏷️", title:"Grow Your Brand",       desc:"We help you build a brand that lasts."        },
-];
-
 
 // ══════════════════════════════════════════════════════════════
 // HERO CAROUSEL MEDIA — add your images & videos here
@@ -311,52 +271,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Gallery */}
-          <div style={{ background:"#fff", borderRadius:"14px", border:"1px solid #f0f0f0", padding:"20px" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"14px" }}>
-              <div style={{ fontSize:"15px", fontWeight:700, color:"#111", fontFamily:"'Playfair Display',serif" }}>Gallery — Our Work</div>
-              <Link href="/gallery" style={{ fontSize:"12px", color:BURG, fontWeight:600, textDecoration:"none" }}>View All Gallery →</Link>
-            </div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"6px" }}>
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="gal-img" style={{ aspectRatio:"1", borderRadius:"8px", background:`linear-gradient(135deg,#f0f0f0,#e5e5e5)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"24px", overflow:"hidden", transition:"transform .2s", cursor:"pointer" }}>
-                  {GALLERY_IMGS[i] ? (
-                    <img src={GALLERY_IMGS[i]} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                  ) : (
-                    <span style={{ opacity:.3 }}>🏺</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Videos */}
-          <div style={{ background:"#fff", borderRadius:"14px", border:"1px solid #f0f0f0", padding:"20px" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"14px" }}>
-              <div style={{ fontSize:"15px", fontWeight:700, color:"#111", fontFamily:"'Playfair Display',serif" }}>Videos — See It In Action</div>
-              <Link href="/training/videos" style={{ fontSize:"12px", color:BURG, fontWeight:600, textDecoration:"none" }}>View All Videos →</Link>
-            </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
-              {VIDEO_ITEMS.map((v, i) => (
-                <div key={i} style={{ display:"flex", gap:"10px", alignItems:"center", padding:"8px", borderRadius:"8px", background:"#f9f9f9", cursor:"pointer" }}
-                  onMouseEnter={e => (e.currentTarget.style.background="#fff8f8")}
-                  onMouseLeave={e => (e.currentTarget.style.background="#f9f9f9")}
-                >
-                  <div style={{ width:"72px", height:"52px", borderRadius:"6px", background:`linear-gradient(135deg,#1a1a1a,#333)`, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", position:"relative", overflow:"hidden" }}>
-                    {v.thumb && <img src={v.thumb} alt="" style={{ width:"100%", height:"100%", objectFit:"cover", position:"absolute", inset:0 }} />}
-                    <div style={{ width:"22px", height:"22px", borderRadius:"50%", background:"rgba(255,255,255,.2)", border:"1.5px solid rgba(255,255,255,.5)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"9px", color:"#fff", zIndex:1 }}>▶</div>
-                    <div style={{ position:"absolute", bottom:"3px", right:"4px", fontSize:"9px", color:"rgba(255,255,255,.8)", background:"rgba(0,0,0,.4)", padding:"1px 4px", borderRadius:"3px" }}>{v.dur}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize:"12px", fontWeight:600, color:"#111" }}>{v.title}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ══ 4-COL: DASHBOARD | TRAINING | WHY | TESTIMONIALS ═ */}
       <section ref={ref("bot")} style={{ padding:"48px 48px", background:"#fff" }}>
         <div className="four-col" style={{ maxWidth:"1280px", margin:"0 auto", display:"grid", gridTemplateColumns:"1.4fr 1fr 1fr 1fr", gap:"20px", alignItems:"start" }}>
@@ -395,40 +309,6 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Training & Learning */}
-          <div style={{ background:"#fff", borderRadius:"14px", border:"1px solid #f0f0f0", padding:"16px" }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"12px" }}>
-              <div style={{ fontSize:"14px", fontWeight:700, color:"#111", fontFamily:"'Playfair Display',serif" }}>Training & Learning</div>
-              <Link href="/training" style={{ fontSize:"11px", color:BURG, fontWeight:600, textDecoration:"none" }}>View All →</Link>
-            </div>
-            {TRAINING.map((t, i) => (
-              <div key={i} style={{ display:"flex", gap:"8px", alignItems:"center", padding:"8px 0", borderBottom:i<3?"1px solid #f5f5f5":"none" }}>
-                <div style={{ width:"36px", height:"28px", borderRadius:"5px", background:BURG, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                  <span style={{ fontSize:"9px", color:"#fff" }}>▶</span>
-                </div>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:"11px", fontWeight:600, color:"#111", lineHeight:1.3 }}>{t.title}</div>
-                  <div style={{ fontSize:"9px", color:"#aaa" }}>{t.desc}</div>
-                </div>
-                <div style={{ fontSize:"9px", color:"#aaa", flexShrink:0 }}>{t.dur}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Why Sellers Trust */}
-          <div style={{ background:"#fff", borderRadius:"14px", border:"1px solid #f0f0f0", padding:"16px" }}>
-            <div style={{ fontSize:"14px", fontWeight:700, color:"#111", marginBottom:"12px", fontFamily:"'Playfair Display',serif" }}>Why Sellers Trust Sanskriti</div>
-            {WHY.map((w, i) => (
-              <div key={i} className="why" style={{ display:"flex", gap:"10px", alignItems:"flex-start", padding:"8px", borderRadius:"8px", border:"1px solid transparent", transition:"all .2s", marginBottom:"6px" }}>
-                <div style={{ width:"28px", height:"28px", borderRadius:"7px", background:`rgba(155,0,32,.08)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"14px", flexShrink:0 }}>{w.icon}</div>
-                <div>
-                  <div style={{ fontSize:"12px", fontWeight:600, color:"#111" }}>{w.title}</div>
-                  <div style={{ fontSize:"10px", color:"#888", lineHeight:1.4 }}>{w.desc}</div>
-                </div>
-              </div>
-            ))}
           </div>
 
           {/* Testimonials */}
