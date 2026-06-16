@@ -199,49 +199,54 @@ export default function HomePage() {
             <HeroCarousel />
 
           {/* white gradient blur — left edge fade (Muchhad-style) */}
-          <div style={{ position:"absolute", left:0, top:0, bottom:0, width:"55%", borderRadius:"20px 0 0 20px", background:"linear-gradient(to right,rgba(255,255,255,.95),rgba(255,255,255,.55) 50%,transparent)", backdropFilter:"blur(5px)", WebkitBackdropFilter:"blur(5px)", pointerEvents:"none" }} />
+          <div style={{ position:"absolute", left:0, top:0, bottom:0, width:"64%", borderRadius:"20px 0 0 20px", background:"linear-gradient(to right,rgba(255,255,255,.95),rgba(255,255,255,.6) 50%,transparent)", backdropFilter:"blur(5px)", WebkitBackdropFilter:"blur(5px)", pointerEvents:"none" }} />
 
-          {/* Gallery sneak peek — bottom left */}
+          {/* two glass sneak-peek cards stacked on the left blur */}
+          <div style={{ position:"absolute", left:"18px", top:0, bottom:0, width:"56%", display:"flex", flexDirection:"column", justifyContent:"center", gap:"12px" }}>
+
+          {/* Gallery sneak peek */}
           <Link href="/gallery"
             onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 16px 36px rgba(155,0,32,.18)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 10px 26px rgba(0,0,0,.13)"; }}
-            style={{ position:"absolute", left:"14px", bottom:"14px", width:"45%", textDecoration:"none", background:"rgba(255,255,255,.66)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"14px", boxShadow:"0 10px 26px rgba(0,0,0,.13)", padding:"9px 10px", transition:"transform .2s, box-shadow .2s" }}>
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"8px" }}>
-              <div style={{ display:"flex", alignItems:"center", gap:"7px" }}>
-                <span style={{ width:"22px", height:"22px", borderRadius:"7px", background:"rgba(155,0,32,.10)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"12px" }}>🏺</span>
-                <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"14px", fontWeight:700, color:"#1d1d1d" }}>Gallery</span>
+            onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,.14)"; }}
+            style={{ display:"block", width:"100%", textDecoration:"none", background:"rgba(255,255,255,.62)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"16px", boxShadow:"0 12px 30px rgba(0,0,0,.14)", padding:"12px 13px", transition:"transform .2s, box-shadow .2s" }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"10px" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                <span style={{ width:"26px", height:"26px", borderRadius:"8px", background:"rgba(155,0,32,.10)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"14px" }}>🏺</span>
+                <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"16px", fontWeight:700, color:"#1d1d1d" }}>Gallery</span>
               </div>
-              <span style={{ fontSize:"9px", fontWeight:700, color:BURG, background:"rgba(155,0,32,.08)", border:`1px solid rgba(155,0,32,.20)`, padding:"2px 7px", borderRadius:"99px", whiteSpace:"nowrap" }}>1L+ products</span>
+              <span style={{ fontSize:"10px", fontWeight:700, color:BURG, background:"rgba(155,0,32,.08)", border:`1px solid rgba(155,0,32,.20)`, padding:"3px 8px", borderRadius:"99px", whiteSpace:"nowrap" }}>1,00,000+ products</span>
             </div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"6px", marginBottom:"8px" }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"7px", marginBottom:"10px" }}>
               {GALLERY_PEEK.map((src,i) => (
-                <div key={i} style={{ position:"relative", aspectRatio:"1", borderRadius:"8px", overflow:"hidden", background:"rgba(155,0,32,.08)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                  <span style={{ fontSize:"15px", opacity:.35 }}>🏺</span>
+                <div key={i} style={{ position:"relative", aspectRatio:"1", borderRadius:"9px", overflow:"hidden", background:"rgba(155,0,32,.08)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <span style={{ fontSize:"18px", opacity:.35 }}>🏺</span>
                   <img src={src} alt="" onError={e => { e.currentTarget.style.display="none"; }} style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover" }} />
                 </div>
               ))}
             </div>
-            <div style={{ display:"flex", alignItems:"center", gap:"5px", fontSize:"11px", fontWeight:600, color:BURG }}>Explore the gallery →</div>
+            <div style={{ display:"flex", alignItems:"center", gap:"6px", fontSize:"12px", fontWeight:600, color:BURG }}>Explore the gallery →</div>
           </Link>
 
-          {/* Training videos sneak peek — bottom right */}
+          {/* Training videos sneak peek */}
           <Link href="/training"
             onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 16px 36px rgba(155,0,32,.18)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 10px 26px rgba(0,0,0,.13)"; }}
-            style={{ position:"absolute", right:"14px", bottom:"14px", width:"45%", textDecoration:"none", background:"rgba(255,255,255,.66)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"14px", boxShadow:"0 10px 26px rgba(0,0,0,.13)", padding:"9px 10px", transition:"transform .2s, box-shadow .2s" }}>
-            <div style={{ display:"flex", alignItems:"center", gap:"7px", marginBottom:"8px" }}>
-              <span style={{ width:"22px", height:"22px", borderRadius:"7px", background:"rgba(155,0,32,.10)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"11px" }}>🎬</span>
-              <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"14px", fontWeight:700, color:"#1d1d1d" }}>Training Videos</span>
+            onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,.14)"; }}
+            style={{ display:"block", width:"100%", textDecoration:"none", background:"rgba(255,255,255,.62)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)", border:`1.5px solid ${BURG}`, borderRadius:"16px", boxShadow:"0 12px 30px rgba(0,0,0,.14)", padding:"12px 13px", transition:"transform .2s, box-shadow .2s" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"10px" }}>
+              <span style={{ width:"26px", height:"26px", borderRadius:"8px", background:"rgba(155,0,32,.10)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"13px" }}>🎬</span>
+              <span style={{ fontFamily:"'Playfair Display',serif", fontSize:"16px", fontWeight:700, color:"#1d1d1d" }}>Training Videos</span>
             </div>
-            <div style={{ position:"relative", aspectRatio:"2/1", borderRadius:"9px", overflow:"hidden", background:"#2a1418", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"8px" }}>
+            <div style={{ position:"relative", aspectRatio:"16/9", borderRadius:"10px", overflow:"hidden", background:"#2a1418", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"10px" }}>
               <img src={TRAINING_PEEK} alt="" onError={e => { e.currentTarget.style.display="none"; }} style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:.9 }} />
-              <span style={{ position:"absolute", width:"56px", height:"56px", borderRadius:"50%", background:"rgba(155,0,32,.4)", filter:"blur(12px)" }} />
-              <span style={{ position:"relative", width:"32px", height:"32px", borderRadius:"50%", background:BURG, display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:"12px", boxShadow:"0 6px 16px rgba(155,0,32,.5)" }}>▶</span>
-              <span style={{ position:"absolute", left:"7px", bottom:"6px", fontSize:"8px", color:"rgba(255,255,255,.85)", letterSpacing:".04em" }}>EP 01 · Amazon Selling 101</span>
+              <span style={{ position:"absolute", width:"70px", height:"70px", borderRadius:"50%", background:"rgba(155,0,32,.4)", filter:"blur(14px)" }} />
+              <span style={{ position:"relative", width:"38px", height:"38px", borderRadius:"50%", background:BURG, display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:"14px", boxShadow:"0 6px 16px rgba(155,0,32,.5)" }}>▶</span>
+              <span style={{ position:"absolute", left:"8px", bottom:"7px", fontSize:"9px", color:"rgba(255,255,255,.85)", letterSpacing:".04em" }}>EP 01 · Amazon Selling 101</span>
             </div>
-            <div style={{ fontSize:"10px", color:"#6b6258", marginBottom:"7px", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>Expert courses on Amazon, branding &amp; ops.</div>
-            <div style={{ display:"flex", alignItems:"center", gap:"5px", fontSize:"11px", fontWeight:600, color:BURG }}>Watch &amp; learn →</div>
+            <div style={{ fontSize:"11px", color:"#6b6258", marginBottom:"8px", lineHeight:1.5 }}>Expert courses on Amazon, branding &amp; operations.</div>
+            <div style={{ display:"flex", alignItems:"center", gap:"6px", fontSize:"12px", fontWeight:600, color:BURG }}>Watch &amp; learn →</div>
           </Link>
+
+          </div>
           </div>
         </div>
       </section>
