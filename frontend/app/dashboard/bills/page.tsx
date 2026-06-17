@@ -347,9 +347,9 @@ export default function BillsPage() {
       {/* Bills table */}
       <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "16px", overflow: "hidden", opacity: tableLoading ? .6 : 1, transition: "opacity .25s" }}>
 
-        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr 100px 110px 100px 130px", padding: "10px 18px", background: `linear-gradient(135deg, #1A0006, ${BURG_DARK})` }}>
+        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr 100px 110px 100px 130px", padding: "10px 18px", background: "#fff", border: `1.5px solid ${BURG}`, borderRadius: "10px 10px 0 0" }}>
           {["Invoice #","Buyer","Amount","GST Type","Payment","Actions"].map(h => (
-            <div key={h} style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,.75)", letterSpacing: ".08em", textTransform: "uppercase" }}>{h}</div>
+            <div key={h} style={{ fontSize: "10px", fontWeight: 700, color: BURG, letterSpacing: ".08em", textTransform: "uppercase" }}>{h}</div>
           ))}
         </div>
 

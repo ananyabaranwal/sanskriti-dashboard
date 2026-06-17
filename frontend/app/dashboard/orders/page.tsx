@@ -334,10 +334,10 @@ export default function OrdersPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px", marginBottom: "20px" }}>
         {loading ? Array(5).fill(0).map((_, i) => <div key={i} className="skeleton" style={{ height: "90px", borderRadius: "12px" }} />) : (
           <>
-            <div style={{ background: `linear-gradient(135deg, #1A0006, ${BURG_DARK})`, borderRadius: "14px", padding: "16px 18px" }}>
-              <div style={{ fontSize: "10px", color: "rgba(255,255,255,.55)", letterSpacing: ".08em", marginBottom: "8px" }}>REVENUE</div>
-              <div style={{ fontSize: "20px", fontWeight: 700, color: "#fff", fontFamily: "Georgia, serif" }}>₹{totalRevenue.toLocaleString("en-IN")}</div>
-              <div style={{ fontSize: "11px", color: "rgba(255,255,255,.45)", marginTop: "3px" }}>All time</div>
+            <div style={{ background: "rgba(255,255,255,.7)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", border: `1.5px solid ${BURG}`, borderRadius: "14px", padding: "16px 18px", boxShadow: "0 4px 16px rgba(155,0,32,.06)" }}>
+              <div style={{ fontSize: "10px", color: BURG, opacity: .75, letterSpacing: ".08em", marginBottom: "8px" }}>REVENUE</div>
+              <div style={{ fontSize: "20px", fontWeight: 700, color: "#1F2937", fontFamily: "Georgia, serif" }}>₹{totalRevenue.toLocaleString("en-IN")}</div>
+              <div style={{ fontSize: "11px", color: "#6B7280", marginTop: "3px" }}>All time</div>
             </div>
             {[
               { label: "Pending",   s: "PENDING",   icon: "⏳" },
@@ -377,9 +377,9 @@ export default function OrdersPage() {
       {/* Orders table */}
       <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "16px", overflow: "hidden", opacity: tableLoading ? .6 : 1, transition: "opacity .25s" }}>
 
-        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr 100px 90px 110px 72px", padding: "10px 18px", background: `linear-gradient(135deg, #1A0006, ${BURG_DARK})`, borderBottom: "1px solid #E5E7EB" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "150px 1fr 100px 90px 110px 72px", padding: "10px 18px", background: "#fff", border: `1.5px solid ${BURG}`, borderRadius: "10px 10px 0 0" }}>
           {["Order #","Buyer","Items","Total","Status",""].map(h => (
-            <div key={h} style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,.75)", letterSpacing: ".08em", textTransform: "uppercase" }}>{h}</div>
+            <div key={h} style={{ fontSize: "10px", fontWeight: 700, color: BURG, letterSpacing: ".08em", textTransform: "uppercase" }}>{h}</div>
           ))}
         </div>
 

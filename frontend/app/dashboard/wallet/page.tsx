@@ -352,44 +352,44 @@ export default function WalletPage() {
         <h1 style={{ fontSize: "26px", fontFamily: "Georgia, serif", color: "#1F2937", fontWeight: 400 }}>Wallet & Payments</h1>
       </div>
 
-      {/* ── Dark balance card ── */}
-      <div style={{ background: `linear-gradient(145deg, #1A0006 0%, #5C0014 45%, ${BURG} 100%)`, borderRadius: "20px", padding: "30px 34px", marginBottom: "20px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "200px", height: "200px", borderRadius: "50%", border: "1px solid rgba(255,255,255,.06)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "-40px", left: "-40px", width: "150px", height: "150px", borderRadius: "50%", border: "1px solid rgba(255,255,255,.05)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
+      {/* ── Balance card (white glass, deep red outline) ── */}
+      <div style={{ background: "rgba(255,255,255,.72)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)", border: `1.5px solid ${BURG}`, borderRadius: "20px", padding: "30px 34px", marginBottom: "20px", position: "relative", overflow: "hidden", boxShadow: "0 6px 24px rgba(155,0,32,.08)" }}>
+        <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "200px", height: "200px", borderRadius: "50%", border: "1px solid rgba(155,0,32,.08)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "-40px", left: "-40px", width: "150px", height: "150px", borderRadius: "50%", border: "1px solid rgba(155,0,32,.06)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(155,0,32,.05) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
 
         <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "24px" }}>
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,.55)", letterSpacing: ".18em", textTransform: "uppercase", marginBottom: "12px" }}>Available Balance</div>
+            <div style={{ fontSize: "10px", fontWeight: 700, color: BURG, opacity: .75, letterSpacing: ".18em", textTransform: "uppercase", marginBottom: "12px" }}>Available Balance</div>
 
             {loading ? (
               <div className="skeleton" style={{ width: "200px", height: "60px", borderRadius: "8px", marginBottom: "16px" }} />
             ) : (
               <div style={{ marginBottom: "16px" }}>
-                <div style={{ fontSize: "clamp(38px, 6vw, 58px)", fontWeight: 700, color: "#fff", fontFamily: "Georgia, serif", lineHeight: 1 }}>
+                <div style={{ fontSize: "clamp(38px, 6vw, 58px)", fontWeight: 700, color: "#1F2937", fontFamily: "Georgia, serif", lineHeight: 1 }}>
                   ₹{balance.toLocaleString("en-IN")}
                 </div>
-                <div style={{ fontSize: "13px", color: "rgba(255,255,255,.5)", marginTop: "6px" }}>Indian Rupee · INR</div>
+                <div style={{ fontSize: "13px", color: "#6B7280", marginTop: "6px" }}>Indian Rupee · INR</div>
               </div>
             )}
 
             <div style={{ display: "flex", gap: "20px" }}>
-              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(74,222,128,.1)", border: "1px solid rgba(74,222,128,.2)" }}>
-                <div style={{ fontSize: "10px", color: "rgba(74,222,128,.7)", letterSpacing: ".08em", marginBottom: "4px" }}>CREDITED</div>
-                <div style={{ fontSize: "17px", fontWeight: 700, color: "#4ade80", fontFamily: "Georgia, serif" }}>+₹{totalCredit.toLocaleString("en-IN")}</div>
+              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(16,185,129,.08)", border: "1px solid rgba(16,185,129,.25)" }}>
+                <div style={{ fontSize: "10px", color: "#15803d", letterSpacing: ".08em", marginBottom: "4px" }}>CREDITED</div>
+                <div style={{ fontSize: "17px", fontWeight: 700, color: "#15803d", fontFamily: "Georgia, serif" }}>+₹{totalCredit.toLocaleString("en-IN")}</div>
               </div>
-              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.15)" }}>
-                <div style={{ fontSize: "10px", color: "rgba(255,255,255,.55)", letterSpacing: ".08em", marginBottom: "4px" }}>DEBITED</div>
-                <div style={{ fontSize: "17px", fontWeight: 700, color: "#fff", fontFamily: "Georgia, serif" }}>-₹{totalDebit.toLocaleString("en-IN")}</div>
+              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(155,0,32,.05)", border: "1px solid rgba(155,0,32,.18)" }}>
+                <div style={{ fontSize: "10px", color: BURG, opacity: .75, letterSpacing: ".08em", marginBottom: "4px" }}>DEBITED</div>
+                <div style={{ fontSize: "17px", fontWeight: 700, color: "#1F2937", fontFamily: "Georgia, serif" }}>-₹{totalDebit.toLocaleString("en-IN")}</div>
               </div>
             </div>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", justifyContent: "center" }}>
-            <button onClick={() => setShowTopUp(true)} style={{ padding: "13px 30px", borderRadius: "10px", background: "#fff", color: BURG, border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 6px 20px rgba(0,0,0,.25)", letterSpacing: ".02em", whiteSpace: "nowrap" }}>
+            <button onClick={() => setShowTopUp(true)} style={{ padding: "13px 30px", borderRadius: "10px", background: BURG, color: "#fff", border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 6px 20px rgba(155,0,32,.22)", letterSpacing: ".02em", whiteSpace: "nowrap" }}>
               + Add Money
             </button>
-            <button onClick={() => setShowPayout(true)} style={{ padding: "11px 30px", borderRadius: "10px", border: "1.5px solid rgba(255,255,255,.3)", color: "#fff", background: "rgba(255,255,255,.06)", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", letterSpacing: ".02em", whiteSpace: "nowrap", transition: "all .2s" }}>
+            <button onClick={() => setShowPayout(true)} style={{ padding: "11px 30px", borderRadius: "10px", border: `1.5px solid ${BURG}`, color: BURG, background: "transparent", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", letterSpacing: ".02em", whiteSpace: "nowrap", transition: "all .2s" }}>
               Withdraw
             </button>
           </div>

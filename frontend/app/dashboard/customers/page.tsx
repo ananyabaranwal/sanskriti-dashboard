@@ -299,9 +299,9 @@ export default function CustomersPage() {
 
         {/* Table */}
         <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "16px", overflow: "hidden" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 90px 120px 120px 40px", padding: "12px 22px", background: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 90px 120px 120px 40px", padding: "12px 22px", background: "#fff", border: `1.5px solid ${BURG}`, borderRadius: "10px 10px 0 0" }}>
             {["Name", "Phone", "Orders", "Revenue", "Last Order", ""].map(h => (
-              <div key={h} style={{ fontSize: "11px", fontWeight: 600, color: "#6B7280", letterSpacing: ".05em", textTransform: "uppercase" }}>{h}</div>
+              <div key={h} style={{ fontSize: "11px", fontWeight: 700, color: BURG, letterSpacing: ".05em", textTransform: "uppercase" }}>{h}</div>
             ))}
           </div>
 
