@@ -1,8 +1,14 @@
 "use client";
 
+// ── DESTINATION: frontend/app/dashboard/wallet/page.tsx
+// (this comment is just a label — safe to delete)
+
 import { useState, useEffect, useCallback } from "react";
 import api from "@/lib/api";
 import DashPageWrapper from "../DashPageWrapper";
+
+const BURG      = "#9B0020";
+const BURG_DARK = "#7A0018";
 
 type Transaction = {
   _id: string;
@@ -61,7 +67,7 @@ function Toast({ msg, type, onClose }: { msg: string; type: "success" | "error";
 // ── Skeleton row ──────────────────────────────────────────────
 function SkeletonRow() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "14px", padding: "16px 22px", borderBottom: "1px solid #F5EDE0" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "14px", padding: "16px 22px", borderBottom: "1px solid #F3F4F6" }}>
       <div className="skeleton" style={{ width: "40px", height: "40px", borderRadius: "10px", flexShrink: 0 }} />
       <div style={{ flex: 1 }}>
         <div className="skeleton" style={{ width: "60%", height: "14px", borderRadius: "4px", marginBottom: "6px" }} />
@@ -110,19 +116,19 @@ function TopUpModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (a
   ];
 
   return (
-    <div onClick={(e) => { if (e.target === e.currentTarget && step !== "processing") onClose(); }} style={{ position: "fixed", inset: 0, background: "rgba(44,24,16,.78)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "20px", backdropFilter: "blur(6px)" }}>
-      <div style={{ background: "#FFFDF9", borderRadius: "22px", width: "100%", maxWidth: "460px", overflow: "hidden", boxShadow: "0 28px 72px rgba(44,24,16,.45)", animation: "scaleIn .3s ease" }}>
+    <div onClick={(e) => { if (e.target === e.currentTarget && step !== "processing") onClose(); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "20px", backdropFilter: "blur(6px)" }}>
+      <div style={{ background: "#fff", borderRadius: "22px", width: "100%", maxWidth: "460px", overflow: "hidden", boxShadow: "0 28px 72px rgba(0,0,0,.35)", animation: "scaleIn .3s ease" }}>
 
         {/* Dark header */}
-        <div style={{ background: "linear-gradient(135deg, #1A0F0A, #2C1810, #3D2B1F)", padding: "22px 28px 20px", position: "relative" }}>
-          <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(201,168,76,.04) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
+        <div style={{ background: `linear-gradient(135deg, #1A0006, #5C0014, ${BURG_DARK})`, padding: "22px 28px 20px", position: "relative" }}>
+          <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
           <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <h2 style={{ fontSize: "20px", fontFamily: "Georgia, serif", color: "#F5E6C8", fontWeight: 400, marginBottom: "3px" }}>Add Money to Wallet</h2>
-              <p style={{ fontSize: "12px", color: "rgba(245,230,200,.5)" }}>Secured · Credited instantly</p>
+              <h2 style={{ fontSize: "20px", fontFamily: "Georgia, serif", color: "#fff", fontWeight: 400, marginBottom: "3px" }}>Add Money to Wallet</h2>
+              <p style={{ fontSize: "12px", color: "rgba(255,255,255,.6)" }}>Secured · Credited instantly</p>
             </div>
             {step !== "processing" && (
-              <button onClick={onClose} style={{ width: "30px", height: "30px", borderRadius: "50%", background: "rgba(255,255,255,.08)", border: "1px solid rgba(201,168,76,.2)", color: "#C9A84C", fontSize: "17px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "inherit" }}>×</button>
+              <button onClick={onClose} style={{ width: "30px", height: "30px", borderRadius: "50%", background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.2)", color: "#fff", fontSize: "17px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "inherit" }}>×</button>
             )}
           </div>
         </div>
@@ -130,50 +136,50 @@ function TopUpModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (a
         {/* Processing */}
         {step === "processing" && (
           <div style={{ padding: "52px 28px", textAlign: "center" }}>
-            <div style={{ width: "56px", height: "56px", borderRadius: "50%", border: "3px solid #E8D5A3", borderTopColor: "#C9A84C", animation: "spin .8s linear infinite", margin: "0 auto 20px" }} />
-            <h3 style={{ fontSize: "18px", fontFamily: "Georgia, serif", color: "#2C1810", marginBottom: "8px" }}>Processing Payment</h3>
-            <p style={{ fontSize: "13px", color: "#A08060" }}>Please wait — do not close this window</p>
+            <div style={{ width: "56px", height: "56px", borderRadius: "50%", border: "3px solid #E5E7EB", borderTopColor: BURG, animation: "spin .8s linear infinite", margin: "0 auto 20px" }} />
+            <h3 style={{ fontSize: "18px", fontFamily: "Georgia, serif", color: "#1F2937", marginBottom: "8px" }}>Processing Payment</h3>
+            <p style={{ fontSize: "13px", color: "#6B7280" }}>Please wait — do not close this window</p>
           </div>
         )}
 
         {/* Success */}
         {step === "success" && (
           <div style={{ padding: "52px 28px", textAlign: "center" }}>
-            <div style={{ width: "66px", height: "66px", borderRadius: "50%", background: "linear-gradient(135deg, #C9A84C, #8B6914)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "28px", fontWeight: 700, color: "#2C1810", boxShadow: "0 8px 24px rgba(201,168,76,.35)" }}>✓</div>
-            <h3 style={{ fontSize: "22px", fontFamily: "Georgia, serif", color: "#2C1810", marginBottom: "8px" }}>₹{Number(amount).toLocaleString("en-IN")} Added!</h3>
-            <p style={{ fontSize: "13px", color: "#A08060" }}>Your wallet balance has been updated</p>
+            <div style={{ width: "66px", height: "66px", borderRadius: "50%", background: `linear-gradient(135deg, ${BURG}, ${BURG_DARK})`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "28px", fontWeight: 700, color: "#fff", boxShadow: "0 8px 24px rgba(155,0,32,.35)" }}>✓</div>
+            <h3 style={{ fontSize: "22px", fontFamily: "Georgia, serif", color: "#1F2937", marginBottom: "8px" }}>₹{Number(amount).toLocaleString("en-IN")} Added!</h3>
+            <p style={{ fontSize: "13px", color: "#6B7280" }}>Your wallet balance has been updated</p>
           </div>
         )}
 
         {/* Select */}
         {step === "select" && (
           <div style={{ padding: "24px 28px" }}>
-            <p style={{ fontSize: "11px", fontWeight: 700, color: "#6B4F12", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "8px" }}>Quick Amount</p>
+            <p style={{ fontSize: "11px", fontWeight: 700, color: "#6B7280", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "8px" }}>Quick Amount</p>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "18px" }}>
               {presets.map(p => (
-                <button key={p} onClick={() => setAmount(String(p))} style={{ padding: "7px 14px", borderRadius: "8px", border: `1.5px solid ${amount === String(p) ? "#C9A84C" : "#E8D5A3"}`, background: amount === String(p) ? "linear-gradient(135deg, #C9A84C, #8B6914)" : "transparent", color: amount === String(p) ? "#2C1810" : "#6B4F12", fontSize: "13px", fontWeight: amount === String(p) ? 700 : 500, cursor: "pointer", fontFamily: "inherit", transition: "all .15s" }}>
+                <button key={p} onClick={() => setAmount(String(p))} style={{ padding: "7px 14px", borderRadius: "8px", border: `1.5px solid ${amount === String(p) ? BURG : "#E5E7EB"}`, background: amount === String(p) ? `linear-gradient(135deg, ${BURG}, ${BURG_DARK})` : "transparent", color: amount === String(p) ? "#fff" : "#374151", fontSize: "13px", fontWeight: amount === String(p) ? 700 : 500, cursor: "pointer", fontFamily: "inherit", transition: "all .15s" }}>
                   ₹{p.toLocaleString("en-IN")}
                 </button>
               ))}
             </div>
 
-            <p style={{ fontSize: "11px", fontWeight: 700, color: "#6B4F12", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "6px" }}>Custom Amount</p>
+            <p style={{ fontSize: "11px", fontWeight: 700, color: "#6B7280", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "6px" }}>Custom Amount</p>
             <div style={{ position: "relative", marginBottom: "18px" }}>
-              <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontSize: "16px", fontWeight: 700, color: "#8B6914" }}>₹</span>
-              <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Enter amount" min={10} max={100000} style={{ width: "100%", padding: "13px 14px 13px 34px", borderRadius: "9px", border: "1.5px solid #E8D5A3", fontSize: "18px", fontWeight: 700, color: "#2C1810", background: "#FBF7F0", outline: "none", fontFamily: "inherit" }} />
+              <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontSize: "16px", fontWeight: 700, color: BURG }}>₹</span>
+              <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Enter amount" min={10} max={100000} style={{ width: "100%", padding: "13px 14px 13px 34px", borderRadius: "9px", border: "1.5px solid #E5E7EB", fontSize: "18px", fontWeight: 700, color: "#1F2937", background: "#F9FAFB", outline: "none", fontFamily: "inherit" }} />
             </div>
 
-            <p style={{ fontSize: "11px", fontWeight: 700, color: "#6B4F12", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "8px" }}>Payment Gateway</p>
+            <p style={{ fontSize: "11px", fontWeight: 700, color: "#6B7280", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "8px" }}>Payment Gateway</p>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "20px" }}>
               {gateways.map(g => (
-                <button key={g.id} onClick={() => setGateway(g.id)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "11px 14px", borderRadius: "10px", border: `1.5px solid ${gateway === g.id ? "#C9A84C" : "#E8D5A3"}`, background: gateway === g.id ? "rgba(201,168,76,.06)" : "transparent", cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all .15s" }}>
+                <button key={g.id} onClick={() => setGateway(g.id)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "11px 14px", borderRadius: "10px", border: `1.5px solid ${gateway === g.id ? BURG : "#E5E7EB"}`, background: gateway === g.id ? "rgba(155,0,32,.05)" : "transparent", cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all .15s" }}>
                   <span style={{ fontSize: "20px" }}>{g.logo}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: "14px", fontWeight: gateway === g.id ? 700 : 500, color: gateway === g.id ? "#8B6914" : "#2C1810" }}>{g.name}</div>
-                    <div style={{ fontSize: "11px", color: "#A08060" }}>{g.desc}</div>
+                    <div style={{ fontSize: "14px", fontWeight: gateway === g.id ? 700 : 500, color: gateway === g.id ? BURG : "#1F2937" }}>{g.name}</div>
+                    <div style={{ fontSize: "11px", color: "#6B7280" }}>{g.desc}</div>
                   </div>
-                  <div style={{ width: "18px", height: "18px", borderRadius: "50%", border: `2px solid ${gateway === g.id ? "#C9A84C" : "#E8D5A3"}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {gateway === g.id && <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#C9A84C" }} />}
+                  <div style={{ width: "18px", height: "18px", borderRadius: "50%", border: `2px solid ${gateway === g.id ? BURG : "#E5E7EB"}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    {gateway === g.id && <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: BURG }} />}
                   </div>
                 </button>
               ))}
@@ -181,10 +187,10 @@ function TopUpModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (a
 
             {error && <div style={{ padding: "10px 14px", borderRadius: "8px", background: "#FEF2F2", border: "1px solid #FECACA", color: "#dc2626", fontSize: "13px", marginBottom: "14px" }}>⚠️ {error}</div>}
 
-            <button onClick={handlePay} disabled={!amount || Number(amount) < 10} style={{ width: "100%", padding: "14px", borderRadius: "10px", background: !amount || Number(amount) < 10 ? "#E8D5A3" : "linear-gradient(135deg, #C9A84C, #8B6914)", color: !amount || Number(amount) < 10 ? "#A08060" : "#2C1810", border: "none", fontSize: "15px", fontWeight: 700, cursor: !amount || Number(amount) < 10 ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em", boxShadow: !amount || Number(amount) < 10 ? "none" : "0 6px 20px rgba(201,168,76,.3)", transition: "all .2s" }}>
+            <button onClick={handlePay} disabled={!amount || Number(amount) < 10} style={{ width: "100%", padding: "14px", borderRadius: "10px", background: !amount || Number(amount) < 10 ? "#E5E7EB" : `linear-gradient(135deg, ${BURG}, ${BURG_DARK})`, color: !amount || Number(amount) < 10 ? "#9CA3AF" : "#fff", border: "none", fontSize: "15px", fontWeight: 700, cursor: !amount || Number(amount) < 10 ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em", boxShadow: !amount || Number(amount) < 10 ? "none" : "0 6px 20px rgba(155,0,32,.3)", transition: "all .2s" }}>
               {amount && Number(amount) >= 10 ? `Pay ₹${Number(amount).toLocaleString("en-IN")} via ${gateways.find(g => g.id === gateway)?.name}` : "Enter an amount to continue"}
             </button>
-            <p style={{ fontSize: "11px", color: "#A08060", textAlign: "center", marginTop: "10px" }}>🔒 256-bit SSL encrypted</p>
+            <p style={{ fontSize: "11px", color: "#9CA3AF", textAlign: "center", marginTop: "10px" }}>🔒 256-bit SSL encrypted</p>
           </div>
         )}
       </div>
@@ -198,8 +204,8 @@ function PayoutModal({ balance, onClose, onSuccess }: { balance: number; onClose
   const [bank, setBank] = useState({ accountHolder: "", bankName: "", accountNumber: "", ifsc: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const inp: React.CSSProperties = { width: "100%", padding: "11px 14px", borderRadius: "8px", border: "1.5px solid #E8D5A3", fontSize: "14px", color: "#2C1810", background: "#FBF7F0", outline: "none", fontFamily: "inherit" };
-  const lbl: React.CSSProperties = { fontSize: "11px", fontWeight: 700, color: "#6B4F12", letterSpacing: ".06em", textTransform: "uppercase", display: "block", marginBottom: "5px" };
+  const inp: React.CSSProperties = { width: "100%", padding: "11px 14px", borderRadius: "8px", border: "1.5px solid #E5E7EB", fontSize: "14px", color: "#1F2937", background: "#F9FAFB", outline: "none", fontFamily: "inherit" };
+  const lbl: React.CSSProperties = { fontSize: "11px", fontWeight: 700, color: "#6B7280", letterSpacing: ".06em", textTransform: "uppercase", display: "block", marginBottom: "5px" };
 
   const handleRequest = async () => {
     const amt = Number(amount);
@@ -213,29 +219,32 @@ function PayoutModal({ balance, onClose, onSuccess }: { balance: number; onClose
     try {
       await api.post("/payouts/request", { amount: amt, bankDetails: bank });
       onSuccess();
-    } catch (e: any) { setError(e.response?.data?.message || "Request failed."); }
-    finally { setLoading(false); }
+    } catch (e: any) {
+      setError(e.response?.data?.message || "Request failed. Try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div onClick={(e) => { if (e.target === e.currentTarget) onClose(); }} style={{ position: "fixed", inset: 0, background: "rgba(44,24,16,.78)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "20px", backdropFilter: "blur(6px)" }}>
-      <div style={{ background: "#FFFDF9", borderRadius: "22px", width: "100%", maxWidth: "460px", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 28px 72px rgba(44,24,16,.45)", animation: "scaleIn .3s ease" }}>
-        <div style={{ background: "linear-gradient(135deg, #1A0F0A, #2C1810)", padding: "22px 28px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div onClick={(e) => { if (e.target === e.currentTarget) onClose(); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, padding: "20px", backdropFilter: "blur(6px)" }}>
+      <div style={{ background: "#fff", borderRadius: "22px", width: "100%", maxWidth: "460px", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 28px 72px rgba(0,0,0,.35)", animation: "scaleIn .3s ease" }}>
+        <div style={{ background: `linear-gradient(135deg, #1A0006, ${BURG})`, padding: "22px 28px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <h2 style={{ fontSize: "20px", fontFamily: "Georgia, serif", color: "#F5E6C8", fontWeight: 400 }}>Withdraw Funds</h2>
-            <p style={{ fontSize: "12px", color: "rgba(245,230,200,.5)", marginTop: "2px" }}>Available: <strong style={{ color: "#C9A84C" }}>₹{balance.toLocaleString("en-IN")}</strong></p>
+            <h2 style={{ fontSize: "20px", fontFamily: "Georgia, serif", color: "#fff", fontWeight: 400 }}>Withdraw Funds</h2>
+            <p style={{ fontSize: "12px", color: "rgba(255,255,255,.6)", marginTop: "2px" }}>Available: <strong style={{ color: "#fff" }}>₹{balance.toLocaleString("en-IN")}</strong></p>
           </div>
-          <button onClick={onClose} style={{ width: "30px", height: "30px", borderRadius: "50%", background: "rgba(255,255,255,.08)", border: "none", color: "#C9A84C", fontSize: "17px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "inherit" }}>×</button>
+          <button onClick={onClose} style={{ width: "30px", height: "30px", borderRadius: "50%", background: "rgba(255,255,255,.1)", border: "none", color: "#fff", fontSize: "17px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "inherit" }}>×</button>
         </div>
         <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: "14px" }}>
           <div>
             <label style={lbl}>Withdrawal Amount *</label>
             <div style={{ position: "relative" }}>
-              <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontSize: "15px", fontWeight: 700, color: "#8B6914" }}>₹</span>
+              <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontSize: "15px", fontWeight: 700, color: BURG }}>₹</span>
               <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Min ₹100" style={{ ...inp, padding: "12px 14px 12px 32px", fontSize: "18px", fontWeight: 700 }} />
             </div>
             {amount && Number(amount) > 0 && (
-              <p style={{ fontSize: "11px", color: "#A08060", marginTop: "4px" }}>Remaining: ₹{Math.max(0, balance - Number(amount)).toLocaleString("en-IN")}</p>
+              <p style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "4px" }}>Remaining: ₹{Math.max(0, balance - Number(amount)).toLocaleString("en-IN")}</p>
             )}
           </div>
           {[
@@ -253,7 +262,7 @@ function PayoutModal({ balance, onClose, onSuccess }: { balance: number; onClose
             ⏱ Payouts are processed within 2–3 business days after admin approval.
           </div>
           {error && <div style={{ padding: "10px 14px", borderRadius: "8px", background: "#FEF2F2", border: "1px solid #FECACA", color: "#dc2626", fontSize: "13px" }}>⚠️ {error}</div>}
-          <button onClick={handleRequest} disabled={loading} style={{ width: "100%", padding: "13px", borderRadius: "10px", background: loading ? "#E8D5A3" : "linear-gradient(135deg, #C9A84C, #8B6914)", color: loading ? "#A08060" : "#2C1810", border: "none", fontSize: "15px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit" }}>
+          <button onClick={handleRequest} disabled={loading} style={{ width: "100%", padding: "13px", borderRadius: "10px", background: loading ? "#E5E7EB" : `linear-gradient(135deg, ${BURG}, ${BURG_DARK})`, color: loading ? "#9CA3AF" : "#fff", border: "none", fontSize: "15px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit" }}>
             {loading ? "Submitting..." : "Request Payout →"}
           </button>
         </div>
@@ -280,7 +289,6 @@ export default function WalletPage() {
 
   const showToast = (msg: string, type: "success" | "error" = "success") => setToast({ msg, type });
 
-  // Fetch balance + payouts (once on mount)
   const fetchBalance = useCallback(async () => {
     try {
       const [balRes, payRes] = await Promise.allSettled([
@@ -297,7 +305,6 @@ export default function WalletPage() {
     finally { setLoading(false); }
   }, []);
 
-  // Fetch transactions (called on page change)
   const fetchTx = useCallback(async (p: number, smooth = false) => {
     smooth ? setTxLoading(true) : setLoading(true);
     try {
@@ -328,7 +335,7 @@ export default function WalletPage() {
     APPROVED: { bg: "#F0FDF4", color: "#15803d", border: "#BBF7D0" },
     REJECTED: { bg: "#FEF2F2", color: "#dc2626", border: "#FECACA" },
     PAID:     { bg: "#EFF6FF", color: "#1d4ed8", border: "#BFDBFE" },
-  }[s] || { bg: "#F5E6C8", color: "#6B4F12", border: "#E8D5A3" });
+  }[s] || { bg: "#F3F4F6", color: "#374151", border: "#E5E7EB" });
 
   const grouped = groupByDate(transactions);
 
@@ -341,52 +348,48 @@ export default function WalletPage() {
 
       {/* Page header */}
       <div style={{ marginBottom: "24px" }}>
-        <p style={{ fontSize: "12px", color: "#A08060", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: "4px" }}>Manage</p>
-        <h1 style={{ fontSize: "26px", fontFamily: "Georgia, serif", color: "#2C1810", fontWeight: 400 }}>Wallet & Payments</h1>
+        <p style={{ fontSize: "12px", color: "#6B7280", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: "4px" }}>Manage</p>
+        <h1 style={{ fontSize: "26px", fontFamily: "Georgia, serif", color: "#1F2937", fontWeight: 400 }}>Wallet & Payments</h1>
       </div>
 
-      {/* ── Dark brown balance card ── */}
-      <div style={{ background: "linear-gradient(145deg, #1A0F0A 0%, #2C1810 45%, #3D2B1F 100%)", borderRadius: "20px", padding: "30px 34px", marginBottom: "20px", position: "relative", overflow: "hidden" }}>
-        {/* Decorative rings */}
-        <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "200px", height: "200px", borderRadius: "50%", border: "1px solid rgba(201,168,76,.07)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "-40px", left: "-40px", width: "150px", height: "150px", borderRadius: "50%", border: "1px solid rgba(201,168,76,.05)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(201,168,76,.03) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
+      {/* ── Dark balance card ── */}
+      <div style={{ background: `linear-gradient(145deg, #1A0006 0%, #5C0014 45%, ${BURG} 100%)`, borderRadius: "20px", padding: "30px 34px", marginBottom: "20px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "-60px", right: "-60px", width: "200px", height: "200px", borderRadius: "50%", border: "1px solid rgba(255,255,255,.06)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "-40px", left: "-40px", width: "150px", height: "150px", borderRadius: "50%", border: "1px solid rgba(255,255,255,.05)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
 
         <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "24px" }}>
-          {/* Left — balance */}
           <div>
-            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(201,168,76,.5)", letterSpacing: ".18em", textTransform: "uppercase", marginBottom: "12px" }}>Available Balance</div>
+            <div style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,.55)", letterSpacing: ".18em", textTransform: "uppercase", marginBottom: "12px" }}>Available Balance</div>
 
             {loading ? (
               <div className="skeleton" style={{ width: "200px", height: "60px", borderRadius: "8px", marginBottom: "16px" }} />
             ) : (
               <div style={{ marginBottom: "16px" }}>
-                <div style={{ fontSize: "clamp(38px, 6vw, 58px)", fontWeight: 700, color: "#C9A84C", fontFamily: "Georgia, serif", lineHeight: 1 }}>
+                <div style={{ fontSize: "clamp(38px, 6vw, 58px)", fontWeight: 700, color: "#fff", fontFamily: "Georgia, serif", lineHeight: 1 }}>
                   ₹{balance.toLocaleString("en-IN")}
                 </div>
-                <div style={{ fontSize: "13px", color: "rgba(201,168,76,.4)", marginTop: "6px" }}>Indian Rupee · INR</div>
+                <div style={{ fontSize: "13px", color: "rgba(255,255,255,.5)", marginTop: "6px" }}>Indian Rupee · INR</div>
               </div>
             )}
 
-            {/* Credit / debit summary */}
             <div style={{ display: "flex", gap: "20px" }}>
-              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(74,222,128,.08)", border: "1px solid rgba(74,222,128,.15)" }}>
-                <div style={{ fontSize: "10px", color: "rgba(74,222,128,.6)", letterSpacing: ".08em", marginBottom: "4px" }}>CREDITED</div>
+              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(74,222,128,.1)", border: "1px solid rgba(74,222,128,.2)" }}>
+                <div style={{ fontSize: "10px", color: "rgba(74,222,128,.7)", letterSpacing: ".08em", marginBottom: "4px" }}>CREDITED</div>
                 <div style={{ fontSize: "17px", fontWeight: 700, color: "#4ade80", fontFamily: "Georgia, serif" }}>+₹{totalCredit.toLocaleString("en-IN")}</div>
               </div>
-              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(248,113,113,.08)", border: "1px solid rgba(248,113,113,.15)" }}>
-                <div style={{ fontSize: "10px", color: "rgba(248,113,113,.6)", letterSpacing: ".08em", marginBottom: "4px" }}>DEBITED</div>
-                <div style={{ fontSize: "17px", fontWeight: 700, color: "#f87171", fontFamily: "Georgia, serif" }}>-₹{totalDebit.toLocaleString("en-IN")}</div>
+              <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.15)" }}>
+                <div style={{ fontSize: "10px", color: "rgba(255,255,255,.55)", letterSpacing: ".08em", marginBottom: "4px" }}>DEBITED</div>
+                <div style={{ fontSize: "17px", fontWeight: 700, color: "#fff", fontFamily: "Georgia, serif" }}>-₹{totalDebit.toLocaleString("en-IN")}</div>
               </div>
             </div>
           </div>
 
-          {/* Right — action buttons */}
           <div style={{ display: "flex", flexDirection: "column", gap: "10px", justifyContent: "center" }}>
-            <button onClick={() => setShowTopUp(true)} style={{ padding: "13px 30px", borderRadius: "10px", background: "linear-gradient(135deg, #C9A84C, #8B6914)", color: "#2C1810", border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 6px 20px rgba(201,168,76,.35)", letterSpacing: ".02em", whiteSpace: "nowrap" }}>
+            <button onClick={() => setShowTopUp(true)} style={{ padding: "13px 30px", borderRadius: "10px", background: "#fff", color: BURG, border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 6px 20px rgba(0,0,0,.25)", letterSpacing: ".02em", whiteSpace: "nowrap" }}>
               + Add Money
             </button>
-            <button onClick={() => setShowPayout(true)} style={{ padding: "11px 30px", borderRadius: "10px", border: "1.5px solid rgba(201,168,76,.28)", color: "#C9A84C", background: "rgba(201,168,76,.05)", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", letterSpacing: ".02em", whiteSpace: "nowrap", transition: "all .2s" }}>
+            <button onClick={() => setShowPayout(true)} style={{ padding: "11px 30px", borderRadius: "10px", border: "1.5px solid rgba(255,255,255,.3)", color: "#fff", background: "rgba(255,255,255,.06)", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", letterSpacing: ".02em", whiteSpace: "nowrap", transition: "all .2s" }}>
               Withdraw
             </button>
           </div>
@@ -396,23 +399,23 @@ export default function WalletPage() {
       {/* ── Summary mini-cards ── */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px", marginBottom: "24px" }}>
         {[
-          { icon: "📊", label: "Transactions",    value: String(total),                                   color: "rgba(59,130,246,.1)"   },
-          { icon: "💹", label: "Total Credited",  value: `₹${totalCredit.toLocaleString("en-IN")}`,     color: "rgba(16,185,129,.1)"   },
-          { icon: "📤", label: "Total Debited",   value: `₹${totalDebit.toLocaleString("en-IN")}`,      color: "rgba(239,68,68,.08)"   },
-          { icon: "🔄", label: "Payouts",         value: String(payouts.length),                          color: "rgba(201,168,76,.1)"   },
+          { icon: "📊", label: "Transactions",   value: String(total),                                color: "rgba(59,130,246,.1)" },
+          { icon: "💹", label: "Total Credited",  value: `₹${totalCredit.toLocaleString("en-IN")}`,    color: "rgba(16,185,129,.1)" },
+          { icon: "📤", label: "Total Debited",   value: `₹${totalDebit.toLocaleString("en-IN")}`,     color: "rgba(239,68,68,.08)" },
+          { icon: "🔄", label: "Payouts",         value: String(payouts.length),                        color: "rgba(155,0,32,.08)" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#FFFDF9", border: "1px solid #E8D5A3", borderRadius: "14px", padding: "15px 18px" }}>
+          <div key={s.label} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "14px", padding: "15px 18px" }}>
             <div style={{ width: "34px", height: "34px", borderRadius: "9px", background: s.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", marginBottom: "10px" }}>{s.icon}</div>
-            <div style={{ fontSize: "18px", fontWeight: 700, color: "#2C1810", fontFamily: "Georgia, serif", lineHeight: 1 }}>{s.value}</div>
-            <div style={{ fontSize: "11px", color: "#A08060", marginTop: "4px" }}>{s.label}</div>
+            <div style={{ fontSize: "18px", fontWeight: 700, color: "#1F2937", fontFamily: "Georgia, serif", lineHeight: 1 }}>{s.value}</div>
+            <div style={{ fontSize: "11px", color: "#6B7280", marginTop: "4px" }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* ── Tabs ── */}
-      <div style={{ display: "flex", gap: "4px", background: "#F0E8D8", padding: "4px", borderRadius: "10px", marginBottom: "16px", width: "fit-content" }}>
+      <div style={{ display: "flex", gap: "4px", background: "#F3F4F6", padding: "4px", borderRadius: "10px", marginBottom: "16px", width: "fit-content" }}>
         {(["transactions", "payouts"] as const).map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: "8px 20px", borderRadius: "7px", border: "none", background: activeTab === tab ? "#FFFDF9" : "transparent", color: activeTab === tab ? "#2C1810" : "#A08060", fontSize: "13px", fontWeight: activeTab === tab ? 600 : 400, cursor: "pointer", fontFamily: "inherit", boxShadow: activeTab === tab ? "0 1px 4px rgba(61,43,31,.1)" : "none", transition: "all .2s" }}>
+          <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: "8px 20px", borderRadius: "7px", border: "none", background: activeTab === tab ? "#fff" : "transparent", color: activeTab === tab ? "#1F2937" : "#6B7280", fontSize: "13px", fontWeight: activeTab === tab ? 600 : 400, cursor: "pointer", fontFamily: "inherit", boxShadow: activeTab === tab ? "0 1px 4px rgba(0,0,0,.1)" : "none", transition: "all .2s" }}>
             {tab === "transactions" ? "💳 Transactions" : "💸 Payouts"}
           </button>
         ))}
@@ -420,16 +423,14 @@ export default function WalletPage() {
 
       {/* ── Transaction timeline ── */}
       {activeTab === "transactions" && (
-        <div style={{ background: "#FFFDF9", border: "1px solid #E8D5A3", borderRadius: "16px", overflow: "hidden" }}>
-          {/* Table header */}
-          <div style={{ padding: "16px 22px", borderBottom: "1px solid #F0E4C0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "16px", overflow: "hidden" }}>
+          <div style={{ padding: "16px 22px", borderBottom: "1px solid #F3F4F6", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <h2 style={{ fontSize: "15px", fontWeight: 600, color: "#2C1810", fontFamily: "Georgia, serif" }}>Transaction Timeline</h2>
-              <p style={{ fontSize: "12px", color: "#A08060", marginTop: "1px" }}>{total} total · Page {page} of {totalPages}</p>
+              <h2 style={{ fontSize: "15px", fontWeight: 600, color: "#1F2937", fontFamily: "Georgia, serif" }}>Transaction Timeline</h2>
+              <p style={{ fontSize: "12px", color: "#6B7280", marginTop: "1px" }}>{total} total · Page {page} of {totalPages}</p>
             </div>
           </div>
 
-          {/* Skeleton while loading */}
           {(loading || txLoading) ? (
             <div style={{ opacity: txLoading ? .55 : 1, transition: "opacity .3s" }}>
               {[1,2,3,4,5].map(i => <SkeletonRow key={i} />)}
@@ -437,49 +438,43 @@ export default function WalletPage() {
           ) : transactions.length === 0 ? (
             <div style={{ padding: "56px", textAlign: "center" }}>
               <div style={{ fontSize: "44px", marginBottom: "14px" }}>💳</div>
-              <p style={{ fontSize: "16px", fontWeight: 500, color: "#2C1810", marginBottom: "6px" }}>No transactions yet</p>
-              <p style={{ fontSize: "13px", color: "#A08060", marginBottom: "20px" }}>Add money to your wallet to get started</p>
-              <button onClick={() => setShowTopUp(true)} style={{ padding: "10px 24px", borderRadius: "8px", background: "linear-gradient(135deg, #C9A84C, #8B6914)", color: "#2C1810", border: "none", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>+ Add Money</button>
+              <p style={{ fontSize: "16px", fontWeight: 500, color: "#1F2937", marginBottom: "6px" }}>No transactions yet</p>
+              <p style={{ fontSize: "13px", color: "#6B7280", marginBottom: "20px" }}>Add money to your wallet to get started</p>
+              <button onClick={() => setShowTopUp(true)} style={{ padding: "10px 24px", borderRadius: "8px", background: `linear-gradient(135deg, ${BURG}, ${BURG_DARK})`, color: "#fff", border: "none", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>+ Add Money</button>
             </div>
           ) : (
             <>
-              {/* Grouped by date */}
               {Object.entries(grouped).map(([dateLabel, txs]) => (
                 <div key={dateLabel}>
-                  {/* Date group header */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 22px 8px", background: "#FBF7F0", borderBottom: "1px solid #F0E4C0" }}>
-                    <span style={{ fontSize: "11px", fontWeight: 700, color: "#8B6914", letterSpacing: ".06em", textTransform: "uppercase" }}>{dateLabel}</span>
-                    <div style={{ flex: 1, height: "1px", background: "#E8D5A3" }} />
-                    <span style={{ fontSize: "11px", color: "#A08060" }}>{txs.length} transaction{txs.length > 1 ? "s" : ""}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 22px 8px", background: "#F9FAFB", borderBottom: "1px solid #F3F4F6" }}>
+                    <span style={{ fontSize: "11px", fontWeight: 700, color: BURG, letterSpacing: ".06em", textTransform: "uppercase" }}>{dateLabel}</span>
+                    <div style={{ flex: 1, height: "1px", background: "#E5E7EB" }} />
+                    <span style={{ fontSize: "11px", color: "#9CA3AF" }}>{txs.length} transaction{txs.length > 1 ? "s" : ""}</span>
                   </div>
 
-                  {/* Transactions in this group */}
                   {txs.map((tx, i) => {
                     const isCredit = tx.type === "CREDIT";
                     const icon = categoryIcons[tx.category] || (isCredit ? "⬆️" : "⬇️");
                     return (
-                      <div key={tx._id} style={{ display: "flex", alignItems: "center", gap: "14px", padding: "14px 22px", borderBottom: i < txs.length - 1 ? "1px solid #F5EDE0" : "none", transition: "background .15s" }}>
-                        {/* Icon */}
+                      <div key={tx._id} style={{ display: "flex", alignItems: "center", gap: "14px", padding: "14px 22px", borderBottom: i < txs.length - 1 ? "1px solid #F3F4F6" : "none", transition: "background .15s" }}>
                         <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: isCredit ? "rgba(16,185,129,.1)" : "rgba(239,68,68,.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", flexShrink: 0, border: `1px solid ${isCredit ? "rgba(16,185,129,.15)" : "rgba(239,68,68,.12)"}` }}>
                           {icon}
                         </div>
 
-                        {/* Description */}
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: "14px", fontWeight: 500, color: "#2C1810", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tx.description}</div>
-                          <div style={{ fontSize: "12px", color: "#A08060", marginTop: "3px", display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                          <div style={{ fontSize: "14px", fontWeight: 500, color: "#1F2937", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tx.description}</div>
+                          <div style={{ fontSize: "12px", color: "#6B7280", marginTop: "3px", display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                             <span>{new Date(tx.createdAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}</span>
-                            <span style={{ width: "3px", height: "3px", borderRadius: "50%", background: "#C4A882", flexShrink: 0 }} />
-                            <span style={{ padding: "1px 7px", borderRadius: "99px", background: "#F5E6C8", color: "#6B4F12", fontSize: "10px", fontWeight: 700 }}>{tx.category}</span>
+                            <span style={{ width: "3px", height: "3px", borderRadius: "50%", background: "#D1D5DB", flexShrink: 0 }} />
+                            <span style={{ padding: "1px 7px", borderRadius: "99px", background: "rgba(155,0,32,.08)", color: BURG, fontSize: "10px", fontWeight: 700 }}>{tx.category}</span>
                           </div>
                         </div>
 
-                        {/* Amount + balance — COLOR CODED */}
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
                           <div style={{ fontSize: "16px", fontWeight: 700, color: isCredit ? "#15803d" : "#dc2626", fontFamily: "Georgia, serif" }}>
                             {isCredit ? "+" : "-"}₹{tx.amount.toLocaleString("en-IN")}
                           </div>
-                          <div style={{ fontSize: "11px", color: "#A08060", marginTop: "2px" }}>Bal ₹{(tx.balance ?? 0).toLocaleString("en-IN")}</div>
+                          <div style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "2px" }}>Bal ₹{(tx.balance ?? 0).toLocaleString("en-IN")}</div>
                         </div>
                       </div>
                     );
@@ -487,32 +482,13 @@ export default function WalletPage() {
                 </div>
               ))}
 
-              {/* ── Pagination — 5 per page ── */}
               {totalPages > 1 && (
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", padding: "16px", borderTop: "1px solid #F0E4C0" }}>
-                  {/* First */}
-                  <button onClick={() => goToPage(1)} disabled={page === 1} style={{ padding: "5px 10px", borderRadius: "6px", border: "1px solid #E8D5A3", background: "transparent", color: page === 1 ? "#C4A882" : "#6B4F12", cursor: page === 1 ? "not-allowed" : "pointer", fontSize: "12px", fontFamily: "inherit" }}>«</button>
-                  {/* Prev */}
-                  <button onClick={() => goToPage(page - 1)} disabled={page === 1} style={{ padding: "5px 12px", borderRadius: "6px", border: "1px solid #E8D5A3", background: "transparent", color: page === 1 ? "#C4A882" : "#2C1810", cursor: page === 1 ? "not-allowed" : "pointer", fontSize: "13px", fontFamily: "inherit" }}>← Prev</button>
-
-                  {/* Page numbers */}
-                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                    let p = i + 1;
-                    if (totalPages > 5) {
-                      const start = Math.max(1, Math.min(page - 2, totalPages - 4));
-                      p = start + i;
-                    }
-                    return (
-                      <button key={p} onClick={() => goToPage(p)} style={{ width: "32px", height: "32px", borderRadius: "7px", border: `1px solid ${p === page ? "#C9A84C" : "#E8D5A3"}`, background: p === page ? "linear-gradient(135deg, #C9A84C, #8B6914)" : "transparent", color: p === page ? "#2C1810" : "#6B4F12", fontSize: "13px", fontWeight: p === page ? 700 : 400, cursor: "pointer", fontFamily: "inherit", transition: "all .15s" }}>
-                        {p}
-                      </button>
-                    );
-                  })}
-
-                  {/* Next */}
-                  <button onClick={() => goToPage(page + 1)} disabled={page === totalPages} style={{ padding: "5px 12px", borderRadius: "6px", border: "1px solid #E8D5A3", background: "transparent", color: page === totalPages ? "#C4A882" : "#2C1810", cursor: page === totalPages ? "not-allowed" : "pointer", fontSize: "13px", fontFamily: "inherit" }}>Next →</button>
-                  {/* Last */}
-                  <button onClick={() => goToPage(totalPages)} disabled={page === totalPages} style={{ padding: "5px 10px", borderRadius: "6px", border: "1px solid #E8D5A3", background: "transparent", color: page === totalPages ? "#C4A882" : "#6B4F12", cursor: page === totalPages ? "not-allowed" : "pointer", fontSize: "12px", fontFamily: "inherit" }}>»</button>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", padding: "16px", borderTop: "1px solid #F3F4F6" }}>
+                  <button onClick={() => goToPage(1)} disabled={page === 1} style={{ padding: "5px 10px", borderRadius: "6px", border: "1px solid #E5E7EB", background: "transparent", color: page === 1 ? "#D1D5DB" : "#374151", cursor: page === 1 ? "not-allowed" : "pointer", fontSize: "12px", fontFamily: "inherit" }}>«</button>
+                  <button onClick={() => goToPage(page - 1)} disabled={page === 1} style={{ padding: "5px 13px", borderRadius: "6px", border: "1px solid #E5E7EB", background: "transparent", color: page === 1 ? "#D1D5DB" : "#1F2937", cursor: page === 1 ? "not-allowed" : "pointer", fontSize: "13px", fontFamily: "inherit" }}>← Prev</button>
+                  <span style={{ fontSize: "13px", color: "#6B7280", padding: "0 8px" }}>Page {page} of {totalPages}</span>
+                  <button onClick={() => goToPage(page + 1)} disabled={page === totalPages} style={{ padding: "5px 13px", borderRadius: "6px", border: "1px solid #E5E7EB", background: "transparent", color: page === totalPages ? "#D1D5DB" : "#1F2937", cursor: page === totalPages ? "not-allowed" : "pointer", fontSize: "13px", fontFamily: "inherit" }}>Next →</button>
+                  <button onClick={() => goToPage(totalPages)} disabled={page === totalPages} style={{ padding: "5px 10px", borderRadius: "6px", border: "1px solid #E5E7EB", background: "transparent", color: page === totalPages ? "#D1D5DB" : "#374151", cursor: page === totalPages ? "not-allowed" : "pointer", fontSize: "12px", fontFamily: "inherit" }}>»</button>
                 </div>
               )}
             </>
@@ -522,13 +498,13 @@ export default function WalletPage() {
 
       {/* ── Payouts tab ── */}
       {activeTab === "payouts" && (
-        <div style={{ background: "#FFFDF9", border: "1px solid #E8D5A3", borderRadius: "16px", overflow: "hidden" }}>
-          <div style={{ padding: "16px 22px", borderBottom: "1px solid #F0E4C0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "16px", overflow: "hidden" }}>
+          <div style={{ padding: "16px 22px", borderBottom: "1px solid #F3F4F6", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <h2 style={{ fontSize: "15px", fontWeight: 600, color: "#2C1810", fontFamily: "Georgia, serif" }}>Payout Requests</h2>
-              <p style={{ fontSize: "12px", color: "#A08060", marginTop: "1px" }}>Your withdrawal history</p>
+              <h2 style={{ fontSize: "15px", fontWeight: 600, color: "#1F2937", fontFamily: "Georgia, serif" }}>Payout Requests</h2>
+              <p style={{ fontSize: "12px", color: "#6B7280", marginTop: "1px" }}>Your withdrawal history</p>
             </div>
-            <button onClick={() => setShowPayout(true)} style={{ padding: "8px 16px", borderRadius: "8px", background: "linear-gradient(135deg, #C9A84C, #8B6914)", color: "#2C1810", border: "none", fontSize: "12px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>+ Request Payout</button>
+            <button onClick={() => setShowPayout(true)} style={{ padding: "8px 16px", borderRadius: "8px", background: `linear-gradient(135deg, ${BURG}, ${BURG_DARK})`, color: "#fff", border: "none", fontSize: "12px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>+ Request Payout</button>
           </div>
           {loading ? (
             <div style={{ padding: "16px 22px" }}>
@@ -537,21 +513,21 @@ export default function WalletPage() {
           ) : payouts.length === 0 ? (
             <div style={{ padding: "52px", textAlign: "center" }}>
               <div style={{ fontSize: "44px", marginBottom: "14px" }}>💸</div>
-              <p style={{ fontSize: "16px", fontWeight: 500, color: "#2C1810", marginBottom: "6px" }}>No payout requests yet</p>
-              <p style={{ fontSize: "13px", color: "#A08060" }}>Request a withdrawal once you have balance</p>
+              <p style={{ fontSize: "16px", fontWeight: 500, color: "#1F2937", marginBottom: "6px" }}>No payout requests yet</p>
+              <p style={{ fontSize: "13px", color: "#6B7280" }}>Request a withdrawal once you have balance</p>
             </div>
           ) : (
             payouts.map((p, i) => {
               const sc = payoutStatusStyle(p.status);
               return (
-                <div key={p._id} style={{ padding: "16px 22px", borderBottom: i < payouts.length - 1 ? "1px solid #F5EDE0" : "none", display: "flex", gap: "14px", alignItems: "flex-start" }}>
-                  <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "rgba(201,168,76,.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", flexShrink: 0 }}>💸</div>
+                <div key={p._id} style={{ padding: "16px 22px", borderBottom: i < payouts.length - 1 ? "1px solid #F3F4F6" : "none", display: "flex", gap: "14px", alignItems: "flex-start" }}>
+                  <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "rgba(155,0,32,.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", flexShrink: 0 }}>💸</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
                       <div>
-                        <div style={{ fontSize: "16px", fontWeight: 700, color: "#2C1810", fontFamily: "Georgia, serif" }}>₹{p.amount.toLocaleString("en-IN")}</div>
-                        <div style={{ fontSize: "12px", color: "#A08060", marginTop: "3px" }}>{p.bankDetails?.bankName} · ****{p.bankDetails?.accountNumber?.slice(-4)}</div>
-                        <div style={{ fontSize: "11px", color: "#C4A882", marginTop: "2px" }}>{new Date(p.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
+                        <div style={{ fontSize: "16px", fontWeight: 700, color: "#1F2937", fontFamily: "Georgia, serif" }}>₹{p.amount.toLocaleString("en-IN")}</div>
+                        <div style={{ fontSize: "12px", color: "#6B7280", marginTop: "3px" }}>{p.bankDetails?.bankName} · ****{p.bankDetails?.accountNumber?.slice(-4)}</div>
+                        <div style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "2px" }}>{new Date(p.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
                       </div>
                       <span style={{ padding: "4px 10px", borderRadius: "99px", fontSize: "11px", fontWeight: 700, background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, alignSelf: "flex-start" }}>{p.status}</span>
                     </div>
@@ -572,10 +548,10 @@ export default function WalletPage() {
         @keyframes scaleIn   { from{opacity:0;transform:scale(.93)} to{opacity:1;transform:scale(1)} }
         @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
         @keyframes spin      { to{transform:rotate(360deg)} }
-        input::placeholder   { color:#C4A882; }
+        input::placeholder   { color:#9CA3AF; }
         input[type=number]::-webkit-outer-spin-button,
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
-        input:focus { border-color:#C9A84C !important; }
+        input:focus { border-color:${BURG} !important; }
       `}</style>
     </div>
     </DashPageWrapper>
