@@ -1,8 +1,5 @@
 "use client";
 
-// ── DESTINATION: frontend/app/dashboard/layout.tsx
-// (this comment is just a label — safe to delete)
-
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,17 +8,117 @@ import api from "@/lib/api";
 const BURG      = "#9B0020";
 const BURG_DARK = "#7A0018";
 
+// ── Deep-red line icons (no extra npm install needed) ─────────
+function IconDashboard({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2.5" y="2.5" width="6.5" height="6.5" rx="1.4" /><rect x="11" y="2.5" width="6.5" height="6.5" rx="1.4" />
+      <rect x="2.5" y="11" width="6.5" height="6.5" rx="1.4" /><rect x="11" y="11" width="6.5" height="6.5" rx="1.4" />
+    </svg>
+  );
+}
+function IconAnalytics({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="3" y1="17" x2="17" y2="17" />
+      <rect x="4.3" y="11" width="3" height="6" rx="0.8" fill="currentColor" stroke="none" />
+      <rect x="8.5" y="7" width="3" height="10" rx="0.8" fill="currentColor" stroke="none" />
+      <rect x="12.7" y="3" width="3" height="14" rx="0.8" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function IconWallet({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2.5" y="5.5" width="15" height="11" rx="2" />
+      <path d="M2.5 8.5h15" />
+      <circle cx="14" cy="12" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function IconOrders({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 6.5 10 3l7 3.5v7L10 17l-7-3.5z" /><path d="M3 6.5 10 10l7-3.5" /><path d="M10 10v7" />
+    </svg>
+  );
+}
+function IconCustomers({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="7.5" cy="6.5" r="2.5" /><path d="M2.5 16c0-2.8 2.2-4.5 5-4.5s5 1.7 5 4.5" />
+      <circle cx="14" cy="7" r="2" /><path d="M12.5 11.2c2.1.3 3.5 1.7 3.5 3.8" />
+    </svg>
+  );
+}
+function IconBills({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 2.5h10v14l-1.7-1.2-1.6 1.2-1.7-1.2-1.6 1.2-1.7-1.2-1.7 1.2z" />
+      <line x1="7" y1="6.5" x2="13" y2="6.5" /><line x1="7" y1="9.5" x2="13" y2="9.5" />
+    </svg>
+  );
+}
+function IconGallery({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2.5" y="3.5" width="15" height="13" rx="2" />
+      <circle cx="7" cy="8" r="1.4" fill="currentColor" stroke="none" />
+      <path d="M3.5 14.5l4-4 3 3 2.5-3 3.5 4.2" />
+    </svg>
+  );
+}
+function IconVideos({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2.5" y="5.5" width="15" height="11" rx="2" />
+      <path d="M2.5 5.5l2-3h2.3l-1.6 3" /><path d="M7.8 5.5l2-3h2.3l-1.6 3" /><path d="M13.1 5.5l2-3h1.4l-1.2 3" />
+      <path d="M8.3 9.3l4 2.4-4 2.4z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function IconProfile({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="10" cy="6.5" r="3.2" /><path d="M3.5 17c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6" />
+    </svg>
+  );
+}
+function IconSettings({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="3" y1="5" x2="17" y2="5" /><line x1="3" y1="10" x2="17" y2="10" /><line x1="3" y1="15" x2="17" y2="15" />
+      <circle cx="7" cy="5" r="1.7" fill="currentColor" stroke="none" /><circle cx="13" cy="10" r="1.7" fill="currentColor" stroke="none" /><circle cx="8" cy="15" r="1.7" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function IconAlertTriangle({ size = 15 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 3.5 17.5 16h-15z" /><line x1="10" y1="8" x2="10" y2="11.5" /><circle cx="10" cy="14" r="0.9" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function IconLogOut({ size = 15 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 3H4.5a1.5 1.5 0 0 0-1.5 1.5v11A1.5 1.5 0 0 0 4.5 17H8" />
+      <line x1="9" y1="10" x2="17" y2="10" /><path d="M13.5 6.5 17 10l-3.5 3.5" />
+    </svg>
+  );
+}
+
 const navItems = [
-  { label: "Dashboard",  href: "/dashboard",            icon: "🏛️", exact: true  },
-  { label: "Analytics",  href: "/dashboard/analytics",  icon: "📊", exact: false },
-  { label: "Wallet",     href: "/dashboard/wallet",     icon: "💰", exact: false },
-  { label: "Orders",     href: "/dashboard/orders",     icon: "📦", exact: false },
-  { label: "Customers",  href: "/dashboard/customers",  icon: "👥", exact: false },
-  { label: "Bills",      href: "/dashboard/bills",      icon: "🧾", exact: false },
-  { label: "Videos",     href: "/dashboard/videos",     icon: "🎬", exact: false },
-  { label: "Profile",    href: "/dashboard/profile",    icon: "👤", exact: false },
-  { label: "Settings",   href: "/dashboard/settings",   icon: "⚙️", exact: false },
-  { label: "Gallery",    href: "/dashboard/gallery",    icon: "🏺", exact: false },
+  { label: "Dashboard",  href: "/dashboard",            Icon: IconDashboard, exact: true  },
+  { label: "Analytics",  href: "/dashboard/analytics",  Icon: IconAnalytics, exact: false },
+  { label: "Wallet",     href: "/dashboard/wallet",     Icon: IconWallet,    exact: false },
+  { label: "Orders",     href: "/dashboard/orders",     Icon: IconOrders,    exact: false },
+  { label: "Customers",  href: "/dashboard/customers",  Icon: IconCustomers, exact: false },
+  { label: "Bills",      href: "/dashboard/bills",      Icon: IconBills,     exact: false },
+  { label: "Gallery",    href: "/dashboard/gallery",    Icon: IconGallery,   exact: false },
+  { label: "Videos",     href: "/dashboard/videos",     Icon: IconVideos,    exact: false },
+  { label: "Profile",    href: "/dashboard/profile",    Icon: IconProfile,   exact: false },
+  { label: "Settings",   href: "/dashboard/settings",   Icon: IconSettings,  exact: false },
 ];
 
 type NotifItem = {
@@ -119,21 +216,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!mounted) return null;
 
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <aside style={{ width: mobile ? "100%" : sidebarOpen ? "260px" : "72px", background: `linear-gradient(180deg, ${BURG} 0%, ${BURG_DARK} 100%)`, height: mobile ? "100%" : "100vh", display: "flex", flexDirection: "column", transition: "width .25s ease", overflow: "hidden", flexShrink: 0, boxShadow: mobile ? "none" : "2px 0 20px rgba(0,0,0,.15)", position: mobile ? "relative" : "sticky", top: 0, zIndex: mobile ? "auto" : 10 }}>
+    <aside style={{ width: mobile ? "100%" : sidebarOpen ? "260px" : "72px", background: "#FFFFFF", height: mobile ? "100%" : "100vh", display: "flex", flexDirection: "column", transition: "width .25s ease", overflow: "hidden", flexShrink: 0, borderRight: mobile ? "none" : "1px solid #E5E7EB", boxShadow: mobile ? "none" : "2px 0 16px rgba(0,0,0,.04)", position: mobile ? "relative" : "sticky", top: 0, zIndex: mobile ? "auto" : 10 }}>
 
       {/* Logo */}
-      <div style={{ padding: "20px 16px 16px", borderBottom: "1px solid rgba(255,255,255,.12)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", minHeight: "72px" }}>
+      <div style={{ padding: "20px 16px 16px", borderBottom: "1px solid #F3F4F6", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", minHeight: "72px" }}>
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "12px", overflow: "hidden" }}>
-          <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: BURG, fontSize: "17px", fontWeight: "700", fontFamily: "Georgia, serif", flexShrink: 0, boxShadow: "0 4px 12px rgba(0,0,0,.2)" }}>S</div>
+          <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: BURG, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "17px", fontWeight: "700", fontFamily: "Georgia, serif", flexShrink: 0, boxShadow: "0 4px 12px rgba(155,0,32,.25)" }}>S</div>
           {(sidebarOpen || mobile) && (
             <div style={{ overflow: "hidden" }}>
-              <div style={{ color: "#fff", fontSize: "14px", fontWeight: "700", fontFamily: "Georgia, serif", letterSpacing: ".06em", whiteSpace: "nowrap" }}>SANSKRITI</div>
-              <div style={{ color: "rgba(255,255,255,.6)", fontSize: "9px", letterSpacing: ".18em", marginTop: "1px" }}>THE ANTIQUE</div>
+              <div style={{ color: BURG, fontSize: "14px", fontWeight: "700", fontFamily: "Georgia, serif", letterSpacing: ".06em", whiteSpace: "nowrap" }}>SANSKRITI</div>
+              <div style={{ color: "#9CA3AF", fontSize: "9px", letterSpacing: ".18em", marginTop: "1px" }}>THE ANTIQUE</div>
             </div>
           )}
         </Link>
         {!mobile && (
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.18)", borderRadius: "6px", width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#fff", fontSize: "11px", flexShrink: 0 }}>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: "6px", width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280", fontSize: "11px", flexShrink: 0 }}>
             {sidebarOpen ? "◀" : "▶"}
           </button>
         )}
@@ -141,14 +238,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Nav */}
       <nav style={{ flex: 1, padding: "12px 8px", overflowY: "auto", overflowX: "hidden" }}>
-        {(sidebarOpen || mobile) && <div style={{ fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,.45)", letterSpacing: ".12em", textTransform: "uppercase", padding: "8px 10px 6px", marginBottom: "4px" }}>Navigation</div>}
+        {(sidebarOpen || mobile) && <div style={{ fontSize: "10px", fontWeight: 600, color: "#9CA3AF", letterSpacing: ".12em", textTransform: "uppercase", padding: "8px 10px 6px", marginBottom: "4px" }}>Navigation</div>}
         {navItems.map((item) => {
           const active = isActive(item);
           return (
-            <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} title={!sidebarOpen && !mobile ? item.label : undefined} style={{ display: "flex", alignItems: "center", gap: "12px", padding: sidebarOpen || mobile ? "11px 12px" : "11px", justifyContent: sidebarOpen || mobile ? "flex-start" : "center", borderRadius: "10px", textDecoration: "none", marginBottom: "3px", background: active ? "rgba(255,255,255,.16)" : "transparent", borderLeft: active ? "3px solid #fff" : "3px solid transparent", transition: "all .18s", overflow: "hidden" }}>
-              <span style={{ fontSize: "18px", flexShrink: 0, filter: active ? "none" : "brightness(.85)" }}>{item.icon}</span>
-              {(sidebarOpen || mobile) && <span style={{ fontSize: "14px", fontWeight: active ? 600 : 400, color: active ? "#fff" : "rgba(255,255,255,.65)", whiteSpace: "nowrap" }}>{item.label}</span>}
-              {active && (sidebarOpen || mobile) && <div style={{ marginLeft: "auto", width: "6px", height: "6px", borderRadius: "50%", background: "#fff", flexShrink: 0 }} />}
+            <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} title={!sidebarOpen && !mobile ? item.label : undefined} style={{ display: "flex", alignItems: "center", gap: "12px", padding: sidebarOpen || mobile ? "11px 12px" : "11px", justifyContent: sidebarOpen || mobile ? "flex-start" : "center", borderRadius: "10px", textDecoration: "none", marginBottom: "3px", background: active ? "rgba(155,0,32,.07)" : "transparent", borderLeft: active ? `3px solid ${BURG}` : "3px solid transparent", transition: "all .18s", overflow: "hidden" }}>
+              <span style={{ color: BURG, opacity: active ? 1 : 0.62, flexShrink: 0, display: "flex" }}><item.Icon size={18} /></span>
+              {(sidebarOpen || mobile) && <span style={{ fontSize: "14px", fontWeight: active ? 600 : 400, color: active ? BURG : "#374151", whiteSpace: "nowrap" }}>{item.label}</span>}
+              {active && (sidebarOpen || mobile) && <div style={{ marginLeft: "auto", width: "6px", height: "6px", borderRadius: "50%", background: BURG, flexShrink: 0 }} />}
             </Link>
           );
         })}
@@ -156,34 +253,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* KYC warning */}
       {seller?.kycStatus !== "approved" && (sidebarOpen || mobile) && (
-        <div style={{ margin: "0 10px 12px", padding: "12px", borderRadius: "10px", background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.2)" }}>
-          <div style={{ fontSize: "11px", fontWeight: 600, color: "#fff", marginBottom: "4px" }}>⚠️ KYC Pending</div>
-          <p style={{ fontSize: "11px", color: "rgba(255,255,255,.7)", lineHeight: "1.4", marginBottom: "8px" }}>Complete verification to unlock all features</p>
-          <Link href="/dashboard/kyc" onClick={() => setMobileOpen(false)} style={{ fontSize: "11px", fontWeight: 600, color: BURG, textDecoration: "none", padding: "4px 10px", borderRadius: "6px", background: "#fff", display: "inline-block" }}>Complete KYC →</Link>
+        <div style={{ margin: "0 10px 12px", padding: "12px", borderRadius: "10px", background: "rgba(155,0,32,.05)", border: "1px solid rgba(155,0,32,.15)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11px", fontWeight: 600, color: BURG, marginBottom: "4px" }}><IconAlertTriangle size={14} /> KYC Pending</div>
+          <p style={{ fontSize: "11px", color: "#6B7280", lineHeight: "1.4", marginBottom: "8px" }}>Complete verification to unlock all features</p>
+          <Link href="/dashboard/kyc" onClick={() => setMobileOpen(false)} style={{ fontSize: "11px", fontWeight: 600, color: "#fff", textDecoration: "none", padding: "4px 10px", borderRadius: "6px", background: BURG, display: "inline-block" }}>Complete KYC →</Link>
         </div>
       )}
 
       {/* Seller info + logout */}
-      <div style={{ padding: "12px 10px", borderTop: "1px solid rgba(255,255,255,.12)" }}>
+      <div style={{ padding: "12px 10px", borderTop: "1px solid #F3F4F6" }}>
         {(sidebarOpen || mobile) ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 4px", marginBottom: "8px" }}>
-            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "rgba(255,255,255,.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "14px", fontWeight: 700, flexShrink: 0 }}>
+            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: BURG, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "14px", fontWeight: 700, flexShrink: 0 }}>
               {seller?.name?.charAt(0).toUpperCase() || "S"}
             </div>
             <div style={{ overflow: "hidden" }}>
-              <div style={{ fontSize: "13px", fontWeight: 600, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{seller?.name || "Seller"}</div>
-              <div style={{ fontSize: "11px", color: "rgba(255,255,255,.55)" }}>Seller Account</div>
+              <div style={{ fontSize: "13px", fontWeight: 600, color: "#1F2937", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{seller?.name || "Seller"}</div>
+              <div style={{ fontSize: "11px", color: "#6B7280" }}>Seller Account</div>
             </div>
           </div>
         ) : (
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "8px" }}>
-            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "rgba(255,255,255,.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "14px", fontWeight: 700 }}>
+            <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: BURG, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "14px", fontWeight: 700 }}>
               {seller?.name?.charAt(0).toUpperCase() || "S"}
             </div>
           </div>
         )}
-        <button onClick={handleLogout} title={!sidebarOpen && !mobile ? "Sign Out" : undefined} style={{ width: "100%", padding: sidebarOpen || mobile ? "9px 12px" : "9px", borderRadius: "8px", background: "rgba(255,255,255,.1)", border: "1px solid rgba(255,255,255,.18)", color: "#fff", fontSize: "13px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: sidebarOpen || mobile ? "flex-start" : "center", gap: "8px" }}>
-          <span>🚪</span>{(sidebarOpen || mobile) && "Sign Out"}
+        <button onClick={handleLogout} title={!sidebarOpen && !mobile ? "Sign Out" : undefined} style={{ width: "100%", padding: sidebarOpen || mobile ? "9px 12px" : "9px", borderRadius: "8px", background: "#FFF1F2", border: "1px solid #FEE2E2", color: BURG, fontSize: "13px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: sidebarOpen || mobile ? "flex-start" : "center", gap: "8px" }}>
+          <IconLogOut size={15} />{(sidebarOpen || mobile) && "Sign Out"}
         </button>
       </div>
     </aside>
