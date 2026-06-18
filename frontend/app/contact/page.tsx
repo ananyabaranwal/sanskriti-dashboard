@@ -8,8 +8,9 @@ const RED = "#9B0020";
 const RED_TINT = "#FDF1F3";
 const BADGE_TINT = "#FCE7EA";
 const BORDER_RED = "#F0C7CE";
+const WA_NUMBER = BRAND.whatsapp.replace(/\D/g, "");
 
-function Icon({ name, size = 18, color = "currentColor" }: { name: string; size?: number; color?: string }) {
+function Icon({ name, size = 16, color = "currentColor" }: { name: string; size?: number; color?: string }) {
   const p = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (name) {
     case "pin":   return (<svg {...p}><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>);
@@ -22,7 +23,7 @@ function Icon({ name, size = 18, color = "currentColor" }: { name: string; size?
   }
 }
 
-function WhatsappIcon({ size = 22 }: { size?: number }) {
+function WhatsappIcon({ size = 18 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="#fff">
       <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.8 1-.2.2-.3.2-.6.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.6-.7.7-.9.1-.2.1-.3 0-.5-.1-.2-.6-1.5-.8-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2 0 1.3.9 2.5 1 2.7.1.2 1.8 2.8 4.4 3.8 2.6 1 2.6.7 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.4-.3z" />
@@ -30,7 +31,7 @@ function WhatsappIcon({ size = 22 }: { size?: number }) {
   );
 }
 
-function InstagramIcon({ size = 18 }: { size?: number }) {
+function InstagramIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
       <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -40,7 +41,7 @@ function InstagramIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-function FacebookIcon({ size = 18 }: { size?: number }) {
+function FacebookIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
       <path d="M15 8.5h-2a1.5 1.5 0 0 0-1.5 1.5v2H15l-.4 3h-2.1V21" />
@@ -49,7 +50,7 @@ function FacebookIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-function YoutubeIcon({ size = 18 }: { size?: number }) {
+function YoutubeIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
       <rect x="2.5" y="6" width="19" height="12" rx="4" />
@@ -58,7 +59,7 @@ function YoutubeIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-function TwitterIcon({ size = 18 }: { size?: number }) {
+function TwitterIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
       <path d="M5 5l14 14M19 5L5 19" />
@@ -66,8 +67,8 @@ function TwitterIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-const labelStyle: React.CSSProperties = { fontSize: "12px", fontWeight: 600, color: "#6b4f53", display: "block", marginBottom: "5px", letterSpacing: ".03em" };
-const inputStyle: React.CSSProperties = { width: "100%", padding: "11px 14px", borderRadius: "8px", border: `1.5px solid ${BORDER_RED}`, fontSize: "14px", color: "#1a1a1a", background: RED_TINT, outline: "none", fontFamily: "inherit" };
+const labelStyle: React.CSSProperties = { fontSize: "10.5px", fontWeight: 600, color: "#6b4f53", display: "block", marginBottom: "3px", letterSpacing: ".03em" };
+const inputStyle: React.CSSProperties = { width: "100%", padding: "8px 12px", borderRadius: "7px", border: `1.5px solid ${BORDER_RED}`, fontSize: "13px", color: "#1a1a1a", background: RED_TINT, outline: "none", fontFamily: "inherit" };
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
@@ -100,92 +101,86 @@ export default function ContactPage() {
   return (
     <div style={{ background: "#fff", minHeight: "100vh", paddingTop: "72px" }}>
 
-      {/* ── Compact page heading — no big banner ── */}
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "36px 24px 0" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px" }}>
-          <Link href="/" style={{ fontSize: "13px", color: "#a3a3a3", textDecoration: "none" }}>Home</Link>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "18px 24px 0" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+          <Link href="/" style={{ fontSize: "12px", color: "#a3a3a3", textDecoration: "none" }}>Home</Link>
           <span style={{ color: "#d4d4d4" }}>›</span>
-          <span style={{ fontSize: "13px", color: RED, fontWeight: 600 }}>Contact</span>
+          <span style={{ fontSize: "12px", color: RED, fontWeight: 600 }}>Contact</span>
         </div>
-        <h1 style={{ fontSize: "clamp(26px, 3.4vw, 36px)", fontFamily: "Georgia, serif", color: RED, marginBottom: "8px", fontWeight: 400 }}>Get In Touch</h1>
-        <p style={{ fontSize: "15px", color: "#6b6b6b", maxWidth: "560px", lineHeight: "1.7", marginBottom: "8px" }}>
+        <h1 style={{ fontSize: "clamp(22px, 2.6vw, 28px)", fontFamily: "Georgia, serif", color: RED, marginBottom: "4px", fontWeight: 400 }}>Get In Touch</h1>
+        <p style={{ fontSize: "13px", color: "#6b6b6b", maxWidth: "620px", lineHeight: "1.5", marginBottom: "0" }}>
           Have a question about our platform, services, or becoming a seller? We&apos;d love to hear from you.
         </p>
       </div>
 
-      {/* ── Two-column section — plain info column + separate form card ── */}
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 24px 80px" }}>
-        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: "48px", alignItems: "start" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "18px 24px 24px" }}>
+        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "28px", alignItems: "start" }}>
 
-          {/* Left — plain contact info, no box */}
           <div>
-            <h2 style={{ fontSize: "22px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "8px", fontWeight: 400 }}>Contact Information</h2>
-            <div style={{ width: "40px", height: "2px", background: RED, borderRadius: "1px", marginBottom: "24px" }} />
+            <h2 style={{ fontSize: "16px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "4px", fontWeight: 400 }}>Contact Information</h2>
+            <div style={{ width: "32px", height: "2px", background: RED, borderRadius: "1px", marginBottom: "12px" }} />
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "32px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "12px" }}>
               {infoItems.map((c) => (
-                <div key={c.label} style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
-                  <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Icon name={c.icon} size={17} color={RED} />
+                <div key={c.label} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                  <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Icon name={c.icon} size={14} color={RED} />
                   </div>
                   <div>
-                    <div style={{ fontSize: "11px", fontWeight: 600, color: "#a3717c", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "3px" }}>{c.label}</div>
-                    <div style={{ fontSize: "14px", color: "#1a1a1a", lineHeight: "1.5" }}>{c.value}</div>
+                    <div style={{ fontSize: "9.5px", fontWeight: 600, color: "#a3717c", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "1px" }}>{c.label}</div>
+                    <div style={{ fontSize: "12.5px", color: "#1a1a1a", lineHeight: "1.4" }}>{c.value}</div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* WhatsApp */}
-            <a href={`https://wa.me/${BRAND.whatsapp}?text=Hi%20Sanskriti%20The%20Antique%2C%20I%20have%20a%20query.`} target="_blank" rel="noopener noreferrer"
-              style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 20px", borderRadius: "12px", background: "rgba(37,211,102,.08)", border: "1px solid rgba(37,211,102,.25)", textDecoration: "none", marginBottom: "28px" }}>
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <WhatsappIcon size={20} />
+            <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi Sanskriti The Antique, I have a query.")}`} target="_blank" rel="noopener noreferrer"
+              style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "10px", background: "rgba(37,211,102,.08)", border: "1px solid rgba(37,211,102,.25)", textDecoration: "none", marginBottom: "12px" }}>
+              <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <WhatsappIcon size={15} />
               </div>
               <div>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: "#15803d" }}>Chat on WhatsApp</div>
-                <div style={{ fontSize: "12px", color: "#166534" }}>Fastest response — usually within 1 hour</div>
+                <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#15803d" }}>Chat on WhatsApp</div>
+                <div style={{ fontSize: "10.5px", color: "#166534" }}>Fastest response — usually within 1 hour</div>
               </div>
-              <span style={{ marginLeft: "auto", color: "#25D366" }}><Icon name="arrow" size={18} color="#25D366" /></span>
+              <span style={{ marginLeft: "auto" }}><Icon name="arrow" size={15} color="#25D366" /></span>
             </a>
 
-            {/* Social */}
             <div>
-              <div style={{ fontSize: "12px", fontWeight: 600, color: "#a3717c", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: "12px" }}>Follow Us</div>
-              <div style={{ display: "flex", gap: "10px" }}>
+              <div style={{ fontSize: "10.5px", fontWeight: 600, color: "#a3717c", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: "8px" }}>Follow Us</div>
+              <div style={{ display: "flex", gap: "8px" }}>
                 {socials.map((s) => (
                   <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-                    style={{ width: "44px", height: "44px", borderRadius: "10px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", color: RED, textDecoration: "none" }}>
-                    <s.Icon size={18} />
+                    style={{ width: "32px", height: "32px", borderRadius: "8px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", color: RED, textDecoration: "none" }}>
+                    <s.Icon size={15} />
                   </a>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Right — form, in its own white card */}
-          <div style={{ background: "#fff", border: `1px solid ${BORDER_RED}`, borderRadius: "20px", padding: "36px", boxShadow: "0 4px 24px rgba(155,0,32,.06)" }}>
+          <div style={{ background: "#fff", border: `1px solid ${BORDER_RED}`, borderRadius: "16px", padding: "20px 24px", boxShadow: "0 4px 24px rgba(155,0,32,.06)" }}>
             {submitted ? (
-              <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: RED_TINT, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
-                  <Icon name="check" size={28} color={RED} />
+              <div style={{ textAlign: "center", padding: "20px 10px" }}>
+                <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: RED_TINT, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+                  <Icon name="check" size={22} color={RED} />
                 </div>
-                <h3 style={{ fontSize: "22px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "10px", fontWeight: 400 }}>Message sent!</h3>
-                <p style={{ fontSize: "14px", color: "#6b6b6b", lineHeight: "1.7", marginBottom: "24px" }}>
+                <h3 style={{ fontSize: "18px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "6px", fontWeight: 400 }}>Message sent!</h3>
+                <p style={{ fontSize: "13px", color: "#6b6b6b", lineHeight: "1.6", marginBottom: "16px" }}>
                   Thank you for reaching out. We&apos;ll get back to you within 24 hours on your email or phone.
                 </p>
                 <button onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", subject: "", message: "" }); }}
-                  style={{ padding: "11px 24px", borderRadius: "8px", background: RED, color: "#fff", border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  style={{ padding: "9px 20px", borderRadius: "8px", background: RED, color: "#fff", border: "none", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                   Send another message
                 </button>
               </div>
             ) : (
               <>
-                <h2 style={{ fontSize: "20px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "6px", fontWeight: 400 }}>Send Us a Message</h2>
-                <p style={{ fontSize: "13px", color: "#8a8a8a", marginBottom: "24px" }}>We typically respond within 24 hours</p>
+                <h2 style={{ fontSize: "17px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "3px", fontWeight: 400 }}>Send Us a Message</h2>
+                <p style={{ fontSize: "12px", color: "#8a8a8a", marginBottom: "14px" }}>We typically respond within 24 hours</p>
 
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                     <div>
                       <label style={labelStyle}>Full Name *</label>
                       <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" required style={inputStyle} />
@@ -215,10 +210,10 @@ export default function ContactPage() {
 
                   <div>
                     <label style={labelStyle}>Message *</label>
-                    <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Tell us how we can help you..." required rows={5} style={{ ...inputStyle, resize: "vertical", lineHeight: "1.6" }} />
+                    <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Tell us how we can help you..." required rows={3} style={{ ...inputStyle, resize: "vertical", lineHeight: "1.5" }} />
                   </div>
 
-                  <button type="submit" disabled={loading} style={{ padding: "13px", borderRadius: "8px", background: loading ? "#e8b9c2" : RED, color: "#fff", border: "none", fontSize: "15px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em" }}>
+                  <button type="submit" disabled={loading} style={{ padding: "10px", borderRadius: "8px", background: loading ? "#e8b9c2" : RED, color: "#fff", border: "none", fontSize: "14px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em" }}>
                     {loading ? "Sending..." : "Send Message →"}
                   </button>
                 </form>
