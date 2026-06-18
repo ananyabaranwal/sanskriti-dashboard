@@ -100,23 +100,21 @@ export default function ContactPage() {
   return (
     <div style={{ background: "#fff", minHeight: "100vh", paddingTop: "72px" }}>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px 24px 0" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-          <Link href="/" style={{ fontSize: "13px", color: "#a3a3a3", textDecoration: "none" }}>Home</Link>
-          <span style={{ color: "#d4d4d4" }}>›</span>
-          <span style={{ fontSize: "13px", color: RED, fontWeight: 600 }}>Contact</span>
-        </div>
-        <h1 style={{ fontSize: "clamp(24px, 2.8vw, 30px)", fontFamily: "Georgia, serif", color: RED, marginBottom: "6px", fontWeight: 400 }}>Get In Touch</h1>
-        <p style={{ fontSize: "14px", color: "#6b6b6b", maxWidth: "620px", lineHeight: "1.6", marginBottom: "0" }}>
-          Have a question about our platform, services, or becoming a seller? We&apos;d love to hear from you.
-        </p>
-      </div>
-
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "22px 24px 24px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "28px 24px 24px" }}>
         <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "28px", alignItems: "stretch" }}>
 
-          {/* Left — plain contact info, stretched to match form height */}
+          {/* Left — heading + plain contact info, stretched to match form height */}
           <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+              <Link href="/" style={{ fontSize: "13px", color: "#a3a3a3", textDecoration: "none" }}>Home</Link>
+              <span style={{ color: "#d4d4d4" }}>›</span>
+              <span style={{ fontSize: "13px", color: RED, fontWeight: 600 }}>Contact</span>
+            </div>
+            <h1 style={{ fontSize: "clamp(24px, 2.8vw, 30px)", fontFamily: "Georgia, serif", color: RED, marginBottom: "6px", fontWeight: 400 }}>Get In Touch</h1>
+            <p style={{ fontSize: "14px", color: "#6b6b6b", lineHeight: "1.6", marginBottom: "26px" }}>
+              Have a question about our platform, services, or becoming a seller? We&apos;d love to hear from you.
+            </p>
+
             <h2 style={{ fontSize: "18px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "6px", fontWeight: 400 }}>Contact Information</h2>
             <div style={{ width: "36px", height: "2px", background: RED, borderRadius: "1px", marginBottom: "22px" }} />
 
