@@ -6,7 +6,8 @@ import { BRAND } from "@/lib/constants";
 
 const RED = "#9B0020";
 const RED_TINT = "#FDF1F3";
-const BORDER_RED = "rgba(155,0,32,.18)";
+const BADGE_TINT = "#FCE7EA";
+const BORDER_RED = "#F0C7CE";
 
 function Icon({ name, size = 18, color = "currentColor" }: { name: string; size?: number; color?: string }) {
   const p = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -65,8 +66,8 @@ function TwitterIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-const labelStyle: React.CSSProperties = { fontSize: "12px", fontWeight: 600, color: "#6b6b6b", display: "block", marginBottom: "5px", letterSpacing: ".03em" };
-const inputStyle: React.CSSProperties = { width: "100%", padding: "11px 14px", borderRadius: "8px", border: "1.5px solid #e8d1d6", fontSize: "14px", color: "#1a1a1a", background: RED_TINT, outline: "none", fontFamily: "inherit" };
+const labelStyle: React.CSSProperties = { fontSize: "12px", fontWeight: 600, color: "#6b4f53", display: "block", marginBottom: "5px", letterSpacing: ".03em" };
+const inputStyle: React.CSSProperties = { width: "100%", padding: "11px 14px", borderRadius: "8px", border: `1.5px solid ${BORDER_RED}`, fontSize: "14px", color: "#1a1a1a", background: RED_TINT, outline: "none", fontFamily: "inherit" };
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
@@ -107,29 +108,29 @@ export default function ContactPage() {
           <span style={{ fontSize: "13px", color: RED, fontWeight: 600 }}>Contact</span>
         </div>
         <h1 style={{ fontSize: "clamp(26px, 3.4vw, 36px)", fontFamily: "Georgia, serif", color: RED, marginBottom: "8px", fontWeight: 400 }}>Get In Touch</h1>
-        <p style={{ fontSize: "15px", color: "#6b6b6b", maxWidth: "560px", lineHeight: "1.7", marginBottom: "28px" }}>
+        <p style={{ fontSize: "15px", color: "#6b6b6b", maxWidth: "560px", lineHeight: "1.7", marginBottom: "8px" }}>
           Have a question about our platform, services, or becoming a seller? We&apos;d love to hear from you.
         </p>
       </div>
 
-      {/* ── Single unified contact box ── */}
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px 80px" }}>
-        <div className="contact-box" style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", borderRadius: "22px", overflow: "hidden", border: `1px solid ${BORDER_RED}`, boxShadow: "0 12px 36px rgba(155,0,32,.10)" }}>
+      {/* ── Two-column section — plain info column + separate form card ── */}
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 24px 80px" }}>
+        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: "48px", alignItems: "start" }}>
 
-          {/* Left — info panel (deep red) */}
-          <div style={{ background: RED, padding: "40px 34px", color: "#fff", display: "flex", flexDirection: "column" }}>
-            <h2 style={{ fontSize: "20px", fontFamily: "Georgia, serif", marginBottom: "8px", fontWeight: 400 }}>Contact Information</h2>
-            <div style={{ width: "36px", height: "2px", background: "rgba(255,255,255,.5)", borderRadius: "1px", marginBottom: "24px" }} />
+          {/* Left — plain contact info, no box */}
+          <div>
+            <h2 style={{ fontSize: "22px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "8px", fontWeight: 400 }}>Contact Information</h2>
+            <div style={{ width: "40px", height: "2px", background: RED, borderRadius: "1px", marginBottom: "24px" }} />
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "18px", marginBottom: "28px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "32px" }}>
               {infoItems.map((c) => (
-                <div key={c.label} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "9px", background: "rgba(255,255,255,.14)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Icon name={c.icon} size={16} color="#fff" />
+                <div key={c.label} style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
+                  <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Icon name={c.icon} size={17} color={RED} />
                   </div>
                   <div>
-                    <div style={{ fontSize: "10.5px", fontWeight: 600, color: "rgba(255,255,255,.65)", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "3px" }}>{c.label}</div>
-                    <div style={{ fontSize: "13.5px", color: "#fff", lineHeight: "1.5" }}>{c.value}</div>
+                    <div style={{ fontSize: "11px", fontWeight: 600, color: "#a3717c", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "3px" }}>{c.label}</div>
+                    <div style={{ fontSize: "14px", color: "#1a1a1a", lineHeight: "1.5" }}>{c.value}</div>
                   </div>
                 </div>
               ))}
@@ -137,35 +138,35 @@ export default function ContactPage() {
 
             {/* WhatsApp */}
             <a href={`https://wa.me/${BRAND.whatsapp}?text=Hi%20Sanskriti%20The%20Antique%2C%20I%20have%20a%20query.`} target="_blank" rel="noopener noreferrer"
-              style={{ display: "flex", alignItems: "center", gap: "12px", padding: "13px 16px", borderRadius: "12px", background: "#fff", textDecoration: "none", marginBottom: "24px" }}>
-              <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <WhatsappIcon size={18} />
+              style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 20px", borderRadius: "12px", background: "rgba(37,211,102,.08)", border: "1px solid rgba(37,211,102,.25)", textDecoration: "none", marginBottom: "28px" }}>
+              <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <WhatsappIcon size={20} />
               </div>
               <div>
-                <div style={{ fontSize: "13.5px", fontWeight: 700, color: "#1a1a1a" }}>Chat on WhatsApp</div>
-                <div style={{ fontSize: "11.5px", color: "#6b6b6b" }}>Fastest response — usually within 1 hour</div>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "#15803d" }}>Chat on WhatsApp</div>
+                <div style={{ fontSize: "12px", color: "#166534" }}>Fastest response — usually within 1 hour</div>
               </div>
-              <span style={{ marginLeft: "auto", color: RED }}><Icon name="arrow" size={16} /></span>
+              <span style={{ marginLeft: "auto", color: "#25D366" }}><Icon name="arrow" size={18} color="#25D366" /></span>
             </a>
 
             {/* Social */}
-            <div style={{ marginTop: "auto" }}>
-              <div style={{ fontSize: "10.5px", fontWeight: 600, color: "rgba(255,255,255,.65)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: "12px" }}>Follow Us</div>
+            <div>
+              <div style={{ fontSize: "12px", fontWeight: 600, color: "#a3717c", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: "12px" }}>Follow Us</div>
               <div style={{ display: "flex", gap: "10px" }}>
                 {socials.map((s) => (
                   <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-                    style={{ width: "38px", height: "38px", borderRadius: "10px", background: "rgba(255,255,255,.14)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", textDecoration: "none" }}>
-                    <s.Icon size={17} />
+                    style={{ width: "44px", height: "44px", borderRadius: "10px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", color: RED, textDecoration: "none" }}>
+                    <s.Icon size={18} />
                   </a>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Right — form panel (white) */}
-          <div style={{ background: "#fff", padding: "40px 36px" }}>
+          {/* Right — form, in its own white card */}
+          <div style={{ background: "#fff", border: `1px solid ${BORDER_RED}`, borderRadius: "20px", padding: "36px", boxShadow: "0 4px 24px rgba(155,0,32,.06)" }}>
             {submitted ? (
-              <div style={{ textAlign: "center", padding: "50px 20px" }}>
+              <div style={{ textAlign: "center", padding: "40px 20px" }}>
                 <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: RED_TINT, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
                   <Icon name="check" size={28} color={RED} />
                 </div>
@@ -174,7 +175,7 @@ export default function ContactPage() {
                   Thank you for reaching out. We&apos;ll get back to you within 24 hours on your email or phone.
                 </p>
                 <button onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", subject: "", message: "" }); }}
-                  style={{ padding: "12px 26px", borderRadius: "8px", background: RED, color: "#fff", border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  style={{ padding: "11px 24px", borderRadius: "8px", background: RED, color: "#fff", border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                   Send another message
                 </button>
               </div>
@@ -217,7 +218,7 @@ export default function ContactPage() {
                     <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Tell us how we can help you..." required rows={5} style={{ ...inputStyle, resize: "vertical", lineHeight: "1.6" }} />
                   </div>
 
-                  <button type="submit" disabled={loading} style={{ padding: "14px", borderRadius: "8px", background: loading ? "#e8b9c2" : RED, color: "#fff", border: "none", fontSize: "15px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em" }}>
+                  <button type="submit" disabled={loading} style={{ padding: "13px", borderRadius: "8px", background: loading ? "#e8b9c2" : RED, color: "#fff", border: "none", fontSize: "15px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em" }}>
                     {loading ? "Sending..." : "Send Message →"}
                   </button>
                 </form>
@@ -229,10 +230,10 @@ export default function ContactPage() {
 
       <style>{`
         @media (max-width: 768px) {
-          .contact-box { grid-template-columns: 1fr !important; }
+          .contact-grid { grid-template-columns: 1fr !important; }
         }
         input:focus, textarea:focus, select:focus { border-color: ${RED} !important; }
-        input::placeholder, textarea::placeholder { color: #c2c2c2; }
+        input::placeholder, textarea::placeholder { color: #c2a0a6; }
       `}</style>
     </div>
   );
