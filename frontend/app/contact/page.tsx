@@ -31,7 +31,7 @@ function WhatsappIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-function InstagramIcon({ size = 16 }: { size?: number }) {
+function InstagramIcon({ size = 17 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
       <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -41,34 +41,33 @@ function InstagramIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-function FacebookIcon({ size = 16 }: { size?: number }) {
+function FacebookIcon({ size = 17 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-      <path d="M15 8.5h-2a1.5 1.5 0 0 0-1.5 1.5v2H15l-.4 3h-2.1V21" />
-      <circle cx="12" cy="12" r="9" />
+    <svg width={size} height={size} viewBox="0 0 24 24">
+      <text x="12" y="17.5" fontSize="16" fontWeight="700" fontFamily="Georgia, serif" textAnchor="middle" fill="currentColor">f</text>
     </svg>
   );
 }
 
-function YoutubeIcon({ size = 16 }: { size?: number }) {
+function YoutubeIcon({ size = 17 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-      <rect x="2.5" y="6" width="19" height="12" rx="4" />
-      <path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none" />
+    <svg width={size} height={size} viewBox="0 0 24 24">
+      <rect x="2" y="5" width="20" height="14" rx="5" fill="currentColor" />
+      <path d="M10 9l6 3-6 3z" fill="#fff" />
     </svg>
   );
 }
 
-function TwitterIcon({ size = 16 }: { size?: number }) {
+function TwitterIcon({ size = 17 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-      <path d="M5 5l14 14M19 5L5 19" />
+    <svg width={size} height={size} viewBox="0 0 24 24">
+      <text x="12" y="17" fontSize="15" fontWeight="700" fontFamily="Arial, sans-serif" textAnchor="middle" fill="currentColor">X</text>
     </svg>
   );
 }
 
-const labelStyle: React.CSSProperties = { fontSize: "10.5px", fontWeight: 600, color: "#6b4f53", display: "block", marginBottom: "3px", letterSpacing: ".03em" };
-const inputStyle: React.CSSProperties = { width: "100%", padding: "8px 12px", borderRadius: "7px", border: `1.5px solid ${BORDER_RED}`, fontSize: "13px", color: "#1a1a1a", background: RED_TINT, outline: "none", fontFamily: "inherit" };
+const labelStyle: React.CSSProperties = { fontSize: "12px", fontWeight: 600, color: "#6b4f53", display: "block", marginBottom: "5px", letterSpacing: ".03em" };
+const inputStyle: React.CSSProperties = { width: "100%", padding: "11px 14px", borderRadius: "8px", border: `1.5px solid ${BORDER_RED}`, fontSize: "14px", color: "#1a1a1a", background: RED_TINT, outline: "none", fontFamily: "inherit" };
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
@@ -101,86 +100,91 @@ export default function ContactPage() {
   return (
     <div style={{ background: "#fff", minHeight: "100vh", paddingTop: "72px" }}>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "18px 24px 0" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-          <Link href="/" style={{ fontSize: "12px", color: "#a3a3a3", textDecoration: "none" }}>Home</Link>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px 24px 0" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+          <Link href="/" style={{ fontSize: "13px", color: "#a3a3a3", textDecoration: "none" }}>Home</Link>
           <span style={{ color: "#d4d4d4" }}>›</span>
-          <span style={{ fontSize: "12px", color: RED, fontWeight: 600 }}>Contact</span>
+          <span style={{ fontSize: "13px", color: RED, fontWeight: 600 }}>Contact</span>
         </div>
-        <h1 style={{ fontSize: "clamp(22px, 2.6vw, 28px)", fontFamily: "Georgia, serif", color: RED, marginBottom: "4px", fontWeight: 400 }}>Get In Touch</h1>
-        <p style={{ fontSize: "13px", color: "#6b6b6b", maxWidth: "620px", lineHeight: "1.5", marginBottom: "0" }}>
+        <h1 style={{ fontSize: "clamp(24px, 2.8vw, 30px)", fontFamily: "Georgia, serif", color: RED, marginBottom: "6px", fontWeight: 400 }}>Get In Touch</h1>
+        <p style={{ fontSize: "14px", color: "#6b6b6b", maxWidth: "620px", lineHeight: "1.6", marginBottom: "0" }}>
           Have a question about our platform, services, or becoming a seller? We&apos;d love to hear from you.
         </p>
       </div>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "18px 24px 24px" }}>
-        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "28px", alignItems: "start" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "22px 24px 24px" }}>
+        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "28px", alignItems: "stretch" }}>
 
-          <div>
-            <h2 style={{ fontSize: "16px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "4px", fontWeight: 400 }}>Contact Information</h2>
-            <div style={{ width: "32px", height: "2px", background: RED, borderRadius: "1px", marginBottom: "12px" }} />
+          {/* Left — plain contact info, stretched to match form height */}
+          <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+            <h2 style={{ fontSize: "18px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "6px", fontWeight: 400 }}>Contact Information</h2>
+            <div style={{ width: "36px", height: "2px", background: RED, borderRadius: "1px", marginBottom: "22px" }} />
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "12px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "24px" }}>
               {infoItems.map((c) => (
-                <div key={c.label} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                  <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Icon name={c.icon} size={14} color={RED} />
+                <div key={c.label} style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
+                  <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Icon name={c.icon} size={17} color={RED} />
                   </div>
                   <div>
-                    <div style={{ fontSize: "9.5px", fontWeight: 600, color: "#a3717c", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "1px" }}>{c.label}</div>
-                    <div style={{ fontSize: "12.5px", color: "#1a1a1a", lineHeight: "1.4" }}>{c.value}</div>
+                    <div style={{ fontSize: "11px", fontWeight: 600, color: "#a3717c", letterSpacing: ".06em", textTransform: "uppercase", marginBottom: "3px" }}>{c.label}</div>
+                    <div style={{ fontSize: "14px", color: "#1a1a1a", lineHeight: "1.5" }}>{c.value}</div>
                   </div>
                 </div>
               ))}
             </div>
 
             <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hi Sanskriti The Antique, I have a query.")}`} target="_blank" rel="noopener noreferrer"
-              style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "10px", background: "rgba(37,211,102,.08)", border: "1px solid rgba(37,211,102,.25)", textDecoration: "none", marginBottom: "12px" }}>
-              <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <WhatsappIcon size={15} />
+              style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 18px", borderRadius: "12px", background: "rgba(37,211,102,.08)", border: "1px solid rgba(37,211,102,.25)", textDecoration: "none", marginBottom: "28px" }}>
+              <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <WhatsappIcon size={18} />
               </div>
               <div>
-                <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#15803d" }}>Chat on WhatsApp</div>
-                <div style={{ fontSize: "10.5px", color: "#166534" }}>Fastest response — usually within 1 hour</div>
+                <div style={{ fontSize: "14px", fontWeight: 700, color: "#15803d" }}>Chat on WhatsApp</div>
+                <div style={{ fontSize: "12px", color: "#166534" }}>Fastest response — usually within 1 hour</div>
               </div>
-              <span style={{ marginLeft: "auto" }}><Icon name="arrow" size={15} color="#25D366" /></span>
+              <span style={{ marginLeft: "auto" }}><Icon name="arrow" size={16} color="#25D366" /></span>
             </a>
 
             <div>
-              <div style={{ fontSize: "10.5px", fontWeight: 600, color: "#a3717c", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: "8px" }}>Follow Us</div>
-              <div style={{ display: "flex", gap: "8px" }}>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "#a3717c", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: "14px" }}>Follow Us</div>
+              <div style={{ display: "flex", gap: "10px" }}>
                 {socials.map((s) => (
                   <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-                    style={{ width: "32px", height: "32px", borderRadius: "8px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", color: RED, textDecoration: "none" }}>
-                    <s.Icon size={15} />
+                    style={{ width: "40px", height: "40px", borderRadius: "10px", background: BADGE_TINT, border: `1px solid ${BORDER_RED}`, display: "flex", alignItems: "center", justifyContent: "center", color: RED, textDecoration: "none" }}>
+                    <s.Icon size={17} />
                   </a>
                 ))}
               </div>
             </div>
+
+            {/* spacer pushes content to fully fill the column height, matching the form card */}
+            <div style={{ flex: 1 }} />
           </div>
 
-          <div style={{ background: "#fff", border: `1px solid ${BORDER_RED}`, borderRadius: "16px", padding: "20px 24px", boxShadow: "0 4px 24px rgba(155,0,32,.06)" }}>
+          {/* Right — form, in its own white card, stretched taller */}
+          <div style={{ background: "#fff", border: `1px solid ${BORDER_RED}`, borderRadius: "18px", padding: "32px 36px", boxShadow: "0 4px 24px rgba(155,0,32,.06)", display: "flex", flexDirection: "column" }}>
             {submitted ? (
-              <div style={{ textAlign: "center", padding: "20px 10px" }}>
-                <div style={{ width: "52px", height: "52px", borderRadius: "50%", background: RED_TINT, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
-                  <Icon name="check" size={22} color={RED} />
+              <div style={{ textAlign: "center", padding: "40px 16px", margin: "auto 0" }}>
+                <div style={{ width: "60px", height: "60px", borderRadius: "50%", background: RED_TINT, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+                  <Icon name="check" size={26} color={RED} />
                 </div>
-                <h3 style={{ fontSize: "18px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "6px", fontWeight: 400 }}>Message sent!</h3>
-                <p style={{ fontSize: "13px", color: "#6b6b6b", lineHeight: "1.6", marginBottom: "16px" }}>
+                <h3 style={{ fontSize: "20px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "8px", fontWeight: 400 }}>Message sent!</h3>
+                <p style={{ fontSize: "14px", color: "#6b6b6b", lineHeight: "1.7", marginBottom: "20px" }}>
                   Thank you for reaching out. We&apos;ll get back to you within 24 hours on your email or phone.
                 </p>
                 <button onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", subject: "", message: "" }); }}
-                  style={{ padding: "9px 20px", borderRadius: "8px", background: RED, color: "#fff", border: "none", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  style={{ padding: "11px 24px", borderRadius: "8px", background: RED, color: "#fff", border: "none", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                   Send another message
                 </button>
               </div>
             ) : (
               <>
-                <h2 style={{ fontSize: "17px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "3px", fontWeight: 400 }}>Send Us a Message</h2>
-                <p style={{ fontSize: "12px", color: "#8a8a8a", marginBottom: "14px" }}>We typically respond within 24 hours</p>
+                <h2 style={{ fontSize: "20px", fontFamily: "Georgia, serif", color: "#1a1a1a", marginBottom: "6px", fontWeight: 400 }}>Send Us a Message</h2>
+                <p style={{ fontSize: "13px", color: "#8a8a8a", marginBottom: "22px" }}>We typically respond within 24 hours</p>
 
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "18px", flex: 1 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                     <div>
                       <label style={labelStyle}>Full Name *</label>
                       <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" required style={inputStyle} />
@@ -208,12 +212,12 @@ export default function ContactPage() {
                     </select>
                   </div>
 
-                  <div>
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
                     <label style={labelStyle}>Message *</label>
-                    <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Tell us how we can help you..." required rows={3} style={{ ...inputStyle, resize: "vertical", lineHeight: "1.5" }} />
+                    <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Tell us how we can help you..." required style={{ ...inputStyle, resize: "vertical", lineHeight: "1.6", flex: 1, minHeight: "90px" }} />
                   </div>
 
-                  <button type="submit" disabled={loading} style={{ padding: "10px", borderRadius: "8px", background: loading ? "#e8b9c2" : RED, color: "#fff", border: "none", fontSize: "14px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em" }}>
+                  <button type="submit" disabled={loading} style={{ padding: "13px", borderRadius: "8px", background: loading ? "#e8b9c2" : RED, color: "#fff", border: "none", fontSize: "15px", fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", letterSpacing: ".02em" }}>
                     {loading ? "Sending..." : "Send Message →"}
                   </button>
                 </form>
