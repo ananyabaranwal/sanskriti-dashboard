@@ -4,82 +4,133 @@ import Link from "next/link";
 
 const BURG = "#9B0020";
 
-// ── Categories — real images from gallery.saumiccraft.com ────
+// ── Shown whenever a photo hasn't been added yet (no external image host involved) ──
+const PLACEHOLDER_IMG =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='100%25' height='100%25' fill='%23f3f1ee'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='18' fill='%23ccc' text-anchor='middle' dominant-baseline='middle'%3EAdd Photo%3C/text%3E%3C/svg%3E";
+
+// ── Categories — every img path below points to /public/images/categories/{id}.jpg ──
+// Add your own photos by placing files at that exact path; nothing else needs to change.
 const CATEGORIES = [
-  { id:"wooden",    label:"Wooden Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png",                count:"33+"  },
-  { id:"resin",     label:"Resin Products",     img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/4.png",                count:"28+"  },
-  { id:"aluminium", label:"Aluminium Products", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/3.png",                count:"22+"  },
-  { id:"toys",      label:"Wooden Toys",        img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/25.png",               count:"45+"  },
-  { id:"marble",    label:"Marble Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png",               count:"18+"  },
-  { id:"bronze",    label:"Bronze Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/6.png",                count:"24+"  },
-  { id:"wallclock", label:"Wall Clock",         img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/17.png",               count:"31+"  },
-  { id:"bamboo",    label:"Bamboo Products",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/12.png",               count:"19+"  },
-  { id:"wallhang",  label:"Wall Hangings",      img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png",               count:"52+"  },
-  { id:"paintings", label:"Paintings",          img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png",               count:"200+" },
-  { id:"gemstone",  label:"Gem & Stones",       img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/26.png",               count:"65+"  },
-  { id:"jewellery", label:"Oxidised Jewellery", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png",               count:"50+"  },
-  { id:"leather",   label:"Leather Diary",      img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/2.png",                count:"15+"  },
-  { id:"plants",    label:"Artificial Plants",  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/19.png",               count:"22+"  },
-  { id:"bedsheet",  label:"Bedsheets",          img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/9.png",                count:"38+"  },
-  { id:"wallart",   label:"Wall Art",           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/cjv.png",              count:"75+"  },
-  { id:"bagru",     label:"Bagru Print",        img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/c7T3NQ-scaled.webp",   count:"30+"  },
-  { id:"tiedye",    label:"Tie Dye",            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/0o90lb.webp",          count:"18+"  },
-  { id:"suzani",    label:"Suzani Jacket",      img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/IBr2Yv-scaled.webp",   count:"12+"  },
-  { id:"lehenga",   label:"Lehenga",            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/geTAdO-scaled.webp",   count:"25+"  },
-  { id:"gown",      label:"Gown",               img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/fj1ELB-scaled.webp",   count:"20+"  },
-  { id:"saree",     label:"Saree",              img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp",   count:"80+"  },
-  { id:"coordset",  label:"Co-ord Set",         img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/23bXhX-scaled.webp",   count:"22+"  },
-  { id:"kurti",     label:"Women Kurtis",       img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/dh4kWX-scaled.webp",   count:"90+"  },
+  { id:"wooden",    label:"Wooden Products",    img:"/images/categories/wooden.jpg",                count:"33+"  },
+  { id:"resin",     label:"Resin Products",     img:"/images/categories/resin.jpg",                count:"28+"  },
+  { id:"aluminium", label:"Aluminium Products", img:"/images/categories/aluminium.jpg",                count:"22+"  },
+  { id:"toys",      label:"Wooden Toys",        img:"/images/categories/toys.jpg",               count:"45+"  },
+  { id:"marble",    label:"Marble Products",    img:"/images/categories/marble.jpg",               count:"18+"  },
+  { id:"bronze",    label:"Bronze Products",    img:"/images/categories/bronze.jpg",                count:"24+"  },
+  { id:"wallclock", label:"Wall Clock",         img:"/images/categories/wallclock.jpg",               count:"31+"  },
+  { id:"bamboo",    label:"Bamboo Products",    img:"/images/categories/bamboo.jpg",               count:"19+"  },
+  { id:"wallhang",  label:"Wall Hangings",      img:"/images/categories/wallhang.jpg",               count:"52+"  },
+  { id:"paintings", label:"Paintings",          img:"/images/categories/paintings.jpg",               count:"200+" },
+  { id:"gemstone",  label:"Gem & Stones",       img:"/images/categories/gemstone.jpg",               count:"65+"  },
+  { id:"jewellery", label:"Oxidised Jewellery", img:"/images/categories/jewellery.jpg",               count:"50+"  },
+  { id:"leather",   label:"Leather Diary",      img:"/images/categories/leather.jpg",                count:"15+"  },
+  { id:"plants",    label:"Artificial Plants",  img:"/images/categories/plants.jpg",               count:"22+"  },
+  { id:"bedsheet",  label:"Bedsheets",          img:"/images/categories/bedsheet.jpg",                count:"38+"  },
+  { id:"wallart",   label:"Wall Art",           img:"/images/categories/wallart.jpg",              count:"75+"  },
+  { id:"bagru",     label:"Bagru Print",        img:"/images/categories/bagru.jpg",   count:"30+"  },
+  { id:"tiedye",    label:"Tie Dye",            img:"/images/categories/tiedye.jpg",          count:"18+"  },
+  { id:"suzani",    label:"Suzani Jacket",      img:"/images/categories/suzani.jpg",   count:"12+"  },
+  { id:"lehenga",   label:"Lehenga",            img:"/images/categories/lehenga.jpg",   count:"25+"  },
+  { id:"gown",      label:"Gown",               img:"/images/categories/gown.jpg",   count:"20+"  },
+  { id:"saree",     label:"Saree",              img:"/images/categories/saree.jpg",   count:"80+"  },
+  { id:"coordset",  label:"Co-ord Set",         img:"/images/categories/coordset.jpg",   count:"22+"  },
+  { id:"kurti",     label:"Women Kurtis",       img:"/images/categories/kurti.jpg",   count:"90+"  },
 ];
 
-// ── Products — real names + real product images from Saumic ──
+// ══════════════════════════════════════════════════════════════
+// ── ADD YOUR OWN PHOTOS HERE ─────────────────────────────────────
+// All photos for this page live under /public/images/ in three folders:
+//
+//   /public/images/categories/{id}.jpg   small square thumbnails — used
+//                                          in the "Choose the Category"
+//                                          grid, and as the hero photo
+//                                          for any category that doesn't
+//                                          have its own entry below.
+//   /public/images/hero/{id}.jpg          OPTIONAL wider/banner-style
+//                                          photo just for the big hero
+//                                          carousel slide of that category.
+//   /public/images/products/{id}.jpg      individual product photos
+//                                          (see the PRODUCTS list below).
+//
+// Every CATEGORIES and PRODUCTS entry already points at the matching
+// /images/... path for its id — just drop your real files in with those
+// exact names and they'll show up automatically. Until a file exists at
+// a given path, that slot quietly shows an "Add Photo" placeholder
+// instead of breaking.
+//
+// Use HERO_PHOTOS below only if you want the hero carousel to show a
+// different (e.g. more panoramic) photo than the small category
+// thumbnail. Anything left commented out just reuses the category photo.
+const HERO_PHOTOS: Record<string, string> = {
+  // wooden:    "/images/hero/wooden.jpg",
+  // jewellery: "/images/hero/jewellery.jpg",
+  // paintings: "/images/hero/paintings.jpg",
+  // marble:    "/images/hero/marble.jpg",
+  // saree:     "/images/hero/saree.jpg",
+  // gemstone:  "/images/hero/gemstone.jpg",
+};
+
+// ── Which categories appear in the hero carousel, and in what order ──
+// Edit this list to control which categories appear in the hero carousel
+// and in what order. Add or remove ids freely.
+const HERO_CATEGORY_IDS = [
+  "wooden", "jewellery", "paintings", "marble", "saree", "gemstone",
+  "bronze", "wallart", "bagru", "lehenga", "kurti", "wallclock",
+];
+
+const HERO_SLIDES = HERO_CATEGORY_IDS
+  .map(id => CATEGORIES.find(c => c.id === id))
+  .filter((c): c is typeof CATEGORIES[number] => Boolean(c))
+  .map(c => ({ ...c, img: HERO_PHOTOS[c.id] || c.img }));
+
+// ── Products — each img path points to /public/images/products/{id}.jpg ──
 const PRODUCTS = [
   // Wooden
-  { id:"w1",  name:"Handcrafted Colorful Wooden Elephant Stool Table",          cat:"wooden",    tag:"Bestseller", moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/5DnjgF-1200x1200.jpg" },
-  { id:"w2",  name:"Handcrafted Rajasthani Wooden Tea Coasters",                cat:"wooden",    tag:"Popular",    moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/PPE3vX-1200x1200.jpg" },
-  { id:"w3",  name:"Handcrafted Wooden Ashoka Pillar Replica",                  cat:"wooden",    tag:"Heritage",   moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/KF7AOI-1200x1200.jpg" },
-  { id:"w4",  name:"Handcrafted Wooden Camel Figurine",                         cat:"wooden",    tag:"New",        moq:8,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/03/tmEBYm-1200x1200.jpg" },
-  { id:"w5",  name:"Handcrafted Wooden Dry Fruit Box",                          cat:"wooden",    tag:"Bestseller", moq:6,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png" },
-  { id:"w6",  name:"Handcrafted Wooden Peacock Wall Hanging",                   cat:"wooden",    moq:5,            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png" },
+  { id:"w1",  name:"Handcrafted Colorful Wooden Elephant Stool Table",          cat:"wooden",    tag:"Bestseller", moq:5,  img:"/images/products/w1.jpg" },
+  { id:"w2",  name:"Handcrafted Rajasthani Wooden Tea Coasters",                cat:"wooden",    tag:"Popular",    moq:10, img:"/images/products/w2.jpg" },
+  { id:"w3",  name:"Handcrafted Wooden Ashoka Pillar Replica",                  cat:"wooden",    tag:"Heritage",   moq:5,  img:"/images/products/w3.jpg" },
+  { id:"w4",  name:"Handcrafted Wooden Camel Figurine",                         cat:"wooden",    tag:"New",        moq:8,  img:"/images/products/w4.jpg" },
+  { id:"w5",  name:"Handcrafted Wooden Dry Fruit Box",                          cat:"wooden",    tag:"Bestseller", moq:6,  img:"/images/products/w5.jpg" },
+  { id:"w6",  name:"Handcrafted Wooden Peacock Wall Hanging",                   cat:"wooden",    moq:5,            img:"/images/products/w6.jpg" },
   // Gemstone — real images found
-  { id:"g1",  name:"7 Chakra Bracelet — Healing Crystal Gemstone Beaded",      cat:"gemstone",  tag:"New Launch", moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/03/qyFV73-400x457.jpg" },
-  { id:"g2",  name:"7 Chakra Pendant Tree of Life Crystal Stone Locket",       cat:"gemstone",  tag:"New Launch", moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/03/DEd6h1-400x457.jpg" },
-  { id:"g3",  name:"African Turquoise Healing Crystal Bracelet 8mm",            cat:"gemstone",  tag:"New Launch", moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/03/zbjn2z-400x457.png" },
+  { id:"g1",  name:"7 Chakra Bracelet — Healing Crystal Gemstone Beaded",      cat:"gemstone",  tag:"New Launch", moq:10, img:"/images/products/g1.jpg" },
+  { id:"g2",  name:"7 Chakra Pendant Tree of Life Crystal Stone Locket",       cat:"gemstone",  tag:"New Launch", moq:10, img:"/images/products/g2.jpg" },
+  { id:"g3",  name:"African Turquoise Healing Crystal Bracelet 8mm",            cat:"gemstone",  tag:"New Launch", moq:12, img:"/images/products/g3.jpg" },
   // Jewellery — using category image as product
-  { id:"j1",  name:"Oxidised Radha Krishna Jhumka Earrings — Traditional",     cat:"jewellery", tag:"Bestseller", moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png" },
-  { id:"j2",  name:"German Silver Chand Bali Jhumka Set",                      cat:"jewellery", moq:10,           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png" },
-  { id:"j3",  name:"Oxidised Tribal Necklace Set — Boho Style",                cat:"jewellery", tag:"Premium",    moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png" },
+  { id:"j1",  name:"Oxidised Radha Krishna Jhumka Earrings — Traditional",     cat:"jewellery", tag:"Bestseller", moq:12, img:"/images/products/j1.jpg" },
+  { id:"j2",  name:"German Silver Chand Bali Jhumka Set",                      cat:"jewellery", moq:10,           img:"/images/products/j2.jpg" },
+  { id:"j3",  name:"Oxidised Tribal Necklace Set — Boho Style",                cat:"jewellery", tag:"Premium",    moq:5,  img:"/images/products/j3.jpg" },
   // Paintings
-  { id:"p1",  name:"Set of Two Golden Frame Wall Paintings",                   cat:"paintings", tag:"New Launch", moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2024/12/ukdC1j-600x600.jpg" },
-  { id:"p2",  name:"Madhubani Folk Art Canvas Painting",                       cat:"paintings", tag:"Heritage",   moq:2,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png" },
-  { id:"p3",  name:"Tanjore Painting — Goddess Lakshmi",                      cat:"paintings", tag:"Featured",   moq:2,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png" },
+  { id:"p1",  name:"Set of Two Golden Frame Wall Paintings",                   cat:"paintings", tag:"New Launch", moq:3,  img:"/images/products/p1.jpg" },
+  { id:"p2",  name:"Madhubani Folk Art Canvas Painting",                       cat:"paintings", tag:"Heritage",   moq:2,  img:"/images/products/p2.jpg" },
+  { id:"p3",  name:"Tanjore Painting — Goddess Lakshmi",                      cat:"paintings", tag:"Featured",   moq:2,  img:"/images/products/p3.jpg" },
   // Marble
-  { id:"m1",  name:"Handcrafted Marble Camel Clock — Timeless Elegance",      cat:"marble",    tag:"Featured",   moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png" },
-  { id:"m2",  name:"Marble Inlay Decorative Serving Plate",                   cat:"marble",    tag:"Premium",    moq:4,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png" },
+  { id:"m1",  name:"Handcrafted Marble Camel Clock — Timeless Elegance",      cat:"marble",    tag:"Featured",   moq:3,  img:"/images/products/m1.jpg" },
+  { id:"m2",  name:"Marble Inlay Decorative Serving Plate",                   cat:"marble",    tag:"Premium",    moq:4,  img:"/images/products/m2.jpg" },
   // Saree
-  { id:"s1",  name:"Gopi Silk Saree — Traditional Handloom Weave",            cat:"saree",     tag:"Bestseller", moq:6,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp" },
-  { id:"s2",  name:"Banarasi Silk Saree — Festival Collection",               cat:"saree",     tag:"Premium",    moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp" },
+  { id:"s1",  name:"Gopi Silk Saree — Traditional Handloom Weave",            cat:"saree",     tag:"Bestseller", moq:6,  img:"/images/products/s1.jpg" },
+  { id:"s2",  name:"Banarasi Silk Saree — Festival Collection",               cat:"saree",     tag:"Premium",    moq:5,  img:"/images/products/s2.jpg" },
   // Kurtis
-  { id:"k1",  name:"Women Block Print Cotton Kurti — Jaipur",                 cat:"kurti",     tag:"Popular",    moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/dh4kWX-scaled.webp" },
-  { id:"k2",  name:"Anarkali Embroidered Kurti — Full Length",                cat:"kurti",     moq:10,           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/dh4kWX-scaled.webp" },
+  { id:"k1",  name:"Women Block Print Cotton Kurti — Jaipur",                 cat:"kurti",     tag:"Popular",    moq:12, img:"/images/products/k1.jpg" },
+  { id:"k2",  name:"Anarkali Embroidered Kurti — Full Length",                cat:"kurti",     moq:10,           img:"/images/products/k2.jpg" },
   // Wall Art
-  { id:"wa1", name:"3D MDF Mandala Wall Art — Laser Cut",                     cat:"wallart",   tag:"Trending",   moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/cjv.png" },
-  { id:"wa2", name:"Metal Peacock Decorative Wall Hanging",                   cat:"wallart",   tag:"Bestseller", moq:5,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png" },
+  { id:"wa1", name:"3D MDF Mandala Wall Art — Laser Cut",                     cat:"wallart",   tag:"Trending",   moq:5,  img:"/images/products/wa1.jpg" },
+  { id:"wa2", name:"Metal Peacock Decorative Wall Hanging",                   cat:"wallart",   tag:"Bestseller", moq:5,  img:"/images/products/wa2.jpg" },
   // Bronze
-  { id:"br1", name:"Bronze Nataraja Idol — 12 Inch Antique Finish",           cat:"bronze",    tag:"Heritage",   moq:2,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/6.png" },
-  { id:"br2", name:"Bronze Ganesha — Premium Casting",                        cat:"bronze",    tag:"Premium",    moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/6.png" },
+  { id:"br1", name:"Bronze Nataraja Idol — 12 Inch Antique Finish",           cat:"bronze",    tag:"Heritage",   moq:2,  img:"/images/products/br1.jpg" },
+  { id:"br2", name:"Bronze Ganesha — Premium Casting",                        cat:"bronze",    tag:"Premium",    moq:3,  img:"/images/products/br2.jpg" },
   // Bedsheet
-  { id:"b1",  name:"Premium Cotton Block Print Bedsheet — King Size",         cat:"bedsheet",  tag:"Popular",    moq:12, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/9.png" },
-  { id:"b2",  name:"Jaipuri Rajasthani Double Bedsheet",                      cat:"bedsheet",  moq:10,           img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/9.png" },
+  { id:"b1",  name:"Premium Cotton Block Print Bedsheet — King Size",         cat:"bedsheet",  tag:"Popular",    moq:12, img:"/images/products/b1.jpg" },
+  { id:"b2",  name:"Jaipuri Rajasthani Double Bedsheet",                      cat:"bedsheet",  moq:10,           img:"/images/products/b2.jpg" },
   // Lehenga
-  { id:"l1",  name:"Designer Embroidered Lehenga Choli — Wedding",            cat:"lehenga",   tag:"Premium",    moq:3,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/geTAdO-scaled.webp" },
+  { id:"l1",  name:"Designer Embroidered Lehenga Choli — Wedding",            cat:"lehenga",   tag:"Premium",    moq:3,  img:"/images/products/l1.jpg" },
   // Co-ord
-  { id:"c1",  name:"Cotton Co-ord Set — Printed Summer Collection",           cat:"coordset",  tag:"New Launch", moq:8,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/23bXhX-scaled.webp" },
+  { id:"c1",  name:"Cotton Co-ord Set — Printed Summer Collection",           cat:"coordset",  tag:"New Launch", moq:8,  img:"/images/products/c1.jpg" },
   // Bagru
-  { id:"bg1", name:"Bagru Hand Block Print Suit Set",                         cat:"bagru",     tag:"New",        moq:10, img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/c7T3NQ-scaled.webp" },
+  { id:"bg1", name:"Bagru Hand Block Print Suit Set",                         cat:"bagru",     tag:"New",        moq:10, img:"/images/products/bg1.jpg" },
   // Wall Hangings
-  { id:"wh1", name:"Macramé Boho Wall Hanging — Handwoven",                   cat:"wallhang",  tag:"Trending",   moq:8,  img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/13.png" },
-  { id:"wh2", name:"Wooden Carved Jali Wall Panel",                           cat:"wallhang",  moq:5,            img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/17.png" },
+  { id:"wh1", name:"Macramé Boho Wall Hanging — Handwoven",                   cat:"wallhang",  tag:"Trending",   moq:8,  img:"/images/products/wh1.jpg" },
+  { id:"wh2", name:"Wooden Carved Jali Wall Panel",                           cat:"wallhang",  moq:5,            img:"/images/products/wh2.jpg" },
 ];
 
 const TAG_STYLE: Record<string, { bg: string; color: string }> = {
@@ -137,7 +188,7 @@ function ProductCard({ p, onLock, wishlisted, onWish }: {
           src={p.img}
           alt={p.name}
           style={{ width:"100%",height:"100%",objectFit:"cover",transition:"transform .35s ease",transform:hov?"scale(1.06)":"scale(1)" }}
-          onError={e => { (e.target as HTMLImageElement).src="https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png"; }}
+          onError={e => { (e.target as HTMLImageElement).src = PLACEHOLDER_IMG; }}
         />
         {/* hover overlay */}
         <div style={{ position:"absolute",inset:0,background:"rgba(155,0,32,.72)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",opacity:hov?1:0,transition:"opacity .22s ease" }}>
@@ -184,14 +235,9 @@ export default function GalleryPage() {
   const [wishlist,      setWishlist]      = useState<Set<string>>(new Set());
   const [mounted,       setMounted]       = useState(false);
   const [heroIdx,       setHeroIdx]       = useState(0);
+  const [heroPaused,    setHeroPaused]    = useState(false);
   const [showAllCats,   setShowAllCats]   = useState(false);
   const productsRef = useRef<HTMLDivElement>(null);
-
-  const HERO = [
-    { heading:"India's Finest Handcrafted Products",    sub:"1 Lakh+ products across 25+ categories — direct from verified manufacturers"  },
-    { heading:"Direct from Manufacturer — Best Margins",sub:"Zero middlemen. Highest margins. Fastest dispatch across India."              },
-    { heading:"Authentic Indian Handicrafts & Textiles",sub:"Wooden, marble, paintings, jewellery, clothing and much more."               },
-  ];
 
   useEffect(() => {
     setMounted(true);
@@ -200,9 +246,13 @@ export default function GalleryPage() {
   }, []);
 
   useEffect(() => {
-    const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO.length), 4500);
+    if (heroPaused) return;
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO_SLIDES.length), 4000);
     return () => clearInterval(t);
-  }, []);
+  }, [heroPaused]);
+
+  const heroPrev = () => setHeroIdx(i => (i - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  const heroNext = () => setHeroIdx(i => (i + 1) % HERO_SLIDES.length);
 
   const toggleWish = (id: string) => {
     setWishlist(prev => {
@@ -246,87 +296,54 @@ export default function GalleryPage() {
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
-      {/* ══ HERO — WHITE ══════════════════════════════════ */}
-      <section style={{ background:"#fff", padding:"56px 48px 48px", position:"relative", overflow:"hidden", borderBottom:"1px solid #f0f0f0" }}>
-        {/* dot pattern */}
-        <div style={{ position:"absolute",inset:0,backgroundImage:`radial-gradient(rgba(155,0,32,.05) 1.2px,transparent 1.2px)`,backgroundSize:"24px 24px",pointerEvents:"none" }} />
-        {/* soft glow corners */}
-        <div style={{ position:"absolute",top:"-60px",right:"-80px",width:"400px",height:"400px",background:"radial-gradient(ellipse,rgba(155,0,32,.07) 0%,transparent 65%)",pointerEvents:"none" }} />
-        <div style={{ position:"absolute",bottom:"-80px",left:"-40px",width:"300px",height:"300px",background:"radial-gradient(ellipse,rgba(155,0,32,.04) 0%,transparent 65%)",pointerEvents:"none" }} />
+      {/* ══ HERO — COLLECTION CAROUSEL ══════════════════════ */}
+      <section
+        onMouseEnter={() => setHeroPaused(true)}
+        onMouseLeave={() => setHeroPaused(false)}
+        style={{ position:"relative", background:"#111", overflow:"hidden", borderBottom:"1px solid #f0f0f0" }}
+      >
+        <div style={{ position:"relative", width:"100%", height:"clamp(380px, 52vw, 560px)" }}>
+          {HERO_SLIDES.map((slide, i) => (
+            <div
+              key={slide.id}
+              style={{ position:"absolute", inset:0, opacity:i===heroIdx?1:0, transition:"opacity .7s ease", pointerEvents:i===heroIdx?"auto":"none" }}
+            >
+              <img
+                src={slide.img}
+                alt={slide.label}
+                style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+                onError={e => { (e.target as HTMLImageElement).src = PLACEHOLDER_IMG; }}
+              />
+              {/* legibility gradient so text/button stay readable over any photo */}
+              <div style={{ position:"absolute", inset:0, background:"linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.78) 100%)" }} />
 
-        <div style={{ maxWidth:"1280px",margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:"52px",alignItems:"center",position:"relative" }}>
-
-          {/* Left — text */}
-          <div style={{ animation:"sk-hero .6s ease both" }}>
-            <div style={{ display:"inline-flex",alignItems:"center",gap:"6px",padding:"5px 14px",borderRadius:"99px",border:"1px solid rgba(155,0,32,.22)",background:"rgba(155,0,32,.05)",fontSize:"11px",fontWeight:600,color:BURG,letterSpacing:".12em",textTransform:"uppercase",marginBottom:"20px",fontFamily:"'DM Sans',sans-serif" }}>
-              <span style={{ width:"5px",height:"5px",borderRadius:"50%",background:BURG,display:"block" }} />
-              Seller Gallery — Sanskriti The Antique
-            </div>
-
-            {HERO.map((s, i) => (
-              <div key={i} style={{ display:i===heroIdx?"block":"none" }}>
-                <h1 style={{ fontFamily:"'Playfair Display',serif",fontSize:"clamp(28px,3.5vw,48px)",fontWeight:700,color:"#111",lineHeight:1.1,marginBottom:"8px" }}>
-                  {s.heading.split(" — ")[0]}
-                  {s.heading.includes(" — ") && (
-                    <span style={{ display:"block",fontStyle:"italic",fontWeight:400,color:BURG }}> — {s.heading.split(" — ")[1]}</span>
-                  )}
+              {/* slide content */}
+              <div style={{ position:"absolute", left:"48px", right:"48px", bottom:"44px", maxWidth:"560px" }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:"6px", padding:"5px 14px", borderRadius:"99px", border:"1px solid rgba(255,255,255,.35)", background:"rgba(255,255,255,.12)", fontSize:"11px", fontWeight:600, color:"#fff", letterSpacing:".12em", textTransform:"uppercase", marginBottom:"14px", fontFamily:"'DM Sans',sans-serif", backdropFilter:"blur(6px)" }}>
+                  {slide.count} Products
+                </div>
+                <h1 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(28px,4vw,52px)", fontWeight:700, color:"#fff", lineHeight:1.08, marginBottom:"18px" }}>
+                  {slide.label}
                 </h1>
+                <button
+                  onClick={() => { setActiveCat(slide.id); productsRef.current?.scrollIntoView({ behavior:"smooth" }); }}
+                  style={{ padding:"13px 28px", borderRadius:"8px", background:"#fff", color:BURG, fontSize:"13px", fontWeight:700, border:"none", cursor:"pointer", fontFamily:"'DM Sans',sans-serif", letterSpacing:".04em", boxShadow:"0 8px 24px rgba(0,0,0,.25)" }}
+                >
+                  Explore {slide.label} →
+                </button>
               </div>
-            ))}
-
-            <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"15px",color:"#666",lineHeight:1.85,marginBottom:"8px",maxWidth:"440px" }}>
-              {HERO[heroIdx].sub}
-            </p>
-            <p style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"14px",color:"#888",lineHeight:1.75,marginBottom:"28px",maxWidth:"440px" }}>
-              All products are <strong style={{ color:"#111" }}>visible to everyone.</strong> Sign in to unlock prices and place bulk orders.
-            </p>
-
-            <div style={{ display:"flex",gap:"12px",flexWrap:"wrap",marginBottom:"28px" }}>
-              <button onClick={() => productsRef.current?.scrollIntoView({ behavior:"smooth" })} style={{ padding:"13px 32px",borderRadius:"8px",background:BURG,color:"#fff",fontSize:"13px",fontWeight:600,border:"none",cursor:"pointer",fontFamily:"'DM Sans',sans-serif",boxShadow:"0 6px 20px rgba(155,0,32,.25)",letterSpacing:".04em" }}>
-                Browse Products →
-              </button>
-              <Link href="/register" style={{ padding:"13px 24px",borderRadius:"8px",border:"1.5px solid #ddd",color:"#333",fontSize:"13px",fontWeight:500,textDecoration:"none",fontFamily:"'DM Sans',sans-serif" }}>
-                Register Free
-              </Link>
             </div>
+          ))}
 
-            {/* Trust strip */}
-            <div style={{ display:"flex",gap:"20px",flexWrap:"wrap" }}>
-              {["1 Lakh+ Products","25+ Categories","Verified Manufacturers","GST Invoicing"].map(t => (
-                <div key={t} style={{ display:"flex",alignItems:"center",gap:"5px",fontFamily:"'DM Sans',sans-serif",fontSize:"12px",color:"#aaa" }}>
-                  <span style={{ color:BURG,fontSize:"13px",fontWeight:700 }}>✓</span> {t}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right — 3×2 category image preview */}
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px" }}>
-            {[
-              { cat:"wooden",    label:"Wooden",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/1.png"                },
-              { cat:"jewellery", label:"Jewellery", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/14.png"               },
-              { cat:"paintings", label:"Paintings", img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/16.png"               },
-              { cat:"marble",    label:"Marble",    img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/hb.png"               },
-              { cat:"saree",     label:"Saree",     img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/10/n6dkdX-scaled.webp"  },
-              { cat:"gemstone",  label:"Gem Stones",img:"https://gallery.saumiccraft.com/wp-content/uploads/2025/05/26.png"               },
-            ].map(item => (
-              <button key={item.cat} onClick={() => { setActiveCat(item.cat); productsRef.current?.scrollIntoView({ behavior:"smooth" }); }} style={{ border:"none",padding:0,cursor:"pointer",borderRadius:"12px",overflow:"hidden",boxShadow:"0 2px 10px rgba(0,0,0,.07)",transition:"transform .2s" }}
-                onMouseEnter={e => (e.currentTarget.style.transform="translateY(-2px)")}
-                onMouseLeave={e => (e.currentTarget.style.transform="none")}
-              >
-                <img src={item.img} alt={item.label} style={{ width:"100%",height:"88px",objectFit:"cover",display:"block" }} />
-                <div style={{ padding:"7px 8px",background:"#fff" }}>
-                  <div style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"11px",fontWeight:600,color:"#111" }}>{item.label}</div>
-                </div>
-              </button>
-            ))}
-          </div>
+          {/* Prev / Next arrows */}
+          <button onClick={heroPrev} aria-label="Previous category" style={{ position:"absolute", left:"18px", top:"50%", transform:"translateY(-50%)", width:"40px", height:"40px", borderRadius:"50%", border:"1px solid rgba(255,255,255,.4)", background:"rgba(0,0,0,.32)", color:"#fff", fontSize:"18px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2 }}>‹</button>
+          <button onClick={heroNext} aria-label="Next category" style={{ position:"absolute", right:"18px", top:"50%", transform:"translateY(-50%)", width:"40px", height:"40px", borderRadius:"50%", border:"1px solid rgba(255,255,255,.4)", background:"rgba(0,0,0,.32)", color:"#fff", fontSize:"18px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2 }}>›</button>
         </div>
 
         {/* Slide dots */}
-        <div style={{ display:"flex",justifyContent:"center",gap:"6px",marginTop:"32px",position:"relative" }}>
-          {HERO.map((_, i) => (
-            <button key={i} onClick={() => setHeroIdx(i)} style={{ width:i===heroIdx?"24px":"7px",height:"7px",borderRadius:"99px",background:i===heroIdx?BURG:"#e0e0e0",border:"none",cursor:"pointer",transition:"all .3s",padding:0 }} />
+        <div style={{ display:"flex",justifyContent:"center",gap:"6px",padding:"16px 0",background:"#fff" }}>
+          {HERO_SLIDES.map((_, i) => (
+            <button key={i} onClick={() => setHeroIdx(i)} aria-label={`Go to slide ${i + 1}`} style={{ width:i===heroIdx?"24px":"7px",height:"7px",borderRadius:"99px",background:i===heroIdx?BURG:"#e0e0e0",border:"none",cursor:"pointer",transition:"all .3s",padding:0 }} />
           ))}
         </div>
       </section>
@@ -362,7 +379,7 @@ export default function GalleryPage() {
                   onMouseLeave={e => { if(!isActive){ e.currentTarget.style.borderColor="#f0f0f0"; e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,.04)"; } }}
                 >
                   <div style={{ height:"88px",overflow:"hidden",position:"relative",background:"#f8f6f4" }}>
-                    <img src={cat.img} alt={cat.label} style={{ width:"100%",height:"100%",objectFit:"cover" }} onError={e => { (e.target as HTMLImageElement).style.display="none"; }} />
+                    <img src={cat.img} alt={cat.label} style={{ width:"100%",height:"100%",objectFit:"cover" }} onError={e => { (e.target as HTMLImageElement).src = PLACEHOLDER_IMG; }} />
                     {isActive && <div style={{ position:"absolute",inset:0,background:"rgba(155,0,32,.15)" }} />}
                   </div>
                   <div style={{ padding:"9px 6px 11px" }}>
