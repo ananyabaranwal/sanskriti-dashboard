@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 const BURG = "#9B0020";
@@ -22,6 +22,8 @@ const STEPS = [
   { n:5, icon:"🚚", title:"We Dispatch",     desc:"We ship from our warehouse",    color:BURG },
   { n:6, icon:"💰", title:"You Earn",        desc:"Profit to your wallet",         color:BURG },
 ];
+
+/* ───────────────── FLOW DIAGRAM PIECES — UNCHANGED ───────────────── */
 
 const ARROW_H = (
   <div style={{ display:"flex", alignItems:"center", justifyContent:"center", width:"48px" }}>
@@ -60,8 +62,33 @@ function StepBox({ s }: { s: typeof STEPS[0] }) {
   );
 }
 
+/* ───────────────── PAGE ───────────────── */
+
 export default function ServicesPage() {
   const [active, setActive] = useState<number | null>(null);
+  const [visible, setVisible] = useState<Set<number>>(new Set());
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Scroll-triggered entrance animation for service cards
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number((entry.target as HTMLElement).dataset.idx);
+            setVisible((prev) => {
+              const next = new Set(prev);
+              next.add(idx);
+              return next;
+            });
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    cardRefs.current.forEach((el) => el && obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <div style={{ fontFamily:"'DM Sans',sans-serif", background:"#fff", paddingTop:"68px" }}>
@@ -69,14 +96,33 @@ export default function ServicesPage() {
         ${GF}*{box-sizing:border-box;margin:0;padding:0}
         @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        .srv:hover{border-color:${BURG}!important;transform:translateY(-2px)!important;box-shadow:0 8px 24px rgba(155,0,32,.09)!important}
+
+        /* ── motion graphics added below ── */
+        @keyframes floatSlow{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(10px,-12px) scale(1.08)}}
+        @keyframes floatSlow2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-14px,10px) scale(1.05)}}
+        @keyframes shimmer{0%{background-position:-300px 0}100%{background-position:300px 0}}
+        @keyframes underlineGrow{from{width:0}to{width:38px}}
+        @keyframes iconPop{0%{transform:scale(.6) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+
+        .srv{ will-change:transform,opacity,box-shadow; }
+        .srv:hover{border-color:${BURG}!important;transform:translateY(-6px) scale(1.012)!important;box-shadow:0 16px 36px rgba(155,0,32,.16)!important}
+        .srv-icon{ transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+        .srv:hover .srv-icon{ transform:scale(1.18) rotate(-6deg); }
+        .srv-cta{ transition:transform .25s ease, color .2s ease; display:inline-flex; align-items:center; gap:4px; }
+        .srv:hover .srv-cta{ transform:translateX(3px); color:${BURG}; }
+        .srv-underline{ height:2px; width:0; background:${BURG}; border-radius:2px; transition:width .35s ease; margin-top:6px; }
+        .srv:hover .srv-underline{ width:32px; }
+
+        .floatA{ animation:floatSlow 6s ease-in-out infinite; }
+        .floatB{ animation:floatSlow2 7.5s ease-in-out infinite; }
+
+        .banner-title-underline{ animation:underlineGrow .6s ease forwards; }
       `}</style>
 
-      {/* ── FLOW DIAGRAM ─────────────────────────────────────── */}
+      {/* ── FLOW DIAGRAM — KEPT EXACTLY AS-IS ─────────────────── */}
       <section style={{ padding:"44px 48px 40px", background:"#fff", borderBottom:"1px solid #f0f0f0" }}>
         <div style={{ maxWidth:"960px", margin:"0 auto" }}>
 
-          {/* Small heading */}
           <div style={{ textAlign:"center", marginBottom:"32px" }}>
             <div style={{ display:"inline-flex", alignItems:"center", gap:"7px", padding:"4px 14px", borderRadius:"99px", border:`1px solid rgba(155,0,32,.18)`, background:`rgba(155,0,32,.04)`, marginBottom:"10px" }}>
               <span style={{ width:"5px", height:"5px", borderRadius:"50%", background:BURG, animation:"pulse 2s infinite", display:"inline-block" }} />
@@ -87,7 +133,6 @@ export default function ServicesPage() {
             </h1>
           </div>
 
-          {/* Top row: 1 → 2 → 3 */}
           <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:"0", marginBottom:"0" }}>
             <StepBox s={STEPS[0]} />
             {ARROW_H}
@@ -96,12 +141,10 @@ export default function ServicesPage() {
             <StepBox s={STEPS[2]} />
           </div>
 
-          {/* Down arrow on right */}
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", marginBottom:"0" }}>
             <div /><div />{ARROW_D}
           </div>
 
-          {/* Bottom row: 6 ← 5 ← 4 */}
           <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:"0" }}>
             <StepBox s={STEPS[5]} />
             {ARROW_H_L}
@@ -110,12 +153,10 @@ export default function ServicesPage() {
             <StepBox s={STEPS[3]} />
           </div>
 
-          {/* Up arrow on left */}
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr" }}>
             {ARROW_U}<div /><div />
           </div>
 
-          {/* Chips */}
           <div style={{ display:"flex", justifyContent:"center", gap:"10px", marginTop:"8px", flexWrap:"wrap" }}>
             {[
               { label:"No Manpower Needed",  yes:false },
@@ -130,7 +171,6 @@ export default function ServicesPage() {
             ))}
           </div>
 
-          {/* CTA */}
           <div style={{ textAlign:"center", marginTop:"22px" }}>
             <Link href="/register" style={{ display:"inline-block", padding:"12px 32px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"13px", fontWeight:700, textDecoration:"none", boxShadow:`0 4px 16px rgba(155,0,32,.28)` }}>
               Start Your Journey →
@@ -139,36 +179,56 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ── SERVICES — narrow banner then grid ───────────────── */}
+      {/* ── SERVICES — banner + grid, ANIMATED ───────────────── */}
       <section style={{ background:"#f9f9f9" }}>
-        {/* Narrow banner */}
-        <div style={{ background:BURG, padding:"18px 48px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"12px" }}>
-          <div>
-            <span style={{ fontSize:"11px", fontWeight:700, color:"rgba(255,255,255,.6)", letterSpacing:".14em", textTransform:"uppercase" }}>What We Offer</span>
-            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"22px", fontWeight:700, color:"#fff", marginTop:"2px" }}>Our Services</h2>
+
+        {/* Narrow banner — with floating motion shapes */}
+        <div style={{ background:"#fff", padding:"18px 48px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"12px", position:"relative", overflow:"hidden", borderBottom:"1px solid #f0f0f0" }}>
+          <div className="floatA" style={{ position:"absolute", top:"-30px", right:"120px", width:"90px", height:"90px", borderRadius:"50%", background:"rgba(155,0,32,.05)", pointerEvents:"none" }} />
+          <div className="floatB" style={{ position:"absolute", bottom:"-40px", right:"260px", width:"70px", height:"70px", borderRadius:"50%", background:"rgba(155,0,32,.04)", pointerEvents:"none" }} />
+          <div className="floatA" style={{ position:"absolute", top:"10px", left:"40%", width:"36px", height:"36px", borderRadius:"50%", background:"rgba(155,0,32,.05)", pointerEvents:"none", animationDelay:"1.2s" }} />
+
+          <div style={{ position:"relative", zIndex:1 }}>
+            <span style={{ fontSize:"11px", fontWeight:700, color:"rgba(155,0,32,.6)", letterSpacing:".14em", textTransform:"uppercase" }}>What We Offer</span>
+            <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"22px", fontWeight:700, color:"#111", marginTop:"2px" }}>Our Services</h2>
+            <div className="banner-title-underline" style={{ height:"2px", background:BURG, borderRadius:"2px", marginTop:"4px" }} />
           </div>
-          <p style={{ fontSize:"13px", color:"rgba(255,255,255,.75)", maxWidth:"400px", lineHeight:1.6 }}>
+          <p style={{ fontSize:"13px", color:"#888", maxWidth:"400px", lineHeight:1.6, position:"relative", zIndex:1 }}>
             Everything a seller needs to build, grow, and scale — under one roof.
           </p>
         </div>
 
-        {/* Services grid */}
+        {/* Services grid — scroll entrance + hover micro-interactions */}
         <div style={{ padding:"32px 48px 60px", maxWidth:"1100px", margin:"0 auto" }}>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:"14px" }}>
             {SERVICES.map((s, i) => (
-              <div key={s.title} className="srv"
+              <div
+                key={s.title}
+                ref={(el) => { cardRefs.current[i] = el; }}
+                data-idx={i}
+                className="srv"
                 onClick={() => setActive(active===i?null:i)}
-                style={{ padding:"22px 20px", borderRadius:"14px", border:"1.5px solid #f0f0f0", background:"#fff", cursor:"pointer", transition:"all .2s" }}
+                style={{
+                  padding:"22px 20px",
+                  borderRadius:"14px",
+                  border:"1.5px solid #f0f0f0",
+                  background:"#fff",
+                  cursor:"pointer",
+                  opacity: visible.has(i) ? 1 : 0,
+                  transform: visible.has(i) ? "translateY(0)" : "translateY(28px)",
+                  transition: `opacity .55s ease ${i*0.08}s, transform .55s ease ${i*0.08}s, border-color .2s ease, box-shadow .2s ease`,
+                }}
               >
-                <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:`rgba(155,0,32,.07)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", marginBottom:"12px" }}>{s.icon}</div>
+                <div className="srv-icon" style={{ width:"44px", height:"44px", borderRadius:"12px", background:`rgba(155,0,32,.07)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", marginBottom:"12px", animation: visible.has(i) ? `iconPop .5s ease ${i*0.08 + 0.15}s both` : "none" }}>{s.icon}</div>
                 <h3 style={{ fontFamily:"'Playfair Display',serif", fontSize:"16px", fontWeight:600, color:"#111", marginBottom:"6px" }}>{s.title}</h3>
-                <p style={{ fontSize:"12px", color:"#888", lineHeight:1.65, marginBottom:"10px" }}>{s.shortDesc}</p>
+                <p style={{ fontSize:"12px", color:"#888", lineHeight:1.65, marginBottom:"4px" }}>{s.shortDesc}</p>
+                <div className="srv-underline" />
                 {active === i && (
-                  <div style={{ animation:"fadeIn .2s ease" }}>
+                  <div style={{ animation:"fadeIn .25s ease", marginTop:"10px" }}>
                     <p style={{ fontSize:"12px", color:"#555", lineHeight:1.7, marginBottom:"12px", paddingTop:"10px", borderTop:"1px solid #f5f5f5" }}>{s.fullDesc}</p>
                     <div style={{ display:"flex", flexDirection:"column", gap:"5px", marginBottom:"10px" }}>
-                      {s.features.map(f => (
-                        <div key={f} style={{ display:"flex", alignItems:"center", gap:"7px" }}>
+                      {s.features.map((f, fi) => (
+                        <div key={f} style={{ display:"flex", alignItems:"center", gap:"7px", animation:`fadeIn .3s ease ${fi*0.04}s both` }}>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={BURG} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                           <span style={{ fontSize:"11px", color:"#444" }}>{f}</span>
                         </div>
@@ -179,26 +239,12 @@ export default function ServicesPage() {
                     </div>
                   </div>
                 )}
-                <div style={{ marginTop:"10px", fontSize:"11px", fontWeight:600, color:active===i?BURG:"#ccc" }}>
-                  {active===i?"Show less ▲":"Learn more ▼"}
+                <div className="srv-cta" style={{ marginTop:"10px", fontSize:"11px", fontWeight:600, color:active===i?BURG:"#ccc" }}>
+                  {active===i ? "Show less ▲" : "Learn more ▾"}
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── BOTTOM CTA ────────────────────────────────────────── */}
-      <section style={{ padding:"60px 48px", background:"#fff", textAlign:"center" }}>
-        <h2 style={{ fontFamily:"'Playfair Display',serif", fontSize:"clamp(24px,3vw,38px)", fontWeight:700, color:"#111", marginBottom:"12px" }}>
-          Ready to grow your <span style={{ fontStyle:"italic", color:BURG, fontWeight:400 }}>antique business?</span>
-        </h2>
-        <p style={{ fontSize:"14px", color:"#666", lineHeight:1.85, marginBottom:"28px", maxWidth:"480px", margin:"0 auto 28px" }}>
-          Join 5,000+ sellers. No inventory, no warehouse, no manpower required.
-        </p>
-        <div style={{ display:"flex", gap:"12px", justifyContent:"center", flexWrap:"wrap" }}>
-          <Link href="/register" style={{ padding:"13px 32px", borderRadius:"8px", background:BURG, color:"#fff", fontSize:"13px", fontWeight:700, textDecoration:"none", boxShadow:`0 6px 20px rgba(155,0,32,.28)` }}>Register as Seller →</Link>
-          <Link href="/login" style={{ padding:"13px 32px", borderRadius:"8px", border:"1.5px solid #e5e5e5", color:"#333", fontSize:"13px", fontWeight:500, textDecoration:"none" }}>Already a Seller? Sign In</Link>
         </div>
       </section>
     </div>
