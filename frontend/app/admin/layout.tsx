@@ -45,6 +45,7 @@ const navGroups = [
     items: [
       { label:"Content",      href:"/admin/content",          icon:"🎬", exact:false },
       { label:"Gallery",      href:"/admin/gallery",          icon:"🏺", exact:false },
+      { label:"Categories",   href:"/admin/categories",       icon:"🗂️", exact:false },
       { label:"Settings",     href:"/admin/settings",         icon:"⚙️", exact:false },
       { label:"Activity Log", href:"/admin/activity",         icon:"🕐", exact:false },
       { label:"Notifications",href:"/admin/notifications",    icon:"📢", exact:false },

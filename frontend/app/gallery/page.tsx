@@ -1,88 +1,41 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import api from "@/lib/api";
 
 const BURG = "#9B0020";
+
+// ── Backend serves uploaded files (e.g. /uploads/categories/x.jpg) from its
+// root, not under /api — so strip a trailing "/api" off NEXT_PUBLIC_API_URL
+// to get the right origin to prefix those paths with.
+const API_ORIGIN = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/api\/?$/, "");
+function resolveUploadUrl(path?: string): string {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  return `${API_ORIGIN}${path}`;
+}
+
+// ── Shape of each category once fetched from /api/categories and normalized ──
+type CategoryItem = {
+  id: string;        // category slug
+  label: string;
+  img: string;        // grid thumbnail (PLACEHOLDER_IMG if none uploaded yet)
+  heroImg: string;    // hero banner photo (falls back to the grid thumbnail)
+  count: string;
+  showInHero: boolean;
+  heroOrder: number;
+};
+
 
 // ── Shown whenever a photo hasn't been added yet (no external image host involved) ──
 const PLACEHOLDER_IMG =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='100%25' height='100%25' fill='%23f3f1ee'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='18' fill='%23ccc' text-anchor='middle' dominant-baseline='middle'%3EAdd Photo%3C/text%3E%3C/svg%3E";
 
-// ── Categories — every img path below points to /public/images/categories/{id}.jpg ──
-// Add your own photos by placing files at that exact path; nothing else needs to change.
-const CATEGORIES = [
-  { id:"wooden",    label:"Wooden Products",    img:"/images/categories/wooden.jpg",                count:"33+"  },
-  { id:"resin",     label:"Resin Products",     img:"/images/categories/resin.jpg",                count:"28+"  },
-  { id:"aluminium", label:"Aluminium Products", img:"/images/categories/aluminium.jpg",                count:"22+"  },
-  { id:"toys",      label:"Wooden Toys",        img:"/images/categories/toys.jpg",               count:"45+"  },
-  { id:"marble",    label:"Marble Products",    img:"/images/categories/marble.jpg",               count:"18+"  },
-  { id:"bronze",    label:"Bronze Products",    img:"/images/categories/bronze.jpg",                count:"24+"  },
-  { id:"wallclock", label:"Wall Clock",         img:"/images/categories/wallclock.jpg",               count:"31+"  },
-  { id:"bamboo",    label:"Bamboo Products",    img:"/images/categories/bamboo.jpg",               count:"19+"  },
-  { id:"wallhang",  label:"Wall Hangings",      img:"/images/categories/wallhang.jpg",               count:"52+"  },
-  { id:"paintings", label:"Paintings",          img:"/images/categories/paintings.jpg",               count:"200+" },
-  { id:"gemstone",  label:"Gem & Stones",       img:"/images/categories/gemstone.jpg",               count:"65+"  },
-  { id:"jewellery", label:"Oxidised Jewellery", img:"/images/categories/jewellery.jpg",               count:"50+"  },
-  { id:"leather",   label:"Leather Diary",      img:"/images/categories/leather.jpg",                count:"15+"  },
-  { id:"plants",    label:"Artificial Plants",  img:"/images/categories/plants.jpg",               count:"22+"  },
-  { id:"bedsheet",  label:"Bedsheets",          img:"/images/categories/bedsheet.jpg",                count:"38+"  },
-  { id:"wallart",   label:"Wall Art",           img:"/images/categories/wallart.jpg",              count:"75+"  },
-  { id:"bagru",     label:"Bagru Print",        img:"/images/categories/bagru.jpg",   count:"30+"  },
-  { id:"tiedye",    label:"Tie Dye",            img:"/images/categories/tiedye.jpg",          count:"18+"  },
-  { id:"suzani",    label:"Suzani Jacket",      img:"/images/categories/suzani.jpg",   count:"12+"  },
-  { id:"lehenga",   label:"Lehenga",            img:"/images/categories/lehenga.jpg",   count:"25+"  },
-  { id:"gown",      label:"Gown",               img:"/images/categories/gown.jpg",   count:"20+"  },
-  { id:"saree",     label:"Saree",              img:"/images/categories/saree.jpg",   count:"80+"  },
-  { id:"coordset",  label:"Co-ord Set",         img:"/images/categories/coordset.jpg",   count:"22+"  },
-  { id:"kurti",     label:"Women Kurtis",       img:"/images/categories/kurti.jpg",   count:"90+"  },
-];
-
-// ══════════════════════════════════════════════════════════════
-// ── ADD YOUR OWN PHOTOS HERE ─────────────────────────────────────
-// All photos for this page live under /public/images/ in three folders:
-//
-//   /public/images/categories/{id}.jpg   small square thumbnails — used
-//                                          in the "Choose the Category"
-//                                          grid, and as the hero photo
-//                                          for any category that doesn't
-//                                          have its own entry below.
-//   /public/images/hero/{id}.jpg          OPTIONAL wider/banner-style
-//                                          photo just for the big hero
-//                                          carousel slide of that category.
-//   /public/images/products/{id}.jpg      individual product photos
-//                                          (see the PRODUCTS list below).
-//
-// Every CATEGORIES and PRODUCTS entry already points at the matching
-// /images/... path for its id — just drop your real files in with those
-// exact names and they'll show up automatically. Until a file exists at
-// a given path, that slot quietly shows an "Add Photo" placeholder
-// instead of breaking.
-//
-// Use HERO_PHOTOS below only if you want the hero carousel to show a
-// different (e.g. more panoramic) photo than the small category
-// thumbnail. Anything left commented out just reuses the category photo.
-const HERO_PHOTOS: Record<string, string> = {
-  // wooden:    "/images/hero/wooden.jpg",
-  // jewellery: "/images/hero/jewellery.jpg",
-  // paintings: "/images/hero/paintings.jpg",
-  // marble:    "/images/hero/marble.jpg",
-  // saree:     "/images/hero/saree.jpg",
-  // gemstone:  "/images/hero/gemstone.jpg",
-};
-
-// ── Which categories appear in the hero carousel, and in what order ──
-// Edit this list to control which categories appear in the hero carousel
-// and in what order. Add or remove ids freely.
-const HERO_CATEGORY_IDS = [
-  "wooden", "jewellery", "paintings", "marble", "saree", "gemstone",
-  "bronze", "wallart", "bagru", "lehenga", "kurti", "wallclock",
-];
-
-const HERO_SLIDES = HERO_CATEGORY_IDS
-  .map(id => CATEGORIES.find(c => c.id === id))
-  .filter((c): c is typeof CATEGORIES[number] => Boolean(c))
-  .map(c => ({ ...c, img: HERO_PHOTOS[c.id] || c.img }));
-
+// ── Categories now come from the admin panel (Category model) via /api/categories.
+// The "Choose the Category" grid and the hero carousel below render whatever the
+// admin panel returns — there's no hardcoded category list in this file anymore.
+// Use the admin "Categories" section to add/edit/delete/reorder categories, set a
+// category's hero photo, and choose which categories appear in the hero carousel.
 // ── Products — each img path points to /public/images/products/{id}.jpg ──
 const PRODUCTS = [
   // Wooden
@@ -166,14 +119,15 @@ function LoginModal({ onClose }: { onClose: () => void }) {
 }
 
 // ── Product Card ──────────────────────────────────────────────
-function ProductCard({ p, onLock, wishlisted, onWish }: {
+function ProductCard({ p, categories, onLock, wishlisted, onWish }: {
   p: typeof PRODUCTS[0];
+  categories: CategoryItem[];
   onLock: () => void;
   wishlisted: boolean;
   onWish: () => void;
 }) {
   const [hov, setHov] = useState(false);
-  const cat = CATEGORIES.find(c => c.id === p.cat);
+  const cat = categories.find(c => c.id === p.cat);
   const tc = p.tag ? TAG_STYLE[p.tag] : null;
 
   return (
@@ -237,6 +191,8 @@ export default function GalleryPage() {
   const [heroIdx,       setHeroIdx]       = useState(0);
   const [heroPaused,    setHeroPaused]    = useState(false);
   const [showAllCats,   setShowAllCats]   = useState(false);
+  const [categories,        setCategories]        = useState<CategoryItem[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const productsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -245,14 +201,39 @@ export default function GalleryPage() {
     try { setWishlist(new Set(JSON.parse(localStorage.getItem("sk_wish") || "[]"))); } catch {}
   }, []);
 
+  // ── Fetch categories from the admin-managed Category collection ──
   useEffect(() => {
-    if (heroPaused) return;
-    const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO_SLIDES.length), 4000);
-    return () => clearInterval(t);
-  }, [heroPaused]);
+    api.get("/categories")
+      .then((res: any) => {
+        const list: CategoryItem[] = (res.data?.categories || []).map((c: any) => ({
+          id: c.slug,
+          label: c.label,
+          img: resolveUploadUrl(c.image) || PLACEHOLDER_IMG,
+          heroImg: resolveUploadUrl(c.heroImage) || resolveUploadUrl(c.image) || PLACEHOLDER_IMG,
+          count: c.count || "",
+          showInHero: !!c.showInHero,
+          heroOrder: c.heroOrder || 0,
+        }));
+        setCategories(list);
+      })
+      .catch(() => setCategories([]))
+      .finally(() => setCategoriesLoading(false));
+  }, []);
 
-  const heroPrev = () => setHeroIdx(i => (i - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  const heroNext = () => setHeroIdx(i => (i + 1) % HERO_SLIDES.length);
+  // ── Hero carousel slides — whichever categories the admin marked "show in hero" ──
+  const heroSlides = categories
+    .filter(c => c.showInHero)
+    .sort((a, b) => a.heroOrder - b.heroOrder)
+    .map(c => ({ ...c, img: c.heroImg }));
+
+  useEffect(() => {
+    if (heroPaused || heroSlides.length === 0) return;
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % heroSlides.length), 4000);
+    return () => clearInterval(t);
+  }, [heroPaused, heroSlides.length]);
+
+  const heroPrev = () => setHeroIdx(i => (i - 1 + heroSlides.length) % Math.max(heroSlides.length, 1));
+  const heroNext = () => setHeroIdx(i => (i + 1) % Math.max(heroSlides.length, 1));
 
   const toggleWish = (id: string) => {
     setWishlist(prev => {
@@ -278,7 +259,7 @@ export default function GalleryPage() {
       return 0;
     });
 
-  const visibleCats = showAllCats ? CATEGORIES : CATEGORIES.slice(0, 16);
+  const visibleCats = showAllCats ? categories : categories.slice(0, 16);
 
   if (!mounted) return null;
 
@@ -297,13 +278,14 @@ export default function GalleryPage() {
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
       {/* ══ HERO — COLLECTION CAROUSEL ══════════════════════ */}
+      {heroSlides.length > 0 && (
       <section
         onMouseEnter={() => setHeroPaused(true)}
         onMouseLeave={() => setHeroPaused(false)}
         style={{ position:"relative", background:"#111", overflow:"hidden", borderBottom:"1px solid #f0f0f0" }}
       >
         <div style={{ position:"relative", width:"100%", height:"clamp(380px, 52vw, 560px)" }}>
-          {HERO_SLIDES.map((slide, i) => (
+          {heroSlides.map((slide, i) => (
             <div
               key={slide.id}
               style={{ position:"absolute", inset:0, opacity:i===heroIdx?1:0, transition:"opacity .7s ease", pointerEvents:i===heroIdx?"auto":"none" }}
@@ -342,11 +324,12 @@ export default function GalleryPage() {
 
         {/* Slide dots */}
         <div style={{ display:"flex",justifyContent:"center",gap:"6px",padding:"16px 0",background:"#fff" }}>
-          {HERO_SLIDES.map((_, i) => (
+          {heroSlides.map((_, i) => (
             <button key={i} onClick={() => setHeroIdx(i)} aria-label={`Go to slide ${i + 1}`} style={{ width:i===heroIdx?"24px":"7px",height:"7px",borderRadius:"99px",background:i===heroIdx?BURG:"#e0e0e0",border:"none",cursor:"pointer",transition:"all .3s",padding:0 }} />
           ))}
         </div>
       </section>
+      )}
 
       {/* ══ CATEGORIES ════════════════════════════════════ */}
       <section style={{ padding:"56px 48px 44px",background:"#fafafa",borderBottom:"1px solid #f0f0f0" }}>
@@ -369,6 +352,15 @@ export default function GalleryPage() {
           </div>
 
           {/* Category grid */}
+          {categoriesLoading ? (
+            <div style={{ textAlign:"center", padding:"40px 0", color:"#aaa", fontFamily:"'DM Sans',sans-serif", fontSize:"13px" }}>
+              Loading categories…
+            </div>
+          ) : categories.length === 0 ? (
+            <div style={{ textAlign:"center", padding:"40px 0", color:"#aaa", fontFamily:"'DM Sans',sans-serif", fontSize:"13px" }}>
+              No categories added yet. Add some from the admin panel's "Categories" section.
+            </div>
+          ) : (
           <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(130px,1fr))",gap:"12px" }}>
             {visibleCats.map(cat => {
               const isActive = activeCat === cat.id;
@@ -390,11 +382,12 @@ export default function GalleryPage() {
               );
             })}
           </div>
+          )}
 
-          {CATEGORIES.length > 16 && (
+          {categories.length > 16 && (
             <div style={{ textAlign:"center",marginTop:"18px" }}>
               <button onClick={() => setShowAllCats(!showAllCats)} style={{ padding:"9px 24px",borderRadius:"8px",border:"1px solid rgba(155,0,32,.2)",background:"transparent",color:BURG,fontSize:"12px",fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif" }}>
-                {showAllCats ? "Show Less ↑" : `Show All ${CATEGORIES.length} Categories ↓`}
+                {showAllCats ? "Show Less ↑" : `Show All ${categories.length} Categories ↓`}
               </button>
             </div>
           )}
@@ -421,14 +414,14 @@ export default function GalleryPage() {
               </select>
               {activeCat !== "All" && (
                 <button onClick={() => setActiveCat("All")} style={{ padding:"10px 16px",borderRadius:"8px",border:"1px solid rgba(155,0,32,.2)",background:"rgba(155,0,32,.07)",color:BURG,fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif" }}>
-                  {CATEGORIES.find(c => c.id === activeCat)?.label} ×
+                  {categories.find(c => c.id === activeCat)?.label} ×
                 </button>
               )}
             </div>
             <div style={{ display:"flex",alignItems:"center",gap:"10px",flexWrap:"wrap" }}>
               <span style={{ fontFamily:"'DM Sans',sans-serif",fontSize:"13px",color:"#888" }}>
                 Showing <strong style={{ color:"#111" }}>{filtered.length}</strong> products
-                {activeCat !== "All" && <> in <strong style={{ color:BURG }}>{CATEGORIES.find(c => c.id === activeCat)?.label}</strong></>}
+                {activeCat !== "All" && <> in <strong style={{ color:BURG }}>{categories.find(c => c.id === activeCat)?.label}</strong></>}
               </span>
               {!isLoggedIn && (
                 <div style={{ padding:"4px 12px",borderRadius:"99px",background:"rgba(155,0,32,.07)",border:"1px solid rgba(155,0,32,.18)",fontSize:"11px",fontWeight:600,color:BURG,fontFamily:"'DM Sans',sans-serif",display:"flex",alignItems:"center",gap:"4px" }}>
@@ -445,7 +438,7 @@ export default function GalleryPage() {
             </button>
             {PILLS.filter(c => c !== "All").slice(0, 12).map(cat => (
               <button key={cat} onClick={() => setActiveCat(activeCat === cat ? "All" : cat)} style={{ padding:"7px 16px",borderRadius:"99px",border:`1px solid ${activeCat===cat?BURG:"#ddd"}`,background:activeCat===cat?BURG:"#fff",color:activeCat===cat?"#fff":"#555",fontSize:"12px",fontWeight:500,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",transition:"all .18s" }}>
-                {CATEGORIES.find(c => c.id === cat)?.label ?? cat}
+                {categories.find(c => c.id === cat)?.label ?? cat}
               </button>
             ))}
           </div>
@@ -464,7 +457,7 @@ export default function GalleryPage() {
             <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:"20px" }}>
               {filtered.map((p, i) => (
                 <div key={p.id} style={{ animation:`sk-fade .4s ${Math.min(i, 8) * 0.05}s ease both` }}>
-                  <ProductCard p={p} onLock={() => setShowLogin(true)} wishlisted={wishlist.has(p.id)} onWish={() => toggleWish(p.id)} />
+                  <ProductCard p={p} categories={categories} onLock={() => setShowLogin(true)} wishlisted={wishlist.has(p.id)} onWish={() => toggleWish(p.id)} />
                 </div>
               ))}
             </div>
