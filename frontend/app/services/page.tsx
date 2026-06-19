@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 const BURG = "#9B0020";
@@ -66,29 +66,6 @@ function StepBox({ s }: { s: typeof STEPS[0] }) {
 
 export default function ServicesPage() {
   const [active, setActive] = useState<number | null>(null);
-  const [visible, setVisible] = useState<Set<number>>(new Set());
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Scroll-triggered entrance animation for service cards
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number((entry.target as HTMLElement).dataset.idx);
-            setVisible((prev) => {
-              const next = new Set(prev);
-              next.add(idx);
-              return next;
-            });
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    cardRefs.current.forEach((el) => el && obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
 
   return (
     <div style={{ fontFamily:"'DM Sans',sans-serif", background:"#fff", paddingTop:"68px" }}>
@@ -100,11 +77,12 @@ export default function ServicesPage() {
         /* ── motion graphics added below ── */
         @keyframes floatSlow{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(10px,-12px) scale(1.08)}}
         @keyframes floatSlow2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-14px,10px) scale(1.05)}}
-        @keyframes shimmer{0%{background-position:-300px 0}100%{background-position:300px 0}}
         @keyframes underlineGrow{from{width:0}to{width:38px}}
-        @keyframes iconPop{0%{transform:scale(.6) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+        @keyframes marqueeRTL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-        .srv{ will-change:transform,opacity,box-shadow; }
+        .srv-track{ display:flex; gap:16px; width:max-content; animation:marqueeRTL 32s linear infinite; }
+        .srv-track:hover{ animation-play-state:paused; }
+        .srv{ will-change:transform,opacity,box-shadow; flex-shrink:0; width:280px; }
         .srv:hover{border-color:${BURG}!important;transform:translateY(-6px) scale(1.012)!important;box-shadow:0 16px 36px rgba(155,0,32,.16)!important}
         .srv-icon{ transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
         .srv:hover .srv-icon{ transform:scale(1.18) rotate(-6deg); }
@@ -198,14 +176,12 @@ export default function ServicesPage() {
           </p>
         </div>
 
-        {/* Services grid — scroll entrance + hover micro-interactions */}
-        <div style={{ padding:"32px 48px 60px", maxWidth:"1100px", margin:"0 auto" }}>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:"14px" }}>
-            {SERVICES.map((s, i) => (
+        {/* Services — infinite right-to-left moving track */}
+        <div style={{ padding:"32px 0 60px", overflow:"hidden" }}>
+          <div className="srv-track">
+            {[...SERVICES, ...SERVICES].map((s, i) => (
               <div
-                key={s.title}
-                ref={(el) => { cardRefs.current[i] = el; }}
-                data-idx={i}
+                key={`${s.title}-${i}`}
                 className="srv"
                 onClick={() => setActive(active===i?null:i)}
                 style={{
@@ -214,12 +190,10 @@ export default function ServicesPage() {
                   border:"1.5px solid #f0f0f0",
                   background:"#fff",
                   cursor:"pointer",
-                  opacity: visible.has(i) ? 1 : 0,
-                  transform: visible.has(i) ? "translateY(0)" : "translateY(28px)",
-                  transition: `opacity .55s ease ${i*0.08}s, transform .55s ease ${i*0.08}s, border-color .2s ease, box-shadow .2s ease`,
+                  transition:"border-color .2s ease, box-shadow .2s ease",
                 }}
               >
-                <div className="srv-icon" style={{ width:"44px", height:"44px", borderRadius:"12px", background:`rgba(155,0,32,.07)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", marginBottom:"12px", animation: visible.has(i) ? `iconPop .5s ease ${i*0.08 + 0.15}s both` : "none" }}>{s.icon}</div>
+                <div className="srv-icon" style={{ width:"44px", height:"44px", borderRadius:"12px", background:`rgba(155,0,32,.07)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", marginBottom:"12px" }}>{s.icon}</div>
                 <h3 style={{ fontFamily:"'Playfair Display',serif", fontSize:"16px", fontWeight:600, color:"#111", marginBottom:"6px" }}>{s.title}</h3>
                 <p style={{ fontSize:"12px", color:"#888", lineHeight:1.65, marginBottom:"4px" }}>{s.shortDesc}</p>
                 <div className="srv-underline" />
